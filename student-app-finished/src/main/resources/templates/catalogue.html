@@ -1,0 +1,12 @@
+{#include layout}
+{#title}Welcome to the HIQUEA catalog!{/}
+{#body}
+<h1>HIQUEA Catalog</h1>
+
+<ul>
+  {#each products}
+    <li><a href="/products/{it.id}">{it.name}</a></li>
+  {/each}
+</ul>
+{/body}
+{/include}
