@@ -9,6 +9,7 @@ Quarkus comes with a template engine named *qute*:
 * Minimized reflection usage
 * Optionally type-safe
 
+
 ## Qute Template Engine - Expressions
 
 ```java

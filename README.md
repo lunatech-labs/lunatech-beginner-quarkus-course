@@ -13,11 +13,24 @@ The `slides` directory contain the reveal.js slides with the course material. Ru
 
 and then browse to `http://localhost:8000/`
 
-### `student-app-finished`
+### `slides-code-samples-app`
 
-This is intended to contain the 'finished' student app; the HIQUEA catalogue app.
+This is a Quarkus app that contains the code that's used in the slides. So we can make sure it works :)
 
-But currently it's in use also to contain the code examples that are used in the slides, to make sure they work. We should split this project into two :)
+### `student-app`
+
+This contains the 'finished' student app; the HIQUEA catalogue app.
+
+### `student-app-frontend`
+
+This is a React app that contains a frontend for the JSON version of the student app. Run it with:
+
+    npm install
+    npm start
+
+Then go to http://localhost:3000/
+
+It's configured to connect to the Quarkus app running on http://localhost:8080/
 
 ## Info about the course
 

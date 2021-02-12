@@ -16,6 +16,7 @@ In this course you will learn:
  * Testing  
  * ... and a lot of Quarkus tooling and best practices
 
+
 ## Prerequisites
 
 You should have:
@@ -56,7 +57,7 @@ Discuss with the group whether they are interested in Qute or not at all. If not
 ### Afternoon
 
 * Observability
-* Additional material
+* Additional material (Like GraphQL, AWS Lambda)
 * TODO
 
 

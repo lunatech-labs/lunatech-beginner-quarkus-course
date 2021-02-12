@@ -1,7 +1,5 @@
 package com.lunatech.training.quarkus;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.json.bind.annotation.JsonbProperty;
 
 public class Greet {
