@@ -27,6 +27,13 @@ public class ProductsQuteResource {
 
     @GET
     @Path("{productId}")
+    public TemplateInstance product2(@PathParam("productId") long productId) {
+        Product product = Product.findById(productId);
+        return productDetails.data("product", product);
+    }
+
+    @GET
+    @Path("{productId}")
     public TemplateInstance product(@PathParam("productId") long productId) {
         return Product.findByIdOptional(productId)
                 .map(product -> productDetails.data("product", product))
