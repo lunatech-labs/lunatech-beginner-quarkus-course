@@ -248,3 +248,15 @@ public class Greet {
 
 We can also have both extensions installed. Quarkus will pick the right serialization framework based on the annotations
 that are used by the class.
+
+
+## Exercise #1: Hello World
+
+* Generate a new Quarkus app on the Quarkus website
+* Download it, import it in your IDE
+* Create an endpoint on the `/hello` path that returns 'Hello World'
+* Run it
+* Browse to http://localhost:8080/hello and observer your message :)
+
+Extra:
+* Add a query parameter that let's you greet a different subject than 'world'
