@@ -9,6 +9,10 @@ class ProductDetails extends React.Component {
             isLoaded: false,
             product: null
         };
+
+        if(props.featureFlags.reactivePrices) {
+            this.eventSource = new EventSource("http://localhost:8080/prices/stream/" + props.match.params.id);
+        }
     }
 
     componentDidMount() {
@@ -33,6 +37,18 @@ class ProductDetails extends React.Component {
                     });
                 }
             )
+
+        if(this.eventSource !== undefined) {
+            this.eventSource.onmessage = e => {
+                this.setState(prevState => {
+                    var updatedProduct = prevState.product;
+                    updatedProduct.price = JSON.parse(e.data).price;
+                    return {
+                        product: updatedProduct
+                    }
+                });
+            }
+        }
     }
 
     render() {

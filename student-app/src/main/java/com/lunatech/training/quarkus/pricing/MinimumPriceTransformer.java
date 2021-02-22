@@ -21,7 +21,6 @@ public class MinimumPriceTransformer {
     @Broadcast // TODO, explain this
     @Acknowledgment(Acknowledgment.Strategy.PRE_PROCESSING) // TODO, explain this in the slides
     public Price process(Price price) {
-        logger.info("Processing a price: " + price);
         // TODO, make this crash occasionally, to demonstrate the dead-letter topic.
         if(price.price.compareTo(MINIMUM_PRICE) > 0) {
             return price;

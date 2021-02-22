@@ -1,7 +1,9 @@
 package com.lunatech.training.quarkus.pricing;
 
 import io.smallrye.mutiny.Multi;
+import io.smallrye.reactive.messaging.kafka.KafkaRecord;
 import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Message;
 import org.jboss.resteasy.annotations.SseElementType;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -10,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -21,9 +23,13 @@ import javax.ws.rs.core.MediaType;
 public class PriceResource {
     Logger logger = LoggerFactory.getLogger(PriceResource.class);
 
-    // TODO, can we directly inject a Multi as well?
-    // TODO, what does Publisher say about how many consumers must be able to connect?
-    @Inject @Channel("prices-in") Publisher<Price> prices;
+    // TODO, learn mor about 'ack'-ing. Doing it per message ain't great.
+    private final Multi<Price> broadcaster;
+
+    @Inject
+    public PriceResource(@Channel("prices-in") Multi<KafkaRecord<Object, Price>> prices) {
+        broadcaster = prices.invoke(Message::ack).map(Message::getPayload).broadcast().toAllSubscribers();
+    }
 
     @GET
     @Path("/stream")
@@ -31,15 +37,16 @@ public class PriceResource {
     @SseElementType(MediaType.APPLICATION_JSON)
     public Publisher<Price> stream() {
         logger.info("Connecting to an SSE consumer!");
-        return prices;
+        return broadcaster;
     }
+
 
     @GET
     @Path("/stream/{productId}")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @SseElementType(MediaType.APPLICATION_JSON)
-    public Publisher<Price> stream(@QueryParam("productId") String productId) {
-        return Multi.createFrom().publisher(prices).filter(p -> p.productId.equals(productId));
+    public Publisher<Price> stream(@PathParam("productId") Long productId) {
+        return broadcaster.filter(p -> p.productId.equals(productId));
     }
 
 }

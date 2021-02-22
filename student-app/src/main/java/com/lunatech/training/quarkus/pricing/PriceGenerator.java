@@ -20,7 +20,7 @@ public class PriceGenerator {
                 .onOverflow().drop()
                 .flatMap(tick ->
                     Multi.createFrom().range(1, 8).map(productId ->
-                    new Price(productId.toString(), new BigDecimal(random.nextInt(100)))));
+                    new Price(productId.longValue(), new BigDecimal(random.nextInt(100)))));
     }
 
 }

@@ -18,6 +18,7 @@ public class FeatureFlagsResource {
         ObjectNode node = mapper.createObjectNode();
         node.put("productDetails", true);
         node.put("productSearch", true);
+        node.put("reactivePrices", true);
         return node;
     }
 

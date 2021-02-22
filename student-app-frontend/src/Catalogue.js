@@ -8,6 +8,9 @@ class Catalogue extends React.Component {
             isLoaded: false,
             products: []
         };
+        if(props.featureFlags.reactivePrices) {
+            this.eventSource = new EventSource("http://localhost:8080/prices/stream");
+        }
     }
 
     componentDidMount() {
@@ -30,6 +33,23 @@ class Catalogue extends React.Component {
                     });
                 }
             )
+
+        if(this.eventSource !== undefined) {
+            this.eventSource.onmessage = e => {
+                this.updatePrice(JSON.parse(e.data));
+            }
+        }
+    }
+
+    updatePrice(data) {
+        this.setState(prevState => ({
+            products: prevState.products.map((product) => {
+                if (product.id === data.productId) {
+                    product.price = data.price;
+                }
+                return product;
+            })
+        }));
     }
 
     render() {
@@ -39,14 +59,20 @@ class Catalogue extends React.Component {
         } else if (!isLoaded) {
             return <div>Loading...</div>;
         } else {
+            let productLine;
+            if (this.props.featureFlags.productDetails) {
+                productLine = (product) => (<span><a href={'/products/' + product.id}>{product.name}</a> - € {product.price}</span>);
+            } else {
+                productLine = (product) => (<span>{product.name} - € {product.price}</span>);
+            }
+
             return (
                 <div>
                     <h2>Catalogue</h2>
                     <ul>
                         {products.map(product => (
                             <li key={product.id}>
-                                <strong>
-                                    <a href={'/products/' + product.id}>{product.name}</a> (€ {product.price})</strong>
+                                <strong>{productLine(product)}</strong>
                                 <p>{product.description}</p>
                             </li>
                         ))}
