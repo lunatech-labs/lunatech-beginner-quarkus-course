@@ -510,3 +510,11 @@ Other strategies, that mutiny currently doesn't have built in yet:
 - Batching  
 - Conflating items (combining them)
 
+
+## RESTEasy Reactive execution model
+
+TODO, show:
+- Which thread something runs on
+- When and How to use @Blocking
+- Difference between 'async blocking' and thread blocking (?)
+
