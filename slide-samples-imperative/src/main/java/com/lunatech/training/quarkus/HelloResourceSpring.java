@@ -1,5 +1,6 @@
 package com.lunatech.training.quarkus;
 
+/*
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,3 +14,4 @@ public class HelloResourceSpring {
 
 }
 
+*/

@@ -9,7 +9,7 @@ In this course you will learn:
  * Quarkus Data Access Layer
  * The Qute Template Engine
  * RESTful API development
- * Reactive messaging
+ * Reactive Programming
  * Writing Serverless apps
  * Dependency Injection with ArC
  * Securing Quarkus apps  

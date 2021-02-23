@@ -1,5 +1,8 @@
 package com.lunatech.training.quarkus;
 
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,4 +17,10 @@ public class HelloResource {
         return "Hello!";
     }
 
+    @GET
+    @Path("/uni")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Uni<String> helloUni() {
+        return Uni.createFrom().item("Hello!");
+    }
 }
