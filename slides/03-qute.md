@@ -57,13 +57,13 @@ You can iterate over collections:
 
 Qute has some useful operators:
 
-```html
+```html [|1|2|3|5|6|]
 Manufacturer: {product.manufacturer ?: 'Unknown'}
 Manufacturer: {product.manufacturer or 'Unknown'}
 Available: {product.isAvailable ? 'Yep' : 'Nope' }
 
-{product.isAvailable && product.isCool} // Logical AND
-{product.isAvailable || product.isCool} // Logical OR
+{product.isAvailable && product.isCool}
+{product.isAvailable || product.isCool}
 ```
 
 Note:
@@ -73,15 +73,15 @@ Note:
 
 ## Qute Usage
 
-```java
-@Inject // 1
+```java [|1-2|6|8|]
+@Inject 
 Template productDetails;
 
 @GET
 @Path("{productId}")
-public TemplateInstance product(@PathParam("productId") long productId) { // 2
+public TemplateInstance product(@PathParam("productId") long productId) { 
   Product product = Product.findById(productId);
-  return productDetails.data("product", product); // 3
+  return productDetails.data("product", product);
 }
 ```
 
@@ -115,12 +115,107 @@ How does it work in native mode?
 
 ## Qute Virtual Methods
 
-// TODO (also explain extension methods)
+Qute allows you to call _virtual methods_ on values. They are called _virtual_ because they don't correspond to real methods on the Java value, but to 
+
+```html [|1|2-3]
+<p>Name: {name}</p>
+<p>Name: {name.toUpperCase()}</p>
+<p>Name: {name.toUpperCase}</p>
+```
+
+Note:
+
+* `toUpperCase` is a nullary method on Java's String. We can call that, with or without parentheses
 
 
-## Qute Custom Tags
+## Qute Virtual Methods
 
-// TODO
+```java [|1|3-9|]
+@TemplateExtension
+public class StringExtension {
+    public static String shout(String in) {
+        return in + "!";
+    }
+
+    public static String shout(String in, String append) {
+        return in + append;
+    }
+}
+```
+
+```html [|1|2|3|]
+<p>Name: {name.shout}</p>
+<p>Name: {name.shout('!!!')}</p>
+<p>Name: {name shout '!!!'}</p>
+```
+
+Note:
+* `shout` is a virtual method. In fact there are two virtual methods, with and without parameters
+* In the last line, we use infix notation
+
+
+## Qute Virtual Methods 
+
+We can't call _real_ methods with parameters out of the box:
+
+    <p>Name: {name.replace('k', 'c'}}</p>
+
+Will print:
+
+    <p>Name: NOT_FOUND</p>
+
+
+## Qute Virtual Methods - Template Data
+
+But we can instruct Qute to generate a _value resolver_ for us:
+
+    @TemplateData(target = String.class)
+
+Now this works as expected:
+
+    <p>Name: {name.replace('k', 'c'}}</p>
+
+Note:
+// TODO, explain value resolvers a bit more.
+
+
+## Type safe templates
+
+In the previous example we saw that the following line:
+
+     <p>Name: {name.replace('k', 'c'}}</p>
+
+printed `NOT_FOUND`, at run time. We can improve on this, and make Qute generate an error at build time, by indicating in the template that we expect a value of type `String`:
+
+```html [|1,7|]
+{@java.lang.String name}
+<html>
+  <head>
+      <title>Qute Examples</title>
+  </head>
+  <body>
+  <p>Name: {name.replace('k', 'c')}</p>
+  </body>
+</html>
+```
+
+
+
+## Type safe templates
+
+Now, Qute will render an error:
+
+![Qute error message rendered in the browser](images/qute/qute-error-1.png)
+
+
+
+
+
+// TODO, explain the two methods of making template type-safe.
+// TODO, demonstrate a typing error in a template and the error Quarkus gives.
+// TODO, explain why the 'native' keyword is used in Java
+
+
 
 
 ## Exercise #3: Qute products, part 1
@@ -144,11 +239,10 @@ Create a 'details' page that shows the details of a product
 // TODO, work out the details
 
 
-# Type safe templates
+# Namespaces
 
-// TODO, explain the two methods of making template type-safe.
-// TODO, demonstrate a typing error in a template and the error Quarkus gives.
-// TODO, explain why the 'native' keyword is used in Java
+// TODO, tell a bit about namespaces
+// TODO, give an example where we use a namespace to inject info about the current request into a template?
 
 
 # Summary

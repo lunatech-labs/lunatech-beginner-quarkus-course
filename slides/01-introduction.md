@@ -6,12 +6,12 @@
 In this course you will learn:
 
  * Quarkus Philosophy
+ * Dependency Injection with ArC 
  * Quarkus Data Access Layer
  * The Qute Template Engine
  * RESTful API development
  * Reactive Programming
  * Writing Serverless apps
- * Dependency Injection with ArC
  * Securing Quarkus apps  
  * Testing  
  * ... and a lot of Quarkus tooling and best practices
@@ -35,14 +35,15 @@ Your machine should have:
 ### Morning
 
 * Getting started
-* Web
+* Qute Template Engine (optional)
+* Web Services
 * Database access
-* Qute templates (optional)
 
 ### Afternoon
 
-* JSON Web services
-* Reactive messaging
+* Quarkus execution model
+* Reactive programming
+* Reactive messaging  
 
 Note:
 Discuss with the group whether they are interested in Qute or not at all. If not, it can be skipped in favor of having more time at the end for additional material.
@@ -53,12 +54,16 @@ Discuss with the group whether they are interested in Qute or not at all. If not
 ### Morning
 
 * Reactive messaging - continued
+* Non Functional Features
 
 ### Afternoon
 
-* Observability
-* Additional material (Like GraphQL, AWS Lambda)
-* TODO
+* Choice of additional material
+    - GraphQL
+    - Serverless with AWS
+
+Note:
+Additional material depends on time.
 
 
 ## Case Study
@@ -66,7 +71,6 @@ Discuss with the group whether they are interested in Qute or not at all. If not
 We will be doing several exercises that build upon the same domain: a furniture store called HIQUÉA. 
 
 TODO: Explain either Course Management Tools, or the way we use vanilla Git to make sure students don't get lost. 
-
 
 
 ## About the trainer
@@ -78,5 +82,4 @@ Tell about:
 * Your experience with Quarkus and/or related technologies
 
 ## Practicalities
-
 

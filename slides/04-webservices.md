@@ -177,10 +177,15 @@ That's why Quarkus makes sure there's a royal amount of threads: at least 200 in
 
 But there is a limitation: Quarkus can't discriminate between a thread blocked on CPU, and a thread blocked on IO. If all 200 threads are used for CPU, it will cause _thread starvation_: the computation doesn't make much progress, because a thread is scheduled only occasionally.
 
-In the next section, we will see a different model that solves this.
+In the next chapter, we will see a different model that solves this.
 
 
 ## OpenAPI and Swagger UI
 
+
 // TODO, demonstrate how to use OpenAPI and Swagger
 
+
+## CDI & ArC
+
+// TODO

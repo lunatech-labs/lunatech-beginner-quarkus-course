@@ -491,16 +491,16 @@ Note: So `asStream` only requests 256 items!
 We can configure the amount of items to queue:
 ```java [8-9]
 Stream<Integer> out = Multi.createFrom().items(1,2,3)
-                .onSubscribe().invoke(() -> System.out.println("⬇️ Subscribed"))
-                .onItem().invoke(i -> System.out.println("⬇️ Received item: " + i))
-                .onFailure().invoke(f -> System.out.println("⬇️ Failed with " + f))
-                .onCompletion().invoke(() -> System.out.println("⬇️ Completed"))
-                .onCancellation().invoke(() -> System.out.println("⬆️ Cancelled"))
-                .onRequest().invoke(l -> System.out.println("⬆️ Requested: " + l))
-                // Use a buffer capacity of 2
-                .subscribe().asStream(2, () -> new ArrayBlockingQueue<>(2));
+  .onSubscribe().invoke(() -> System.out.println("⬇️ Subscribed"))
+  .onItem().invoke(i -> System.out.println("⬇️ Received item: " + i))
+  .onFailure().invoke(f -> System.out.println("⬇️ Failed with " + f))
+  .onCompletion().invoke(() -> System.out.println("⬇️ Completed"))
+  .onCancellation().invoke(() -> System.out.println("⬆️ Cancelled"))
+  .onRequest().invoke(l -> System.out.println("⬆️ Requested: " + l))
+  // Use a buffer capacity of 2
+  .subscribe().asStream(2, () -> new ArrayBlockingQueue<>(2));
 
-        Set<Integer> set = out.collect(Collectors.toSet());
+Set<Integer> set = out.collect(Collectors.toSet());
 ```
 
 ``` [2|3-4|5|6-7]
