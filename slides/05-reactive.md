@@ -1,5 +1,165 @@
 # Reactive Programming
 
+## CPU vs Non-Blocking IO vs Blocking IO
+
+Remember from last section:
+
+* A thread doing CPU is good, but we don't want a ton of those
+* A thread doing IO is fine, but it shouldn't prevent other threads doing CPU work
+
+Solution?
+
+* Have a limited number of threads doing CPU-work
+* Try to do IO without blocking a thread
+* If you can't, have potentially an unlimited number of threads waiting for IO
+
+
+## RESTEasy Reactive
+
+The `quarkus-resteasy-reactive` extension brings reactive JAX-RS support to Quarkus.
+
+```xml
+<dependency>
+  <groupId>io.quarkus</groupId>
+  <artifactId>quarkus-resteasy-reactive</artifactId>
+</dependency>
+```
+
+```java
+@GET
+@Path("/hello")
+public String hello() {
+  return "Hello World";
+}
+```
+
+Works identically.
+
+
+## RESTEasy Reactive
+
+The `quarkus-resteasy-reactive` extension brings reactive JAX-RS support to Quarkus.
+
+```xml
+<dependency>
+  <groupId>io.quarkus</groupId>
+  <artifactId>quarkus-resteasy-reactive</artifactId>
+</dependency>
+```
+
+```java [|4|]
+@GET
+@Path("/hello")
+@Produces(MediaType.TEXT_PLAIN)
+public CompletionStage<String> hello() {
+  return CompletableFuture.completedFuture("Hello!");
+}
+```
+
+We can also return a `CompletionStage`
+
+
+## Reactive Execution Model
+
+RESTEasy reactive **does** care about blocking
+
+* Your method will be called by a Vert.x eventloop thread
+* You shouldn't block it
+* If you do block, annotate with `@Blocking`
+
+
+## Reactive Execution Model - Example
+
+```java
+@GET
+@Path("/regular")
+public String regular() {
+  return Thread.currentThread().getName();
+}
+```
+
+This is fine - returns something like `vert.x-eventloop-thread-3`
+        
+
+## Reactive Execution Model - Bad Example
+
+```java [|4|]
+@GET
+@Path("/regular-slow")
+public String regularSlow() {
+  Thread.sleep(1000);
+  return Thread.currentThread().getName();
+}
+```
+
+This is **not** fine.
+
+Note:
+Here we block the eventloop thread for IO. Ask the audience what they expect to happen if we measure this with a high number of concurrent requests?
+
+See next page for the results
+
+
+## Reactive Execution Model - Bad Example
+
+``` [|1|8|9-10|]
+ab -c50 -n300  http://127.0.0.1:8082/threads/regular-slow
+
+Connection Times (ms)
+min  mean[+/-sd] median   max
+Connect:        0    1   0.7      0       3
+Processing:  1005 2013 402.7   2012    3087
+Waiting:     1005 2012 402.7   2012    3087
+Total:       1007 2013 402.3   2013    3088
+WARNING: The median and mean for the initial connection time are not within a normal deviation
+These results are probably not that reliable.
+```
+
+Note:
+Ask the audience if they can guess how many IO threads quarkus has out of the box?
+
+Answer: 
+* We run 50 requests concurrently, and you see that the slowest take 3 seconds. This gives us between 17 and 24 threads to get this behaviour.
+* According to the Quarkus docs, it's twice the number of cores.
+* This measurement was done on 6 cores with hyperthreading, so effectively 12 cores and 24 IO threads. We guessed correctly!
+
+Also note that AB finds the results suspicious :)
+
+
+## Reactive Execution Model - Example
+
+```java [|2|]
+@GET
+@Path("/regular-slow")
+@Blocking
+public String blockingSlow() {
+  Thread.sleep(1000);
+  return Thread.currentThread().getName();
+}
+```
+
+This returns `executor-thread-221`
+
+
+## Reactive Execution Model - Example
+
+```
+ab -c70 -n300  http://127.0.0.1:8082/threads/blocking-slow
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   0.7      1       3
+Processing:  1001 1008   4.5   1007    1023
+Waiting:     1001 1008   4.5   1007    1023
+Total:       1001 1009   4.9   1008    1024
+```
+
+Back to normal :)
+
+Note:
+Here we see that if we tell quarkus that our method is blocking, it will run it with an executor thread; of which there are many more available. 
+
+
 
 ## Reactive Streams
 
@@ -123,9 +283,7 @@ Explain this line by line:
 Obviously, this is for demo purposes. In real code, you should almost never use *join*. Instead, the frameworks we work with (like Quarkus), support returning Uni's and Multi's.
 
 
-## RESTEasy Reactive
-
-The `quarkus-resteasy-reactive` extension brings reactive JAX-RS support to Quarkus.
+## RESTEasy Reactive with Mutiny UNI
 
 `Uni`s are supported as a result type:
 ```java [|3|4]
@@ -509,12 +667,4 @@ Other strategies, that mutiny currently doesn't have built in yet:
 - Sampling
 - Batching  
 - Conflating items (combining them)
-
-
-## RESTEasy Reactive execution model
-
-TODO, show:
-- Which thread something runs on
-- When and How to use @Blocking
-- Difference between 'async blocking' and thread blocking (?)
 

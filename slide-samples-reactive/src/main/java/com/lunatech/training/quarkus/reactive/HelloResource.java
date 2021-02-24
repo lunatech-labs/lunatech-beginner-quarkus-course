@@ -11,6 +11,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 @Path("hello")
 public class HelloResource {
@@ -22,6 +24,13 @@ public class HelloResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
         return "Hello!";
+    }
+
+    @GET
+    @Path("/cs")
+    @Produces(MediaType.TEXT_PLAIN)
+    public CompletionStage<String> helloCompltionStage() {
+        return CompletableFuture.completedFuture("Hello!");
     }
 
     @GET

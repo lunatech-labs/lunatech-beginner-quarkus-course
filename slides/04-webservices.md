@@ -104,8 +104,83 @@ The React application has functionality to create and edit products as well!
 // TODO (include the TestTransaction feature)
 
 
+## Execution Model
+
+When using the standard *imperative* RESTEasy, Quarkus creates as many `executor` threads as needed, up to the configured maximum:
+
+```java [|6|]
+@GET
+@Path("/slow")
+public String slow() throws InterruptedException {
+    String thread = Thread.currentThread().getName();
+    System.out.println("Thread: " + thread);
+    Thread.sleep(1000);
+    return thread;
+}
+```
+
+``` [|1|8|]
+ab -c 50 -n300  http://127.0.0.1:8081/threads/slow
+...
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.7      0       3
+Processing:  1002 1009   6.8   1007    1037
+Waiting:     1002 1009   6.8   1007    1037
+Total:       1002 1010   7.4   1007    1039
+```
+
+The default maximum is `max(200, 8 * nr_of_cores)`
+
+Note:
+What we see here, is that if we execute 50 concurrent requests, they all get executed in parallel. 
+
+
+## Execution Model
+
+If we choose a smaller amount of maximum threads:
+
+```quarkus.thread-pool.max-threads=10```
+
+Then running the same `ab` command takes much longer:
+
+``` [|8|]
+ab -c 50 -n300  http://127.0.0.1:8081/threads/slow
+...
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.5      0       2
+Processing:  1020 4679 959.9   5021    5068
+Waiting:     1020 4679 960.0   5020    5068
+Total:       1022 4680 959.5   5021    5070
+```
+
+Note:
+What we see here, is that if we reduce the maximum number of threads, we see that many requests have to wait before being processed.
+
+
+## Execution Model - Blocking Threads
+
+Two types of a thread being held up:
+
+* Doing useful work on the CPU
+* Waiting for somebody else (Database, API call, Disk IO, etc.). This is what we call _blocking_.
+
+Note:
+Explain the following:
+* Doing useful work on the CPU is good. It's what we have it for. If all CPU's are busy doing useful work, we have great utilization of our resources, and we can be happy.
+* Waiting for others is fine, it's a fact of life. But it means we need to be *doing something else* with the CPU.
+
+So suppose we have 4 cores, and 10 threads. If 5 threads are actively computing stuff, and 5 threads are blocked, there's no problem. But if 8 threads are blocked, and only 2 doing useful CPU work, it ís a problem. 
+
+That's why Quarkus makes sure there's a royal amount of threads: at least 200 in the default config. So we can have at least 200 concurrent requests. 
+
+But there is a limitation: Quarkus can't discriminate between a thread blocked on CPU, and a thread blocked on IO. If all 200 threads are used for CPU, it will cause _thread starvation_: the computation doesn't make much progress, because a thread is scheduled only occasionally.
+
+In the next section, we will see a different model that solves this.
+
+
 ## OpenAPI and Swagger UI
 
 // TODO, demonstrate how to use OpenAPI and Swagger
-
 
