@@ -19,6 +19,7 @@ public class MinimumPriceTransformer {
     @Incoming("raw-prices-in")
     @Outgoing("prices-out")
     @Broadcast // TODO, explain this
+    // TODO, figure out batched commits
     @Acknowledgment(Acknowledgment.Strategy.PRE_PROCESSING) // TODO, explain this in the slides
     public Price process(Price price) {
         // TODO, make this crash occasionally, to demonstrate the dead-letter topic.

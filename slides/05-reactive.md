@@ -1,5 +1,6 @@
 # Reactive Programming
 
+
 ## CPU vs Non-Blocking IO vs Blocking IO
 
 Remember from last section:
@@ -7,11 +8,15 @@ Remember from last section:
 * A thread doing CPU is good, but we don't want a ton of those
 * A thread doing IO is fine, but it shouldn't prevent other threads doing CPU work
 
+<div class="fragment">
 Solution?
 
-* Have a limited number of threads doing CPU-work
-* Try to do IO without blocking a thread
-* If you can't, have potentially an unlimited number of threads waiting for IO
+<ul>
+<li> Have a limited number of threads doing CPU-work
+<li> Try to do IO without blocking a thread
+<li> If you can't, have potentially an unlimited number of threads waiting for IO
+</ul>
+</div>
 
 
 ## RESTEasy Reactive
@@ -68,7 +73,9 @@ RESTEasy reactive **does** care about blocking
 * If you do block, annotate with `@Blocking`
 
 
-## Reactive Execution Model - Example
+## Reactive Execution Model
+
+### Example
 
 ```java
 @GET
@@ -79,9 +86,11 @@ public String regular() {
 ```
 
 This is fine - returns something like `vert.x-eventloop-thread-3`
-        
 
-## Reactive Execution Model - Bad Example
+
+## Reactive Execution Model
+
+### Bad Example
 
 ```java [|4|]
 @GET
@@ -100,7 +109,9 @@ Here we block the eventloop thread for IO. Ask the audience what they expect to 
 See next page for the results
 
 
-## Reactive Execution Model - Bad Example
+## Reactive Execution Model 
+
+### Bad Example
 
 ``` [|1|8|9-10|]
 ab -c50 -n300  http://127.0.0.1:8082/threads/regular-slow
@@ -126,7 +137,9 @@ Answer:
 Also note that AB finds the results suspicious :)
 
 
-## Reactive Execution Model - Example
+## Reactive Execution Model 
+
+### Good Example
 
 ```java [|2|]
 @GET
@@ -140,8 +153,13 @@ public String blockingSlow() {
 
 This returns `executor-thread-221`
 
+Note:
+And remember, of these threads there are very many, and you can safely tie them up in blocking IO.
 
-## Reactive Execution Model - Example
+
+## Reactive Execution Model 
+
+### Good Example
 
 ```
 ab -c70 -n300  http://127.0.0.1:8082/threads/blocking-slow
@@ -159,6 +177,21 @@ Back to normal :)
 Note:
 Here we see that if we tell quarkus that our method is blocking, it will run it with an executor thread; of which there are many more available. 
 
+
+## Exercise
+
+TODO, rework some stuff into reactive
+
+
+# Reactive Database Access
+
+
+## About JDBC
+
+
+
+
+# Reactive Streams
 
 
 ## Reactive Streams
@@ -667,4 +700,6 @@ Other strategies, that mutiny currently doesn't have built in yet:
 - Sampling
 - Batching  
 - Conflating items (combining them)
+
+If you want more advanced features, take a look at more advanced reactive streams libraries, like RxJava or Akka Streams.
 

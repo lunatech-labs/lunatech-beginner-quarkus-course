@@ -59,6 +59,7 @@ based on the values in this object, the frontend enables or disables certain fea
   }
   ```
 
+// TODO, make them put the feature flags in the config file.
 
 
 ## Exercise #4, moving to JSON 
@@ -75,6 +76,7 @@ In this exercise, we will be switching the Catalogue endpoint to JSON.
     * JDBC
     * Others // TODO
     
+
 
 ## Putting our products in the database
 

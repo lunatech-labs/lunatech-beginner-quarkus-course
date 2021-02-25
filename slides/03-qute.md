@@ -248,3 +248,5 @@ Create a 'details' page that shows the details of a product
 # Summary
 
 // TODO, explain again why Qute is created
+// TODO, custom tags
+// TODO, include / insert templates

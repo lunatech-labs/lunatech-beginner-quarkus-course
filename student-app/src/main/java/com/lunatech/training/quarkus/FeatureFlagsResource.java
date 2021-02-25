@@ -16,9 +16,9 @@ public class FeatureFlagsResource {
     @GET
     public ObjectNode flags() {
         ObjectNode node = mapper.createObjectNode();
-        node.put("productDetails", false);
-        node.put("productSearch", false);
-        node.put("reactivePrices", false);
+        node.put("productDetails", true);
+        node.put("productSearch", true);
+        node.put("reactivePrices", true);
         return node;
     }
 
