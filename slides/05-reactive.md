@@ -178,9 +178,76 @@ Note:
 Here we see that if we tell quarkus that our method is blocking, it will run it with an executor thread; of which there are many more available. 
 
 
+## Reactive Execution Model
+
+### Event better example
+
+Of course, we can do even much better, by not blocking a thread at all:
+
+```java [|3|5|6-7|]
+@GET
+@Path("/nonblocking-slow")
+public Uni<String> nonblockingSlow() {
+  return Uni.createFrom().item(Thread.currentThread().getName())
+    .onItem().delayIt().by(Duration.ofSeconds(1))
+    .onItem().transform(i ->
+      "Initial: " + i + ", later: " + Thread.currentThread().getName());
+}
+```
+
+Outputs:
+    Initial: vert.x-eventloop-thread-18, later: executor-thread-1
+
+Note:
+This demonstrates asynchronous 'waiting'. No thread is blocked here. The initial part of the computation is performed on the Vert.x IO thread. The `delayIt` method doesn't block, just returns a `Uni` that completes after the specified time. Continued work with that `Uni` is not performed by an IO Thread.
+
+
 ## Exercise
 
 TODO, rework some stuff into reactive
+
+
+## Reactive Routes
+
+An alternative to _RESTEasy Reactive_ is to use the _Reactive Routes_ extension:
+
+> Reactive routes propose an alternative approach to implement HTTP endpoints where you declare and chain routes. This approach became very popular in the JavaScript world, with frameworks like Express.Js or Hapi. Quarkus also offers the possibility to use reactive routes. You can implement REST API with routes only or combine them with JAX-RS resources and servlets.
+
+Note:
+This extension is also known as 'Vert.x web'
+
+
+## Reactive Routes
+
+```java [|1-5|7-10|12-16|]
+@Route(methods = HttpMethod.GET) 
+void hello(RoutingContext rc) { 
+    rc.response().end("hello");
+}
+
+@Route(path = "/hello")
+Uni<String> hello(RoutingContext context) {
+  return Uni.createFrom().item("Hello world!");
+}
+
+@Route(produces = "application/json")
+Person createPerson(@Body Person person, @Param("id") Optional<String> primaryKey) {
+  person.setId(primaryKey.map(Integer::valueOf).orElse(42));
+  return person;
+}
+```
+
+Note:
+1. No path or regex set, path derived from the method name! Shows working with the `RoutingContext`, which is a Vert.x class.
+2. Shows returning a Uni instead of putting the response on the `RoutingContext`
+3. Shows parameter usage
+
+Also note:
+Instead of injecting `RoutingContext` you can also choose some other Vert.x or Quarkus or even Mutiny HTTP model classes. Just pick one that you like working with or that has the stuff you need easily available.
+
+How to choose between this and RESTEasy Reactive?
+- RESTEasy Reactive is _experimental_ as of February 2021
+- Vert.x Web is stable, so typically a better choice.
 
 
 # Reactive Database Access
@@ -188,7 +255,67 @@ TODO, rework some stuff into reactive
 
 ## About JDBC
 
+JDBC is a blocking API
 
+Example:
+
+    ResultSet rs = stmt.executeQuery(query);
+
+There is **no way** to obtain the `ResultSet` without blocking **a** thread.
+
+Note:
+Remark that you don't necessarily have to block the thread you're working on. Of course you can execute the call on some different thread, and obtain a `CompletionStage` here. But then you have to block that other thread! 
+
+Of course it's not a huge problem in most applications, for several reasons:
+- Databases don't like thousands of concurrent queries, so we'd probably queue requests anyway if we have many of them
+- As shown, Quarkus can deal quite will with a relatively large amount of threads that are okay to block on IO
+- For big apps, the overhead of several tens of threads for this isn't huge
+
+But for *supersonic* *subatomic* we can do better!
+
+
+## Hibernate going Reactive
+
+In December 2020, Hibernate Reactive was launched:
+
+```java
+Uni<Book> bookUni = session.find(Book.class, book.id);
+bookUni.invoke( book -> System.out.println(book.title + " is a great book!") )
+```
+
+It's a reactive API for Hibernate ORM. 
+
+
+## Hibernate going Reactive
+
+* Works with non-blocking database clients. Currently the Vert.x clients for Postgres, MySQL and DB2
+* Returns Mutiny `Uni` and `Multi` types
+* Well-integrated with Quarkus
+* No implicit blocking lazy loading, but explicit asynchronous operations for fetching associations
+
+... but we won't be using it in this course :)
+
+Note:
+People should try it, but it's too new to use in the course right now. Instead, we will be using the lower-level libraries directly.
+
+One other thing to mention, the creators _don't expect this to be faster than regular Hibernate ORM_. They don't expect many applications to benefit from it. However, they do expect better degradation under load for some applications, and maybe there will be performancee improvements in the future.
+
+
+## Vert.x Postgres Client
+
+TODO
+
+
+
+## What's looming on the horizon?
+
+![Project Loom](images/reactive/loom.jpeg)
+
+Note:
+Explain a bit about Project Loom:
+- Upcoming changes to the JDK, to support _virtual threads_, aka fibers, threads that don't consume an OS thread and thus don't suffer from the memory-overhead and poor cache behavior of regular threads. With Loom it is possible to create millions of virtual threads!
+- Loom will make most existing JDBC drivers suddenly non-blocking, because all networking API's will be reimplemented in a non-blocking fashion. User code won't have to change
+- Game changer for many applications, but also quite far away. Unlikely to make the Java 17 LTS, so maybe the first LTS that has it will be Java 23, due in 2024, so used at a company near you in 2026...
 
 
 # Reactive Streams
@@ -361,7 +488,7 @@ Also, `Multi` is supported:
 @GET
 @Produces(MediaType.TEXT_PLAIN)
 public Multi<String> helloMulti() {
-    return Multi.createFrom().items("Hello", "world!");
+  return Multi.createFrom().items("Hello", "world!");
 }
 ```
 
