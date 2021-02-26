@@ -141,6 +141,13 @@ Typically, Quarkus uses the _SmallRye_ implementation of these APIs. SmallRye is
 WildFly, Thorntail and Open Liberty. 
 
 
+## Quarkus and Vert.x
+
+Quarkus is built on top of Vert.x, so many Vert.x APIs and types are also available in Quarkus. 
+
+For example, the `quarkus-routes` extension provides Vert.x annotations for creating HTTP endpoints.
+
+
 ## Automatic JSON serialization
 
 Given a class `Greet`:
@@ -191,14 +198,14 @@ This returns:
 
 We can use Jackson annotations to change how the JSON is generated:
 
-```java
+```java [|1,7]|]
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Greet {
 
     public final String subject;
 
-    @JsonProperty("TheGreeting") // This is added
+    @JsonProperty("TheGreeting")
     public final String greet;
 
     public Greet(String subject, String greet) {
@@ -217,6 +224,8 @@ Now we get the following output:
   "TheGreeting": "Hello"
 }
 ```
+
+Note: Jackson annotation to control JSON output
 
 
 ## Alternatives
@@ -260,3 +269,10 @@ that are used by the class.
 
 Extra:
 * Add a query parameter that let's you greet a different subject than 'world'
+
+
+## Conclusion
+
+// TODO, say something about that Quarkus typically has multiple ways of getting something done, you can pick your API
+// Getting started is easy
+// It's about four things (see above)
