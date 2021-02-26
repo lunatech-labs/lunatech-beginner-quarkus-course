@@ -301,10 +301,194 @@ People should try it, but it's too new to use in the course right now. Instead, 
 One other thing to mention, the creators _don't expect this to be faster than regular Hibernate ORM_. They don't expect many applications to benefit from it. However, they do expect better degradation under load for some applications, and maybe there will be performancee improvements in the future.
 
 
-## Vert.x Postgres Client
+## Reactive SQL Clients
 
-TODO
+Instead, we will be experimenting with the underlying clients directly.
 
+```
+PgConnectOptions connectOptions = new PgConnectOptions()
+.setPort(5432)
+.setHost("the-host")
+.setDatabase("the-db")
+.setUser("user")
+.setPassword("secret");
+
+// Pool options
+PoolOptions poolOptions = new PoolOptions()
+.setMaxSize(5);
+
+// Create the client pool
+PgPool client = PgPool.pool(connectOptions, poolOptions);
+```
+
+The base object we need is a `PgPool` instance. 
+
+Note:
+^ Remark that in Quarkus, *of course* we can just configure it in the unified config, so this is not needed.
+
+
+## Reactive SQL Clients
+
+```
+@Inject
+PgPool client;
+```
+
+This is what you do in Quarkus :)
+
+Pick the right `PgPool`:
+* `io.vertx.mutiny.pgclient.PgPool` uses Mutiny types
+* `io.vertx.pgclient.PgPoool` uses Vert.x types
+
+Note:
+There are created with a code generator. There are also variants for RxJava 2 and RxJava 3. But when using Quarkus, sticking with the Mutiny variants is certainly your best option. 
+
+
+## Querying 
+
+Querying returns a `Uni` containing a `RowSet`:
+
+    Uni<RowSet<Row>> rowSetUni = client.query("SELECT name, age FROM people").execute();
+
+Of course, we can transform this into a `Multi` of `Rows`:
+
+    Multi<Row> people = client.query("SELECT name, age FROM people").execute()
+        .onItem().transformToMulti(set -> Multi.createFrom().iterable(set));
+
+
+## Querying
+
+```java
+Multi<Person> people = client.query("SELECT name, age FROM people")
+  .execute()
+  .onItem().transformToMulti(rows -> Multi.createFrom().iterable(rows))
+  .onItem().transform(Person::fromRow);
+```
+
+```java
+static Person fromRow(Row row) { 
+  return new Person(row.getString("nam"), row.getInteger("age"));
+}
+```
+
+Note:
+Explain how `onItem` and `transform` are just regular Mutiny methods
+Explain that `RowSet` is an iterator that reads from the DB when requested.
+
+Explain how we can utilize a static method on Person and a method reference to cleanly map from a `Row` to a `Person`
+
+
+
+## Parameters
+
+```java [|1|2|3|]
+client.preparedQuery(
+    "SELECT id, name FROM fruits WHERE id = $1")
+    .execute(Tuple.of(id))
+```
+
+Note:
+Explain that this `Tuple` comes from Mutiny.
+
+
+## Inserts and Updates
+
+```java [|1|2|3|4|]
+  Uni<Long> personId = client
+    .preparedQuery("INSERT INTO people (name, age) VALUES ($1, $2) RETURNING id")
+    .execute(Tuple.of(name, age))
+    .onItem().transform(pgRowSet -> pgRowSet.iterator().next().getLong("id"));
+}
+```
+
+Note:
+Explain that we retrieve back the generated Id from the database.
+
+
+## Listen & Notify
+
+One of the cool features of Postgres is to `Listen` to channels. As part of transactions you can notify channels, for example to alert consumers that are waiting for event.
+
+Note:
+This lends itself very well for reactive programming: keep a connection open to Postgres, have a stream of subscriptions/unsubscribes going there, and a stream of notifications coming back.
+
+
+
+
+## Listen & Notify
+
+```java
+@Path("/listen/{channel}")
+@GET
+@Produces(MediaType.SERVER_SENT_EVENTS)
+@RestSseElementType(MediaType.APPLICATION_JSON)
+public Multi<JsonObject> listen(@PathParam("channel") String channel) {
+  return client.getConnection()
+    .onItem().transformToMulti(connection -> {
+      Multi<PgNotification> notifications = Multi.createFrom().
+        emitter(c -> toPgConnection(connection).notificationHandler(c::emit));
+      return connection.query("LISTEN " + channel).execute().onItem().transformToMulti(__ -> notifications);
+    }).map(PgNotification::toJson);
+}
+```
+
+```java
+@Path("/notify/{channel}")
+@POST
+@Produces(MediaType.TEXT_PLAIN)
+@Consumes(MediaType.WILDCARD)
+public Uni<String> notif(@PathParam("channel") String channel, String stuff) {
+    return client.preparedQuery("NOTIFY " + channel +  ", $$" + stuff + "$$").execute()
+            .map(rs -> "Posted to " + channel + " channel");
+}
+```
+
+Note:
+First image shows `LISTEN`, we start listening to a Postgres _channel_. Every notification for that channel ends up in the Multi, so will be observed by someone who connects to the SSE endpoint.
+
+Of course, like this we make a new connection per customer that connects. Ask the audience; what could we do to make this better? Answer: broadcast.
+
+Second image shows how we `NOTIFY`
+
+
+## Listen & Notify
+
+```shell
+➜ http localhost:8082/db/listen/milkshakes --stream
+HTTP/1.1 200 OK
+Content-Type: text/event-stream
+X-SSE-Content-Type: application/json
+transfer-encoding: chunked
+
+data:{"channel":"milkshakes","payload":"{\"flavour\": \"banana\"}","processId":57}
+
+data:{"channel":"milkshakes","payload":"{\"flavour\": \"strawberry\"}","processId":58}
+```
+
+```shell
+➜ http POST localhost:8082/db/notify/milkshakes flavour=banana
+HTTP/1.1 200 OK
+Content-Type: text/plain
+content-length: 28
+
+Posted to milkshakes channel
+
+➜ http POST localhost:8082/db/notify/milkshakes flavour=strawberry
+HTTP/1.1 200 OK
+Content-Type: text/plain
+content-length: 28
+
+Posted to milkshakes channel
+```
+
+Note:
+First screenshot show connecting to the RESTful SSE 'listen' endpoint with path param 'milkshakes'. 
+
+Second screenshot shows posting messages to the 'notify' endpoint with path param 'milkshakes' and a request body.
+
+In the first screenshot you see those come in.
+
+TODO, maybe prepare a little demo for this?
 
 
 ## What's looming on the horizon?
