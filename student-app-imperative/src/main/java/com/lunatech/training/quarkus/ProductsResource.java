@@ -1,7 +1,9 @@
 package com.lunatech.training.quarkus;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.quarkus.panache.common.Sort;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -10,6 +12,9 @@ import java.util.List;
 
 @Path("/products")
 public class ProductsResource {
+
+    @Inject
+    private MeterRegistry registry;
 
     @GET
     public List<Product> allProducts() {
@@ -34,7 +39,8 @@ public class ProductsResource {
     public List<Product> productDetails(
             @QueryParam("query") String query,
             @QueryParam("page") @DefaultValue("0") Integer page) {
-        return Product.search(query, page, 3);
+        return registry.timer("product_search_duration_seconds").record(() ->
+            Product.search(query, page, 3));
     }
 
 
