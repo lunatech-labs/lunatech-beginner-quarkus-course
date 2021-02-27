@@ -5,10 +5,14 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
+
+import { ThemeProvider } from '@material-ui/core/styles'
 import SearchResult from "./SearchResult";
 import Catalogue from "./Catalogue";
 import ProductDetails from "./ProductDetails";
-import Navbar from "./Navbar";
+import Navbar from "./view/Navbar";
+
+import theme from './config/theme'
 
 class App extends React.Component {
 
@@ -45,27 +49,28 @@ class App extends React.Component {
     render() {
       if(this.state.isLoaded) {
           const featureFlags = this.state.featureFlags;
-          return (<Router>
-              <div class="container">
-                  <Navbar featureFlags={featureFlags}/>
-                  <Switch>
-                      <Route
-                          path="/search/:query"
-                          render={(props) =>
-                              (<SearchResult {...props} featureFlags={featureFlags} />)} />
+          return (
+              <ThemeProvider theme={theme}>
+                  <Router>
+                      <Navbar featureFlags={featureFlags} />
+                      <Switch>
+                          <Route
+                              path="/search/:query"
+                              render={(props) =>
+                                  (<SearchResult {...props} featureFlags={featureFlags} />)} />
 
-                      <Route
-                          path="/products/:id"
-                          render={(props) =>
-                              (<ProductDetails {...props} featureFlags={featureFlags} />)} />
+                          <Route
+                              path="/products/:id"
+                              render={(props) =>
+                                  (<ProductDetails {...props} featureFlags={featureFlags} />)} />
 
-                      <Route
-                          render={props =>
-                              (<Catalogue {...props} featureFlags={featureFlags} />)} />
-
-                  </Switch>
-              </div>
-          </Router>);
+                          <Route
+                              render={props =>
+                                  (<Catalogue {...props} featureFlags={featureFlags} />)} />
+                      </Switch>
+                  </Router>
+              </ThemeProvider>
+          )
       } else {
           return "Loading..."; // TODO, make a bit prettier!
       }
