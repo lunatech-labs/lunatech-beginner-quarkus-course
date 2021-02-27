@@ -2,6 +2,7 @@ package com.lunatech.training.quarkus;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.quarkus.panache.common.Sort;
+import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -12,6 +13,8 @@ import java.util.List;
 
 @Path("/products")
 public class ProductsResource {
+
+    private static final Logger LOGGER = Logger.getLogger(ProductsResource.class);
 
     @Inject
     private MeterRegistry registry;
@@ -39,6 +42,8 @@ public class ProductsResource {
     public List<Product> productDetails(
             @QueryParam("query") String query,
             @QueryParam("page") @DefaultValue("0") Integer page) {
+        LOGGER.info("Searching for products matching '" + query + "'");
+
         return registry.timer("product_search_duration_seconds").record(() ->
             Product.search(query, page, 3));
     }
