@@ -1,6 +1,126 @@
 # Getting Started
 
 
+## Learning outcomes
+
+After this module, you should:
+* Understand the Quarkus philosophy and its motivations
+* Witness how to generate a new Quarkus project from the Quarkus website
+* Know how to run Quarkus from the terminal with the Maven wrapper script
+* Know how to access the Dev UI
+
+
+## Why Quarkus exists
+
+> _Supersonic Subatomic Java ..._
+> _A Kubernetes Native Java stack..._
+> _crafted from the best of breed Java libraries and standards._
+
+https://quarkus.io/
+
+Note:
+This is the tagline from the Quarkus homepage
+
+
+## Why Quarkus exists
+
+* *Java for the cloud-native age*
+* Unifies Imperative & Reactive paradigms
+* Developer Joy
+
+Note:
+This is where we can explain the Supersonic (fast startups) Subatomic (small memory footprint) tagline that encapsulates the "cloud-native" aims of Quarkus.
+
+Contrast this with historical context of Enterprise Java frameworks that could accept slow startups and large memory footprint for applications that are meant to be long-lived and go through a "warm-up" phase before being optimised.
+
+
+## Why Quarkus exists
+
+* Java for the cloud-native age
+* *Unifies Imperative & Reactive paradigms*
+* Developer Joy
+
+Note:
+Can mention here that these two themes will be covered over the two days of the training course
+
+
+## Why Quarkus exists
+
+* Java for the cloud-native age
+* Unifies Imperative & Reactive paradigms
+* *Developer Joy*
+
+Note:
+At this slide, we explain _developer joy_ only:
+* Zero config (note there is no config file yet in this hello world app!). Show the config of the Dev UI, so people see how easy it is to lookup all possible configuration options.
+* Live reload (already shown)
+* Standards (Jax-RS in this example)
+* Unified config (we'll see this later, everything in one config file)
+* Streamlined code (a lot of stuff works out of the box, but you can fall back to full framework capabilitis when needed)
+* No hassle native executable generation (show the results, and run the native image. Highlight startup time!)
+
+Explain that in the coming two days, we will dive deeper into each of these to fully grasp what they mean and why they are important.
+
+
+## Based on standards, inspired by best practice
+* Quarkus and many extensions are based on industry standards like Jakarta EE and MicroProfile
+* Quarkus itself is built on a best-of-breed reactive framework Vert.x
+* Quarkus inspired by developer experience of other frameworks like Spring Boot and Play Java
+    * Quarkus even has a _Spring Compatibility_ extension
+
+
+<!-- .slide: data-visibility="hidden" -->
+## Quarkus & Spring
+
+Quarkus has _Spring Compatiblity_ extensions; the annotations for several popular Spring components can be used in Quarkus.
+
+Primarily useful for porting existing Spring applications.
+
+Note:
+Discuss some of the limitations; like that Quarkus still requires beans to be resolved compile-time, so you can't use
+`@Conditional` for example.
+
+
+<!-- .slide: data-visibility="hidden" -->
+## Quarkus and Microprofile
+
+Eclipse Microprofile is a set of APIs that can be implemented by vendors:
+
+* CDI
+* JSON-B
+* JAX-RS
+* Config
+* Health
+* Context Propagation
+* OpenAPI
+* OpenTracing
+* Fault Tolerance
+* Metrics
+* ... and more
+
+Quarkus has many extensions that implement these APIs (among others!)
+
+Note:
+* Some of these APIs are just Jakarta EE APIs. Others are Microprofile specific.
+* Both Microprofile and Jakarta EE now fall under the Eclipse foundation. Further integration between the
+two seems likely.
+
+
+<!-- .slide: data-visibility="hidden" -->
+## Quarkus and Microprofile
+
+* Typically, Quarkus uses the _[SmallRye](https://smallrye.io/)_ implementation of these APIs
+* SmallRye is a RedHat project, and is also used by WildFly, Thorntail and Open Liberty.
+
+
+<!-- .slide: data-visibility="hidden" -->
+## Quarkus and Vert.x
+
+Quarkus is built on top of Vert.x, so many Vert.x APIs and types are also available in Quarkus.
+
+For example, the `quarkus-routes` extension provides Vert.x annotations for creating HTTP endpoints.
+
+
 ## Hello World Demo
 
 Note:
@@ -14,25 +134,6 @@ Demo the following:
 * Fix the error, show people that no restart is needed
 * Show the Dev UI
 * Start the generation of the native executable! (Already, because it takes time!)
-
-
-## Why Quarkus exists
-
-* *Developer Joy*
-* Supersonic Subatomic
-* Unifies Imperative & Reactive
-* Best of breed libraries and frameworks
-
-Note:
-At this slide, we explain _developer joy_ only:
-* Zero config (note there is no config file yet in this hello world app!). Show the config of the Dev UI, so people see how easy it is to lookup all possible configuration options.
-* Live reload (already shown)
-* Standards (Jax-RS in this example)
-* Unified config (we'll see this later, everything in one config file)
-* Streamlined code (a lot of stuff works out of the box, but you can fall back to full framework capabilitis when needed)
-* No hassle native executable generation (show the results, and run the native image. Highlight startup time!)
-
-Explain that in the coming two days, we will dive deeper into each of these to fully grasp what they mean and why they are important.
 
 
 ## Hello World in Quarkus
@@ -70,12 +171,18 @@ JAX-RS is a Jakarta EE API spec. It contains annotations such as:
 
 So, a standard way of describing RESTful web services
 
+Note:
+Might want to keep handy a couple links:
+* [Quarkus Cheat Sheet JAX-RS section](https://lordofthejars.github.io/quarkus-cheat-sheet/#_jax_rs)
+* [Another JAX-RS Cheat Sheet](http://www.mastertheboss.com/jboss-frameworks/resteasy/jax-rs-cheatsheet)
+
 
 ## JAX-RS & RESTeasy
 
 RESTeasy is the Red Hat _implementation_ of the JAX-RS standard. It's what Quarkus uses to provide web services.
 
 
+<!-- .slide: data-visibility="hidden" -->
 ## Hello World in Quarkus with Spring compatiblity
 
 Or use the Quarkus extension for Spring Web API:
@@ -98,167 +205,6 @@ public class HelloResourceSpring {
 ```
 
 
-## Quarkus & Spring
-
-Quarkus has _Spring Compatiblity_ extensions; the annotations for several popular Spring components can be used in Quarkus.
-
-Primarily useful for porting existing Spring applications.
-
-Note:
-Discuss some of the limitations; like that Quarkus still requires beans to be resolved compile-time, so you can't use
-`@Conditional` for example.
-
-
-## Quarkus and Microprofile 
-
-TODO: Move this to a place *after* we actually use a Microprofile API in the code.
-
-Eclipse Microprofile is a set of APIs that can be implemented by vendors:
-
-* CDI
-* JSON-B
-* JAX-RS
-* Config  
-* Health
-* Context Propagation
-* OpenAPI
-* OpenTracing
-* Fault Tolerance
-* Metrics
-* ... and more
-
-Quarkus implements these APIs (among others!) and is thus a runtime for Microprofile applications.
-
-Note:
-* Some of these APIs are just Jakarta EE APIs. Others are Microprofile specific.
-* Both Microprofile and Jakarta EE now fall under the Eclipse foundation. Further integration between the 
-two seems likely.
-
-
-## Quarkus and Microprofile
-
-Typically, Quarkus uses the _SmallRye_ implementation of these APIs. SmallRye is a RedHat project, and is also used by 
-WildFly, Thorntail and Open Liberty. 
-
-
-## Quarkus and Vert.x
-
-Quarkus is built on top of Vert.x, so many Vert.x APIs and types are also available in Quarkus. 
-
-For example, the `quarkus-routes` extension provides Vert.x annotations for creating HTTP endpoints.
-
-
-## Automatic JSON serialization
-
-Given a class `Greet`:
-
-```java
-public class Greet {
-
-    public final String subject;
-    public final String greet;
-
-    public Greet(String subject, String greet) {
-        this.subject = subject;
-        this.greet = greet;
-    }
-
-}
-```
-
-
-## Automatic JSON serialization
-
-Quarkus and RESTeasy can automatically serialize it to JSON, if you tell it to produce JSON:
-
-```java
-@Path("hello-json")
-public class HelloJsonResource {
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Greet hello() {
-        return new Greet("world", "Hello");
-    }
-
-}
-```
-
-This returns:
-
-```json
-{
-  "subject": "world",
-  "greet": "Hello"
-}
-```
-
-
-## Automatic JSON serialization with Jackson
-
-We can use Jackson annotations to change how the JSON is generated:
-
-```java [|1,7]|]
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class Greet {
-
-    public final String subject;
-
-    @JsonProperty("TheGreeting")
-    public final String greet;
-
-    public Greet(String subject, String greet) {
-        this.subject = subject;
-        this.greet = greet;
-    }
-
-}
-```
-
-Now we get the following output:
-
-```json
-{
-  "subject": "world",
-  "TheGreeting": "Hello"
-}
-```
-
-Note: Jackson annotation to control JSON output
-
-
-## Alternatives
-
-But Quarkus isn't tied to Jackson! This just happens to use Jackson, because we have the extension 
-`quarkus-resteasy-jackson` installed. But if we prefer JSON-B instead (part of Microprofile!), we can use
-the `quarkus-resteasy-jsonb` extension. And then we can use JSON-B annotations:
-
-```java
-import javax.json.bind.annotation.JsonbProperty;
-
-public class Greet {
-
-    @JsonbProperty("sayWho")
-    public final String subject;
-
-    public final String greet;
-
-    public Greet(String subject, String greet) {
-        this.subject = subject;
-        this.greet = greet;
-    }
-
-}
-```
-
-
-## Alternatives
-
-We can also have both extensions installed. Quarkus will pick the right serialization framework based on the annotations
-that are used by the class.
-
-
 ## Exercise #1: Hello World
 
 * Generate a new Quarkus app on the Quarkus website
@@ -266,13 +212,12 @@ that are used by the class.
 * Create an endpoint on the `/hello` path that returns 'Hello World'
 * Run it
 * Browse to http://localhost:8080/hello and observer your message :)
-
-Extra:
 * Add a query parameter that let's you greet a different subject than 'world'
 
 
 ## Conclusion
 
-// TODO, say something about that Quarkus typically has multiple ways of getting something done, you can pick your API
-// Getting started is easy
-// It's about four things (see above)
+In this module we have:
+* Discussed the philosophy of Quarkus
+* Set up the base project for the rest of the training
+* Experienced some of the Developer Joy that Quarkus aims to spark
