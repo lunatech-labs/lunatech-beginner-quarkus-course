@@ -9,6 +9,7 @@ Lunatech's beginner Quarkus training course aimed at developers who may or may n
 The `slides` directory contain the reveal.js slides with the course material. Run it with:
 
     npm install
+    npm run build
     npm start
 
 and then browse to `http://localhost:8000/`
