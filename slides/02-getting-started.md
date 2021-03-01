@@ -213,7 +213,8 @@ public class HelloResourceSpring {
 ```
 
 
-## Exercise #1: Hello World
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Hello World
 
 * Generate a new Quarkus app on the Quarkus website
 * Download it, import it in your IDE

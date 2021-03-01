@@ -1,6 +1,12 @@
 # Non Functional Features
 
 
+## Learning outcomes
+
+After this module, you should:
+* ...
+
+
 ## Monitoring
 * Task of / tools for observing our application over a period of time
     * Observing overall status and measuring behaviour
@@ -52,9 +58,17 @@ Note:
 * Can configure to trace JDBC requests and Kafka message deliver
 
 
-## Caching
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Stretch goal exercise on Observability
 
 // TODO, introduce the HTTP client and caching using some external FX service
 
 
 ## Security
+
+
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Stretch goal exercise on Security
+
+
+## Recap

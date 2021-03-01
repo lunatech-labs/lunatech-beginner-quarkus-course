@@ -1,6 +1,12 @@
 # Reactive Programming
 
 
+## Learning outcomes
+
+After this module, you should:
+* ...
+
+
 ## Execution Model
 
 When using the standard *imperative* RESTEasy, Quarkus creates as many `executor` threads as needed, up to the configured maximum:
@@ -277,7 +283,8 @@ Note:
 This demonstrates asynchronous 'waiting'. No thread is blocked here. The initial part of the computation is performed on the Vert.x IO thread. The `delayIt` method doesn't block, just returns a `Uni` that completes after the specified time. Continued work with that `Uni` is not performed by an IO Thread.
 
 
-## Exercise
+<!-- .slide: data-background="#abcdef" -->
+## Exercise:
 
 TODO, rework some stuff into reactive
 
@@ -1098,3 +1105,6 @@ Other strategies, that mutiny currently doesn't have built in yet:
 - Conflating items (combining them)
 
 If you want more advanced features, take a look at more advanced reactive streams libraries, like RxJava or Akka Streams.
+
+
+## Recap
