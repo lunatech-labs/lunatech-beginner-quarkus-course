@@ -1,6 +1,20 @@
 import React from "react";
+import LoadingCircular from "./view/LoadingCircular";
+import {Container, Grid, withStyles} from "@material-ui/core";
+import ProductCard from "./view/ProductCard";
+
+const styles=  (theme) => ({
+    catalogContainer: {
+        flexGrow: 1,
+        marginLeft: '3rem',
+        marginRight: '3rem'
+
+
+    }
+})
 
 class Catalogue extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -54,10 +68,13 @@ class Catalogue extends React.Component {
 
     render() {
         const { error, isLoaded, products } = this.state;
+
+        const { classes } = this.props;
+
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
-            return <div>Loading...</div>;
+            return <LoadingCircular />;
         } else {
             let productLine;
             if (this.props.featureFlags.productDetails) {
@@ -67,21 +84,22 @@ class Catalogue extends React.Component {
             }
 
             return (
-                <div>
+                <Container className={classes.catalogContainer}>
                     <h2>Catalogue</h2>
-                    <ul>
+
+                    <Grid container spacing={3} >
+
                         {products.map(product => (
-                            <li key={product.id}>
-                                <strong>{productLine(product)}</strong>
-                                <p>{product.description}</p>
-                            </li>
+                            <Grid item xs={4} key={product.id} >
+                                <ProductCard data={product}/>
+                            </Grid>
                         ))}
-                    </ul>
-                </div>
+                    </Grid>
+                </Container>
             );
         }
     }
 
 }
 
-export default Catalogue
+export default withStyles(styles) (Catalogue)

@@ -13,6 +13,7 @@ import ProductDetails from "./ProductDetails";
 import Navbar from "./view/Navbar";
 
 import theme from './config/theme'
+import LoadingCircular from "./view/LoadingCircular";
 
 class App extends React.Component {
 
@@ -72,7 +73,7 @@ class App extends React.Component {
               </ThemeProvider>
           )
       } else {
-          return "Loading..."; // TODO, make a bit prettier!
+          return <LoadingCircular />;
       }
     }
 }

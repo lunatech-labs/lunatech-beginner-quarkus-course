@@ -1,5 +1,6 @@
 
 import React from "react";
+import LoadingCircular from "./view/LoadingCircular";
 
 class SearchResult extends React.Component {
     constructor(props) {
@@ -12,7 +13,7 @@ class SearchResult extends React.Component {
     }
 
     componentDidMount() {
-        const { match: { params: { query }} } = this.props;
+        const {match: {params: {query}}} = this.props;
 
         fetch("http://localhost:8080/products/search?query=" + query)
             .then(res => res.json())
@@ -40,7 +41,7 @@ class SearchResult extends React.Component {
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
-            return <div>Loading...</div>;
+            return <LoadingCircular/>;
         } else {
             return (
                 <div>
