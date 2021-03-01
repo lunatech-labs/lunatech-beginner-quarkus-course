@@ -1,6 +1,12 @@
 # Qute
 
 
+## Learning outcomes
+
+After this module, you should:
+* ...
+
+
 ## Qute Template Engine
 
 Quarkus comes with a template engine named *Qute* (**Qu**arkus **te**mplating):
@@ -90,7 +96,8 @@ public TemplateInstance product(@PathParam("productId") long productId) {
 3. Populate the template with data to create a `TemplateInstance`.
 
 
-## Exercise #2: A Qute Hello World
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: A Qute Hello World
 
 Enhance your Hello World application with an HTML template that renders the message.
 
@@ -215,7 +222,8 @@ Now, Qute will render an error:
 // TODO, explain why the 'native' keyword is used in Java
 
 
-## Exercise #3: Qute products, part 1
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Qute products, part 1
 
 Now that we know some Quarkus, and some Qute, we will start on the HIQUÉA catalog!
 
@@ -227,7 +235,8 @@ TODO, tell people how to get the Product class, and how to get some sample produ
 * Use a custom tag for each product in the list
 
 
-## Exercise #3, Qute products, part 2
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Qute products, part 2
 
 Create a 'details' page that shows the details of a product
 
@@ -242,7 +251,7 @@ Create a 'details' page that shows the details of a product
 // TODO, give an example where we use a namespace to inject info about the current request into a template?
 
 
-# Summary
+# Recap
 
 // TODO, explain again why Qute is created
 // TODO, custom tags
