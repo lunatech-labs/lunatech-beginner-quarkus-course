@@ -4,7 +4,10 @@
 ## Learning outcomes
 
 After this module, you should:
-* ...
+* Know how to write a GET endpoint that returns JSON
+* Know how to write a POST endpoint that takes and validates JSON
+* Know how to generate an Open API spec
+* Know how to use @QuarkusTest to write an integration test for RESTful endpoint
 
 
 ## Introduction
@@ -213,3 +216,10 @@ based on the values in this object, the frontend enables or disables certain fea
 
 
 ## Recap
+
+In this module we have:
+* Seen how JSON serialisation works in Quarkus
+* Added a POST endpoint with validation of JSON body
+* Generated an OpenAPI spec and seen how to access Swagger UI
+* Hooked up a React frontend to our HIQUEA application
+* Seen how to pass @ConfigProperty values through our code

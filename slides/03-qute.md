@@ -4,7 +4,9 @@
 ## Learning outcomes
 
 After this module, you should:
-* ...
+* Understand the motivations behind Qute
+* Know how to create and use a simple Qute template
+* Know how to create custom Qute tags and Extension methods
 
 
 ## Qute Template Engine
@@ -253,6 +255,8 @@ Create a 'details' page that shows the details of a product
 
 # Recap
 
-// TODO, explain again why Qute is created
-// TODO, custom tags
-// TODO, include / insert templates
+In this module we have:
+* Discussed why Qute was created and how it compares to other template engines
+* Created a Qute template and used it from a Resource
+* Seen how to create custom tags and extension methods
+* Seen how to create type-safe templates

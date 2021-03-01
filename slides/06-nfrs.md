@@ -4,7 +4,10 @@
 ## Learning outcomes
 
 After this module, you should:
-* ...
+* Understand how to add health checks
+* Understand the different approaches to gathering metrics
+* Understand how to add tracing
+* Know how to add security to a Quarkus app using Keycloak
 
 
 ## Monitoring
@@ -72,3 +75,9 @@ Note:
 
 
 ## Recap
+
+In this module we have:
+* Seen how to add liveness and readiness checks
+* Seen two ways of enabling metrics gathering on our Quarkus app
+* Seen how to enable distributed tracing
+* Seen how to secure our Quarkus app using Keycloak
