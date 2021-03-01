@@ -187,7 +187,3 @@ In the next chapter, we will see a different model that solves this.
 
 // TODO, demonstrate how to use OpenAPI and Swagger
 
-
-## CDI & ArC
-
-// TODO
