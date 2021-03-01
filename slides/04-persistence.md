@@ -1,12 +1,15 @@
 # Persistence
 
-// TODO, and also CDI
 
 
 ## Learning outcomes
 
 After this module, you should:
-* ...
+* Understand the different connectivity options
+* Know how to configure a datasource
+* Know how to use Hibernate+Panache to retrieve and store data
+* Understand where @Transactional annotation can be placed
+* Know how to write tests that include the persistence layer
 
 
 ## Database Connectivity
@@ -53,3 +56,8 @@ TODO
 
 
 ## Recap
+
+In this module we have:
+* Configured a Quarkus datasource to connect to PostgreSQL
+* Added the Hibernate+Panache extension for our persistence layer
+* Seen how to use the @Transactional annotation

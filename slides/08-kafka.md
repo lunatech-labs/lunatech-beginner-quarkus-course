@@ -1,7 +1,10 @@
 # Reactive Messaging
 
 
-Kafka is the Swiss Army Chainsaw of messaging.
+## Learning outcomes
+
+After this module, you should:
+* Understand how Kafka is the Swiss Army Chainsaw of messaging.
 
 
 ## Microprofile Reactive Messaging Spec
@@ -23,7 +26,7 @@ Messages are the items that are produced by and written to Channels. It's a mini
 To acknowledge the message means to tell the producer of the message that we've succesfully processed it, and don't need to retrieve it again.
 
 Note:
-A typical implementation (for example for Kafka) will have a richer class that extends `Message`, like `KafkaRecord`. 
+A typical implementation (for example for Kafka) will have a richer class that extends `Message`, like `KafkaRecord`.
 
 
 ## Internal Channels
@@ -135,7 +138,7 @@ Note:
 ## Failure Strategies
 
 Let's make our consumer crash occasionally:
-```java [|5-7|] 
+```java [|5-7|]
 private int counter = 0;
 
 @Incoming("greets-in")
@@ -169,7 +172,7 @@ This can be useful in scenario's where we don't need to process every message pe
 ## Failure Strategies
 
 Another option:
-    
+
     mp.messaging.incoming.greets-in.failure-strategy=dead-letter-queue
 
 This moves bad messages to a *dead letter queue*, where another system - or human operators - can inspect it, and maybe reschedule it.
@@ -177,7 +180,7 @@ This moves bad messages to a *dead letter queue*, where another system - or huma
 
 ## Commit Strategies
 
-Kafka is an _at-least-once_ delivery system. To indicate to Kafka that you've succesfully processed a message, you *commit* it. This will tell Kafka you don't need to see that particular message again. If you don't commit a message, then in case of a crash and a restart of your application, you will see the same message from Kafka again. 
+Kafka is an _at-least-once_ delivery system. To indicate to Kafka that you've succesfully processed a message, you *commit* it. This will tell Kafka you don't need to see that particular message again. If you don't commit a message, then in case of a crash and a restart of your application, you will see the same message from Kafka again.
 
 SmallRye Reactive Messaging Kafka keeps track of all acknowledgements of messages, and based on that decides when to commit.
 
@@ -206,7 +209,7 @@ Answer: All messages from 4 onwards are reprocessed.
 
 There are three commit strategies available:
 
-* Ignore 
+* Ignore
 * Latest
 * Throttled
 
@@ -223,12 +226,18 @@ When using `throttled`, there's a maximum time the connector waits for an `ack` 
 
 
 
-## 
+##
 
 TODO:
-- Message acknowledgement  
+- Message acknowledgement
 - Message<T> instead of <T>
 - Supporting multiple subscribers (broadcasting)
 - Injecting publisher or multi
 - Dead letter queue
 - Health & Metrics integration
+
+
+## Recap
+
+In this module we have:
+*

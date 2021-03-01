@@ -1108,3 +1108,6 @@ If you want more advanced features, take a look at more advanced reactive stream
 
 
 ## Recap
+
+In this module we have:
+*
