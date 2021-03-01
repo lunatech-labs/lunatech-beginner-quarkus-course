@@ -111,9 +111,9 @@ Discuss some of the limitations; like that Quarkus still requires beans to be re
 
 ## Quarkus and Microprofile 
 
-TODO: Move this to a place *after* we actually use a Microprofile API in the code.
+The JAX-RS API's are part of Eclipse Microprofile (and Jakarta EE!)
 
-Eclipse Microprofile is a set of APIs that can be implemented by vendors:
+Eclipse Microprofile is a set of APIs suitable for Microservices that can be implemented by vendors:
 
 * CDI
 * JSON-B
@@ -146,6 +146,16 @@ WildFly, Thorntail and Open Liberty.
 Quarkus is built on top of Vert.x, so many Vert.x APIs and types are also available in Quarkus. 
 
 For example, the `quarkus-routes` extension provides Vert.x annotations for creating HTTP endpoints.
+
+
+## Quarkus and ...
+
+Quarkus implements many APIs and supports a lot of frameworks. This is part of the Quarkus Philosophy.
+
+Note:
+* Explain to people that they can choose what they like
+* Explain that it's typically a good idea to *not fight quarkus*. Some of the libraries are quite opinionated. If you yourself 
+are also quite opinionated, that might not match well. You can spend a ton of time reconfiguring a framework, for little benefit. _Going with the flow_ is useful. Luckily, you have a choice of libraries to use :)
 
 
 ## Automatic JSON serialization
@@ -230,11 +240,11 @@ Note: Jackson annotation to control JSON output
 
 ## Alternatives
 
-But Quarkus isn't tied to Jackson! This just happens to use Jackson, because we have the extension 
+But as you'd expect by now, Quarkus isn't tied to Jackson! This just happens to use Jackson, because we have the extension 
 `quarkus-resteasy-jackson` installed. But if we prefer JSON-B instead (part of Microprofile!), we can use
 the `quarkus-resteasy-jsonb` extension. And then we can use JSON-B annotations:
 
-```java
+```java [|1,5|]
 import javax.json.bind.annotation.JsonbProperty;
 
 public class Greet {
@@ -258,6 +268,9 @@ public class Greet {
 We can also have both extensions installed. Quarkus will pick the right serialization framework based on the annotations
 that are used by the class.
 
+Note:
+* You can leave it as an exercise to the reader to figure out which one prevails if there are annotations of both.
+
 
 ## Exercise #1: Hello World
 
@@ -271,7 +284,8 @@ Extra:
 * Add a query parameter that let's you greet a different subject than 'world'
 
 
-## Conclusion
+## Recap
+
 
 // TODO, say something about that Quarkus typically has multiple ways of getting something done, you can pick your API
 // Getting started is easy

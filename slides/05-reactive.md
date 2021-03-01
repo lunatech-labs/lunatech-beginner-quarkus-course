@@ -289,7 +289,6 @@ It's a reactive API for Hibernate ORM.
 ## Hibernate going Reactive
 
 * Works with non-blocking database clients. Currently the Vert.x clients for Postgres, MySQL and DB2
-* Returns Mutiny `Uni` and `Multi` types
 * Well-integrated with Quarkus
 * No implicit blocking lazy loading, but explicit asynchronous operations for fetching associations
 
@@ -342,6 +341,19 @@ Pick the right `PgPool`:
 
 Note:
 There are created with a code generator. There are also variants for RxJava 2 and RxJava 3. But when using Quarkus, sticking with the Mutiny variants is certainly your best option. 
+
+
+## Mutiny, Unit & Multi
+
+**Mutiny** is the library for Reactive Programming that Quarkus uses. It's two main types are:
+
+- `Multi<T>` represents a stream of items of type `T`
+- `Uni<T>`, represents a stream of zero or one element of type `T`
+
+Note:
+* Mention that Multi is potentially unbounded
+* Mention that they also support indicating failure.
+* Mention that we *will learn much more about these types in later slides*
 
 
 ## Querying 
@@ -411,7 +423,6 @@ One of the cool features of Postgres is to `Listen` to channels. As part of tran
 
 Note:
 This lends itself very well for reactive programming: keep a connection open to Postgres, have a stream of subscriptions/unsubscribes going there, and a stream of notifications coming back.
-
 
 
 
@@ -603,7 +614,7 @@ So you need to use an *implementation* of the standard, to do meaningful streami
 * Mutiny
 * ... and others
 
-Note: Mutiny is the one that Quarkus uses. It's part of Smallrye.
+Note: Mutiny is the one that Quarkus uses. It's part of Smallrye. We've already used it in the DB section.
 
 But some parts of the Vert.x implementation are also used, since Quarkus uses Vert-x as well.
 
@@ -639,7 +650,6 @@ public Uni<String> helloUni() {
 ```
 
 Note: Again, a `Uni` is like a stream that emits up to one element. But it can also be cancelled or fail.
-
 
 
 ## Mutiny Uni
