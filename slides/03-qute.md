@@ -3,7 +3,7 @@
 
 ## Qute Template Engine
 
-Quarkus comes with a template engine named *qute*:
+Quarkus comes with a template engine named *Qute* (**Qu**arkus **te**mplating):
 
 * Simple syntax
 * Minimized reflection usage
@@ -30,11 +30,11 @@ This is a template rendering the product details:
 ```html
 <html>
   <head>
-    <title>{product.name}</title> 
+    <title>{product.name}</title>
   </head>
   <body>
     <h1>{product.name}</h1>
-    <div>Price: {product.price}</div> 
+    <div>Price: {product.price}</div>
   </body>
 </html>
 ```
@@ -74,12 +74,12 @@ Note:
 ## Qute Usage
 
 ```java [|1-2|6|8|]
-@Inject 
+@Inject
 Template productDetails;
 
 @GET
 @Path("{productId}")
-public TemplateInstance product(@PathParam("productId") long productId) { 
+public TemplateInstance product(@PathParam("productId") long productId) {
   Product product = Product.findById(productId);
   return productDetails.data("product", product);
 }
@@ -115,7 +115,7 @@ How does it work in native mode?
 
 ## Qute Virtual Methods
 
-Qute allows you to call _virtual methods_ on values. They are called _virtual_ because they don't correspond to real methods on the Java value, but to 
+Qute allows you to call _virtual methods_ on values. They are called _virtual_ because they don't correspond to real methods on the Java value, but to
 
 ```html [|1|2-3]
 <p>Name: {name}</p>
@@ -154,7 +154,7 @@ Note:
 * In the last line, we use infix notation
 
 
-## Qute Virtual Methods 
+## Qute Virtual Methods
 
 We can't call _real_ methods with parameters out of the box:
 
@@ -201,21 +201,18 @@ printed `NOT_FOUND`, at run time. We can improve on this, and make Qute generate
 
 
 
-## Type safe templates
+## Type-safe templates
 
 Now, Qute will render an error:
 
 ![Qute error message rendered in the browser](images/qute/qute-error-1.png)
 
 
-
-
+## Type-safe templates
 
 // TODO, explain the two methods of making template type-safe.
 // TODO, demonstrate a typing error in a template and the error Quarkus gives.
 // TODO, explain why the 'native' keyword is used in Java
-
-
 
 
 ## Exercise #3: Qute products, part 1

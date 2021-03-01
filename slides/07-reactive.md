@@ -1,6 +1,81 @@
 # Reactive Programming
 
 
+## Execution Model
+
+When using the standard *imperative* RESTEasy, Quarkus creates as many `executor` threads as needed, up to the configured maximum:
+
+```java [|6|]
+@GET
+@Path("/slow")
+public String slow() throws InterruptedException {
+    String thread = Thread.currentThread().getName();
+    System.out.println("Thread: " + thread);
+    Thread.sleep(1000);
+    return thread;
+}
+```
+
+``` [|1|8|]
+ab -c 50 -n300  http://127.0.0.1:8081/threads/slow
+...
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.7      0       3
+Processing:  1002 1009   6.8   1007    1037
+Waiting:     1002 1009   6.8   1007    1037
+Total:       1002 1010   7.4   1007    1039
+```
+
+The default maximum is `max(200, 8 * nr_of_cores)`
+
+Note:
+What we see here, is that if we execute 50 concurrent requests, they all get executed in parallel.
+
+
+## Execution Model
+
+If we choose a smaller amount of maximum threads:
+
+```quarkus.thread-pool.max-threads=10```
+
+Then running the same `ab` command takes much longer:
+
+``` [|8|]
+ab -c 50 -n300  http://127.0.0.1:8081/threads/slow
+...
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.5      0       2
+Processing:  1020 4679 959.9   5021    5068
+Waiting:     1020 4679 960.0   5020    5068
+Total:       1022 4680 959.5   5021    5070
+```
+
+Note:
+What we see here, is that if we reduce the maximum number of threads, we see that many requests have to wait before being processed.
+
+
+## Execution Model - Blocking Threads
+
+Two types of a thread being held up:
+
+* Doing useful work on the CPU
+* Waiting for somebody else (Database, API call, Disk IO, etc.). This is what we call _blocking_.
+
+Note:
+Explain the following:
+* Doing useful work on the CPU is good. It's what we have it for. If all CPU's are busy doing useful work, we have great utilization of our resources, and we can be happy.
+* Waiting for others is fine, it's a fact of life. But it means we need to be *doing something else* with the CPU.
+
+So suppose we have 4 cores, and 10 threads. If 5 threads are actively computing stuff, and 5 threads are blocked, there's no problem. But if 8 threads are blocked, and only 2 doing useful CPU work, it ís a problem.
+
+That's why Quarkus makes sure there's a royal amount of threads: at least 200 in the default config. So we can have at least 200 concurrent requests.
+
+But there is a limitation: Quarkus can't discriminate between a thread blocked on CPU, and a thread blocked on IO. If all 200 threads are used for CPU, it will cause _thread starvation_: the computation doesn't make much progress, because a thread is scheduled only occasionally.
+
+In the next chapter, we will see a different model that solves this.
+
 ## CPU vs Non-Blocking IO vs Blocking IO
 
 Remember from last section:
@@ -109,7 +184,7 @@ Here we block the eventloop thread for IO. Ask the audience what they expect to 
 See next page for the results
 
 
-## Reactive Execution Model 
+## Reactive Execution Model
 
 ### Bad Example
 
@@ -129,7 +204,7 @@ These results are probably not that reliable.
 Note:
 Ask the audience if they can guess how many IO threads quarkus has out of the box?
 
-Answer: 
+Answer:
 * We run 50 requests concurrently, and you see that the slowest take 3 seconds. This gives us between 17 and 24 threads to get this behaviour.
 * According to the Quarkus docs, it's twice the number of cores.
 * This measurement was done on 6 cores with hyperthreading, so effectively 12 cores and 24 IO threads. We guessed correctly!
@@ -137,7 +212,7 @@ Answer:
 Also note that AB finds the results suspicious :)
 
 
-## Reactive Execution Model 
+## Reactive Execution Model
 
 ### Good Example
 
@@ -157,7 +232,7 @@ Note:
 And remember, of these threads there are very many, and you can safely tie them up in blocking IO.
 
 
-## Reactive Execution Model 
+## Reactive Execution Model
 
 ### Good Example
 
@@ -175,7 +250,7 @@ Total:       1001 1009   4.9   1008    1024
 Back to normal :)
 
 Note:
-Here we see that if we tell quarkus that our method is blocking, it will run it with an executor thread; of which there are many more available. 
+Here we see that if we tell quarkus that our method is blocking, it will run it with an executor thread; of which there are many more available.
 
 
 ## Reactive Execution Model
@@ -220,8 +295,8 @@ This extension is also known as 'Vert.x web'
 ## Reactive Routes
 
 ```java [|1-5|7-10|12-16|]
-@Route(methods = HttpMethod.GET) 
-void hello(RoutingContext rc) { 
+@Route(methods = HttpMethod.GET)
+void hello(RoutingContext rc) {
     rc.response().end("hello");
 }
 
@@ -264,7 +339,7 @@ Example:
 There is **no way** to obtain the `ResultSet` without blocking **a** thread.
 
 Note:
-Remark that you don't necessarily have to block the thread you're working on. Of course you can execute the call on some different thread, and obtain a `CompletionStage` here. But then you have to block that other thread! 
+Remark that you don't necessarily have to block the thread you're working on. Of course you can execute the call on some different thread, and obtain a `CompletionStage` here. But then you have to block that other thread!
 
 Of course it's not a huge problem in most applications, for several reasons:
 - Databases don't like thousands of concurrent queries, so we'd probably queue requests anyway if we have many of them
@@ -283,7 +358,7 @@ Uni<Book> bookUni = session.find(Book.class, book.id);
 bookUni.invoke( book -> System.out.println(book.title + " is a great book!") )
 ```
 
-It's a reactive API for Hibernate ORM. 
+It's a reactive API for Hibernate ORM.
 
 
 ## Hibernate going Reactive
@@ -320,7 +395,7 @@ PoolOptions poolOptions = new PoolOptions()
 PgPool client = PgPool.pool(connectOptions, poolOptions);
 ```
 
-The base object we need is a `PgPool` instance. 
+The base object we need is a `PgPool` instance.
 
 Note:
 ^ Remark that in Quarkus, *of course* we can just configure it in the unified config, so this is not needed.
@@ -340,7 +415,7 @@ Pick the right `PgPool`:
 * `io.vertx.pgclient.PgPoool` uses Vert.x types
 
 Note:
-There are created with a code generator. There are also variants for RxJava 2 and RxJava 3. But when using Quarkus, sticking with the Mutiny variants is certainly your best option. 
+There are created with a code generator. There are also variants for RxJava 2 and RxJava 3. But when using Quarkus, sticking with the Mutiny variants is certainly your best option.
 
 
 ## Mutiny, Unit & Multi
@@ -356,7 +431,7 @@ Note:
 * Mention that we *will learn much more about these types in later slides*
 
 
-## Querying 
+## Querying
 
 Querying returns a `Uni` containing a `RowSet`:
 
@@ -378,7 +453,7 @@ Multi<Person> people = client.query("SELECT name, age FROM people")
 ```
 
 ```java
-static Person fromRow(Row row) { 
+static Person fromRow(Row row) {
   return new Person(row.getString("nam"), row.getInteger("age"));
 }
 ```
@@ -493,7 +568,7 @@ Posted to milkshakes channel
 ```
 
 Note:
-First screenshot show connecting to the RESTful SSE 'listen' endpoint with path param 'milkshakes'. 
+First screenshot show connecting to the RESTful SSE 'listen' endpoint with path param 'milkshakes'.
 
 Second screenshot shows posting messages to the 'notify' endpoint with path param 'milkshakes' and a request body.
 
@@ -525,7 +600,7 @@ Explain a bit about Project Loom:
 - Messages that are consumed from a queue, transformed and put on another queue
 
 <p class="fragment">A fundamental problem of streaming data systems, is to make sure that the <em>consumer</em> of the stream
-can handle the messages that are being sent to it.</p> 
+can handle the messages that are being sent to it.</p>
 
 
 ## Slow consumer
@@ -534,7 +609,7 @@ Suppose you have a system that reads records from a database, transforms them to
 
 *Question:* What happens if you read 1000 records per second, but you can only write 500 per second to files?
 
-Note: 
+Note:
 Answer: memory will fill up, until the system breaks.
 
 
@@ -547,7 +622,7 @@ TODO, draw diagram of slow consumer being overloaded by fast producer
 
 Possible solutions:
 * <!-- .element: class="fragment" -->Have a really fast consumer instead
-* <!-- .element: class="fragment" -->Have a really slow producer  
+* <!-- .element: class="fragment" -->Have a really slow producer
 * <!-- .element: class="fragment" -->Have more memory than your database size
 * <!-- .element: class="fragment" -->Adapt the speed of the producer, based on the capacity of the consumer
 
@@ -562,7 +637,7 @@ That last one is essentially what's called back-pressure. The consumer can indic
 // TODO, draw diagram of a consumer indicating demand.
 
 
-## Back pressure 
+## Back pressure
 
 * Works for the entire stream, not just the consumer at the end
 * Each element can adapt the demand that's sent upstream
@@ -572,7 +647,7 @@ That last one is essentially what's called back-pressure. The consumer can indic
 
 ## Streaming across TCP
 
-* TCP natively supports back-pressure! 
+* TCP natively supports back-pressure!
 * *ack* messages contain a *window* field, indicating how much the sender may send.
 * When the receiver processed data, a new *ack* gets sent, with a bigger window.
 
@@ -588,7 +663,7 @@ So we can make reactive back-pressuring systems across TCP. For example using ch
 
 ## The Reactive Streams standard
 
-Around 2013, engineers from Netflix, Pivotal, Lightbend, Twitter and others were all working on streaming systems, essentially solving the same issues. 
+Around 2013, engineers from Netflix, Pivotal, Lightbend, Twitter and others were all working on streaming systems, essentially solving the same issues.
 
 To make sure their libraries would be interoperable, they came up with the **Reactive Streams** standard.
 
@@ -599,7 +674,7 @@ It's a minimal interface needed to connect streaming libraries, retaining full n
 
 Ended up into the Java Standard Library as of Java 9, under `java.util.concurrent.Flow`.
 
-Note: 
+Note:
 The standard itself is very small, you can't really program against it directly. For example, ther are no `map` or `filter` methods in the standard library.
 
 So you need to use an *implementation* of the standard, to do meaningful streaming work.
@@ -669,7 +744,7 @@ myUni.subscribe().with(System.out::println); // Prints 'Creating the item!' and 
 ```
 
 Note:
-This is different from a `CompletionStage`, which is already running. 
+This is different from a `CompletionStage`, which is already running.
 
 A `Uni` is more a descriptor of an operation.
 
@@ -708,10 +783,10 @@ return Multi.createFrom().items("One", "Two", "Three", "Four", "Five", "Six")
 ```
 
 Note:
-1. There many methods to *create* a Multi: From elements, from iterators, by imperatively pushing them in, from timer ticks. However, most typically as an application builder you won't create your own multi's, but obtain a multi from a library, like a Kafka connector, a Database connector, a web service client, a form upload, and transform that Multi. 
+1. There many methods to *create* a Multi: From elements, from iterators, by imperatively pushing them in, from timer ticks. However, most typically as an application builder you won't create your own multi's, but obtain a multi from a library, like a Kafka connector, a Database connector, a web service client, a form upload, and transform that Multi.
 2. The `map` method. Familiar from streams.
 3. The `filter` method. Familiar from streams.
-4. The `flatMap' method. To flatten nested Multi's. 
+4. The `flatMap' method. To flatten nested Multi's.
 5. Another `map`
 
 There are many more, see the docs. Be aware; Quarkus uses a somewhat outdated Mutiny version sometimes.
@@ -743,7 +818,7 @@ Server-Sent Events is a technology that allows the server to push data to the cl
 
 ## Server-Sent Events
 
-Here's an example of an endpoint that sends a chunk every second, containing the current time: 
+Here's an example of an endpoint that sends a chunk every second, containing the current time:
 
 ```java [|2|3|6-7|8]
 @GET
@@ -868,7 +943,7 @@ Set<Integer> set = out.collect(Collectors.toSet());
 ```
 
 Note:
-Our buffer of 2 creates a demand of 2. When empty, it creates new demand of 2. 
+Our buffer of 2 creates a demand of 2. When empty, it creates new demand of 2.
 
 
 ## Visualising the events
@@ -979,7 +1054,7 @@ A - ⬇️ Received item: 3
 B - ⬇️ Received item: 2
 ```
 
-Note: 
+Note:
 1. We add an `onOverflow.drop()` to drop elements in case there's no demand.
 2. We now see infinite demand in both locations in the stream
 3. Position A sees element 0 and 1, and then position B sees element 0.
@@ -1014,13 +1089,12 @@ A - ⬇️ Received item: 3
 B - ⬇️ Received item: 2
 ```
 
-Note: 
+Note:
 What we see here is that B receives all elements. Obviously, this is up to a point; after a while the buffer is full and the stream will still crash.
 
 Other strategies, that mutiny currently doesn't have built in yet:
 - Sampling
-- Batching  
+- Batching
 - Conflating items (combining them)
 
 If you want more advanced features, take a look at more advanced reactive streams libraries, like RxJava or Akka Streams.
-
