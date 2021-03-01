@@ -221,9 +221,3 @@ The React application has functionality to create and edit products as well!
 
 
 // TODO, demonstrate how to use OpenAPI and Swagger
-
-
-## CDI & ArC
-
-* ArC - Quarkus approach of build-time (instead of runtime) wiring of dependencies
-* Allows to fail fast

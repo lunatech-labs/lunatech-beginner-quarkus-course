@@ -67,6 +67,12 @@ Explain that in the coming two days, we will dive deeper into each of these to f
 * Quarkus itself is built on a best-of-breed reactive framework Vert.x
 * Quarkus inspired by developer experience of other frameworks like Spring Boot and Play Java
     * Quarkus even has a _Spring Compatibility_ extension
+* Quarkus implements many APIs and supports a lot of frameworks. This is part of the Quarkus Philosophy.
+
+Note:
+* Explain to people that they can choose what they like
+* Explain that it's typically a good idea to *not fight quarkus*. Some of the libraries are quite opinionated. If you yourself
+are also quite opinionated, that might not match well. You can spend a ton of time reconfiguring a framework, for little benefit. _Going with the flow_ is useful. Luckily, you have a choice of libraries to use :)
 
 
 <!-- .slide: data-visibility="hidden" -->
@@ -84,7 +90,9 @@ Discuss some of the limitations; like that Quarkus still requires beans to be re
 <!-- .slide: data-visibility="hidden" -->
 ## Quarkus and Microprofile
 
-Eclipse Microprofile is a set of APIs that can be implemented by vendors:
+The JAX-RS API's are part of Eclipse Microprofile (and Jakarta EE!)
+
+Eclipse Microprofile is a set of APIs suitable for Microservices that can be implemented by vendors:
 
 * CDI
 * JSON-B
@@ -215,7 +223,7 @@ public class HelloResourceSpring {
 * Add a query parameter that let's you greet a different subject than 'world'
 
 
-## Conclusion
+## Recap
 
 In this module we have:
 * Discussed the philosophy of Quarkus
