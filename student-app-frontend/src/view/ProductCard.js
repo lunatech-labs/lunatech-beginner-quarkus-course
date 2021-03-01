@@ -7,6 +7,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import EditIcon from "@material-ui/icons/Edit";
+import MoreIcon from "@material-ui/icons/More";
 
 const useStyles = makeStyles({
 	root: {
@@ -46,10 +48,10 @@ export default function ProductCard (props) {
 				</CardContent>
 			</CardActionArea>
 			<CardActions>
-				<Button size="small" color="primary">
+				<Button variant="outlined" endIcon={<EditIcon />} size="small" color="primary">
 					Edit
 				</Button>
-				<Button size="small" color="primary">
+				<Button variant="outlined" size="small" color="primary" disabled={"true"} >
 					Learn More
 				</Button>
 			</CardActions>

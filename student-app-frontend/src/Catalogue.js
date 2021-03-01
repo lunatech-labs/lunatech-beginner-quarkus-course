@@ -1,6 +1,6 @@
 import React from "react";
 import LoadingCircular from "./view/LoadingCircular";
-import {Container, Grid, withStyles} from "@material-ui/core";
+import {Container, Grid, Typography, withStyles} from "@material-ui/core";
 import ProductCard from "./view/ProductCard";
 
 const styles=  (theme) => ({
@@ -85,12 +85,15 @@ class Catalogue extends React.Component {
 
             return (
                 <Container className={classes.catalogContainer}>
-                    <h2>Catalogue</h2>
+
+                    <Typography gutterBottom variant="h3" color={"primary"} >
+                        Catalogue
+                    </Typography>
 
                     <Grid container spacing={3} >
 
-                        {products.map(product => (
-                            <Grid item xs={4} key={product.id} >
+                        { products.map(product => (
+                            <Grid item xs={6} sm={4} md={3} key={product.id} >
                                 <ProductCard data={product}/>
                             </Grid>
                         ))}
