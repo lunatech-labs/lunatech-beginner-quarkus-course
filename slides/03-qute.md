@@ -201,21 +201,18 @@ printed `NOT_FOUND`, at run time. We can improve on this, and make Qute generate
 
 
 
-## Type safe templates
+## Type-safe templates
 
 Now, Qute will render an error:
 
 ![Qute error message rendered in the browser](images/qute/qute-error-1.png)
 
 
-
-
+## Type-safe templates
 
 // TODO, explain the two methods of making template type-safe.
 // TODO, demonstrate a typing error in a template and the error Quarkus gives.
 // TODO, explain why the 'native' keyword is used in Java
-
-
 
 
 ## Exercise #3: Qute products, part 1
