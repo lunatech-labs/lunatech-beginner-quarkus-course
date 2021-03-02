@@ -107,9 +107,6 @@ function Navbar( props ) {
                     <Link className={classes.link}  style={{textDecoration: 'none'}} color="inherit" href="/">
                         Home
                     </Link>
-                    <Link className={classes.link}  style={{textDecoration: 'none'}} color="inherit" href="/">
-                        Add product
-                    </Link>
                 </div>
                 {props.featureFlags.productSearch ?
                     <form className={classes.search}>

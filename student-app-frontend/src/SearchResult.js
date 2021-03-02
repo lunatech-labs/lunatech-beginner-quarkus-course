@@ -15,7 +15,7 @@ class SearchResult extends React.Component {
     componentDidMount() {
         const {match: {params: {query}}} = this.props;
 
-        fetch("http://localhost:8080/products/search?query=" + query)
+        fetch("/products/search?query=" + query)
             .then(res => res.json())
             .then(
                 (result) => {

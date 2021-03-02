@@ -11,7 +11,7 @@ class ProductDetails extends React.Component {
         };
 
         if(props.featureFlags.reactivePrices) {
-            this.eventSource = new EventSource("http://localhost:8080/prices/stream/" + props.match.params.id);
+            this.eventSource = new EventSource("/prices/stream/" + props.match.params.id);
         }
 
     }
@@ -19,7 +19,7 @@ class ProductDetails extends React.Component {
     componentDidMount() {
         const { match: { params } } = this.props;
 
-        fetch("http://localhost:8080/products/" + params.id)
+        fetch("/products/" + params.id)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -53,7 +53,9 @@ class ProductDetails extends React.Component {
     }
 
     componentWillUnmount() {
-        this.eventSource.close()
+        if(this.props.featureFlags.reactivePrices) {
+            this.eventSource.close()
+        }
     }
 
     render() {

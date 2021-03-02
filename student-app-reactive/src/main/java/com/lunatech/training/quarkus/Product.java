@@ -1,20 +1,29 @@
 package com.lunatech.training.quarkus;
 
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;
 import io.vertx.mutiny.sqlclient.Row;
 
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 
-public class Product {
+@Entity
+public class Product extends PanacheEntity {
 
-    public final String name;
-    public final String description;
-    public final BigDecimal price;
+    public String name;
+    public String description;
+    public BigDecimal price;
+
+    public Product() {
+
+    }
 
     public Product(String name, String description, BigDecimal price) {
         this.name = name;
         this.description = description;
         this.price = price;
     }
+
+
 
     public static Product from(Row row) {
         return new Product(

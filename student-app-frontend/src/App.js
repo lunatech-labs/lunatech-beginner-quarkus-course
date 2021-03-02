@@ -24,7 +24,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:8080/feature-flags")
+    fetch("/feature-flags")
         .then(res => res.json())
         .then(
             (result) => {

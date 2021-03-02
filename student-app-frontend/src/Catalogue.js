@@ -23,7 +23,7 @@ class Catalogue extends React.Component {
             products: []
         };
         if(props.featureFlags.reactivePrices) {
-            this.eventSource = new EventSource("http://localhost:8080/prices/stream");
+            this.eventSource = new EventSource("/prices/stream");
         }
 
     }
@@ -41,7 +41,7 @@ class Catalogue extends React.Component {
 
     componentDidMount() {
 
-        fetch("http://localhost:8080/products")
+        fetch("/products")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -69,7 +69,9 @@ class Catalogue extends React.Component {
     }
 
     componentWillUnmount() {
-        this.eventSource.close();
+        if(this.props.featureFlags.reactivePrices) {
+            this.eventSource.close();
+        }
     }
 
 

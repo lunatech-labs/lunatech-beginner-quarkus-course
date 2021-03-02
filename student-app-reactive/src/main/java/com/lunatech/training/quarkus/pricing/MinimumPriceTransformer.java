@@ -1,5 +1,6 @@
 package com.lunatech.training.quarkus.pricing;
 
+import io.smallrye.mutiny.Uni;
 import io.smallrye.reactive.messaging.annotations.Broadcast;
 import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -12,21 +13,21 @@ import java.math.BigDecimal;
 
 @ApplicationScoped
 public class MinimumPriceTransformer {
-    Logger logger = LoggerFactory.getLogger(MinimumPriceTransformer.class);
-
     private static final BigDecimal MINIMUM_PRICE = new BigDecimal(30);
 
     @Incoming("raw-prices-in")
     @Outgoing("prices-out")
-    @Broadcast // TODO, explain this
-    // TODO, figure out batched commits
-    @Acknowledgment(Acknowledgment.Strategy.PRE_PROCESSING) // TODO, explain this in the slides
-    public Price process(Price price) {
-        // TODO, make this crash occasionally, to demonstrate the dead-letter topic.
+    @Broadcast
+    @Acknowledgment(Acknowledgment.Strategy.PRE_PROCESSING)
+    public Uni<Price> process(Price price) {
+        if(price == null) {
+            return Uni.createFrom().nothing();
+        }
+
         if(price.price.compareTo(MINIMUM_PRICE) > 0) {
-            return price;
+            return Uni.createFrom().item(price);
         } else {
-            return new Price(price.productId, price.price.add(MINIMUM_PRICE));
+            return Uni.createFrom().item(new Price(price.productId, price.price.add(MINIMUM_PRICE)));
         }
     }
 
