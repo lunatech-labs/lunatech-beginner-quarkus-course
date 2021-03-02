@@ -219,6 +219,7 @@ In this exercise, we will see how we can create close to no-code CRUD endpoints 
 // TODO (include the TestTransaction feature)
 
 
+
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Hook up the react app
 
@@ -236,6 +237,15 @@ In this exercise we will add a (premade) React frontend to our application. This
   ```
 
 * Run the react app
+
+
+## Validation
+
+TODO: Show validation and making a POST or PUT endopint
+
+
+## Exercise: Create PUT endpoint, enable feature flag and try in the react app
+
 
 
 ## Recap

@@ -123,6 +123,12 @@ Explain every line
 
 ```java
 public static List<Product> findExpensive(){
+    return list(Sort.by("price"));
+}
+```
+
+```java
+public static List<Product> findExpensive(){
     return list("price > ?1", Sort.by("price").descending(), new BigDecimal("100"));
 }
 ```
@@ -331,7 +337,7 @@ Note:
 * Normal scopes: `@ApplicationScoped`, `@RequestScoped`, `@SessionScoped` - Created when a method is invoked.
 * Pseudo scopes: `@Singleton`, `@Dependent` - Created when injected.
 
-Note: 
+Note:
 SessionScoped is only available if `quarkus-undertow` is used. Not very common to use these days, since we prefer stateless apps.
 
 So for the normal scoped beans, a proxy is injected, which instantiates the actual class only when a method is invoked.
@@ -394,6 +400,7 @@ Note:
 * We create an interceptor, and annotate it with the binding annotation
 
 This particular one prints the duration of the method invocation.
+
 
 ## Interceptors
 
