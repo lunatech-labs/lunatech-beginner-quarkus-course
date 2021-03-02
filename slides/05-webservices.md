@@ -148,13 +148,6 @@ public ObjectNode node() {
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Convert endpoints to JSON
 
-In this exercise, we will abandon our Qute templates, and convert our endpoints to returning JSON instead of HTML. Later, we will hook up a React frontend application to these endpoints.
-
-* Remove the `@Injected` templates from the `ProductsResource`
-* Make the `products` and `details` method return a JSON representation of a list of products or a single product, respectively, instead. For this you will need to add an `@Produces` annotation either on the class, or on each of the methods.
-* Update the tests for the list and details endpoint and make them check for the right content-type.
-* Update the test for the details endpoint, and use the Json-path expression `name` to test that the value for the url `/products/1` equals `"Chair"`.
-
 
 ## OpenAPI and Swagger UI
 
@@ -164,79 +157,17 @@ In this exercise, we will abandon our Qute templates, and convert our endpoints 
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Add Open API
 
-Now, we will be adding OpenAPI support and Swagger UI to our application, so we have better visibility into our REST endpoint.
-
-* Add the `quarkus-smallrye-openapi` extension to your application:
-
-```xml
-<dependency>
-    <groupId>io.quarkus</groupId>
-    <artifactId>quarkus-smallrye-openapi</artifactId>
-</dependency>
-```
-
-* Browse to http://localhost:8080/ and observer under `Additional endpoints`, that two new endpoints emerged: /q/openapi and /q/swagger-ui/
-* Browse to http://localhost:8080/q/swagger-ui/. You will see our four endpoints, and you can try them out in the UI. Try sending some requests to them!
-
 
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Adding REST data Panache
-
-In this exercise, we will see how we can create close to no-code CRUD endpoints with the _hibernate-orm-rest-data-panache_ extension.
-
-* Add the following extension to your dependencies:
-
-```xml
-<dependency>
-  <groupId>io.quarkus</groupId>
-  <artifactId>quarkus-hibernate-orm-rest-data-panache</artifactId>
-</dependency>
-```
-
-* Create a new *interface* `PanacheProductsResource` that extends `PanacheEntityResource<Product, Long>`
-* Browse to the Swagger UI endpoint at http://localhost:8080/q/swagger-ui/ and observe the new endpoints that Panache created.
-
-
-<!-- .slide: data-background="#abcdef" -->
-## Exercise: Adding REST data Panache (cont'd)
-
-* Create a new product using Swagger UI, by posting the following JSON to the POST panache-products endpoint:
-
-```json
-{
-  "name": "Couch",
-  "description": "A leather couch",
-  "price": 399
-}
-```
-
-* Check the /panache-products (or your own /products) endpoint to see if you find your newly created couch back.
 
 
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Test your endpoints
 
-// TODO (include the TestTransaction feature)
-
-
 
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Hook up the react app
-
-In this exercise we will add a (premade) React frontend to our application. This frontend application understands some _feature flags_ to enable or disable certain functionality. So first, we will add a backend resource to serve these feature flags to the frontend.
-
-* Create a `/feature-flags` endpoint that serves the following JSON structure.
-  * Make it such that the flags can be configured in the application.properties configuration file:
-
-  ```json
-  {
-			“productDetails”: true,
-			“productSearch”: false,
-			“reactivePrices”: false
-	}
-  ```
-
-* Run the react app
 
 
 ## Validation
@@ -245,7 +176,6 @@ TODO: Show validation and making a POST or PUT endopint
 
 
 ## Exercise: Create PUT endpoint, enable feature flag and try in the react app
-
 
 
 ## Recap

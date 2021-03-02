@@ -52,14 +52,13 @@ For Docker
 
 * Getting started
 * Qute Template Engine
-* Web Services
 * Database access
 
 ### Afternoon
 
-* Logging
-* Testing
+* Web Services
 * OpenAPI
+* Testing
 * Observability
 
 Note:
@@ -76,8 +75,8 @@ Discuss with the group whether they are interested in Qute or not at all. If not
 
 ### Afternoon
 
-* Choice of additional material
-    - GraphQL
+* Reactive programming (cont'd)
+* Additional demo material
     - Serverless with AWS
 
 Note:
@@ -101,4 +100,19 @@ Tell about:
 * Your experience with Quarkus and/or related technologies
 
 
+## About the participants
+
+Note:
+Get each participant to tell about:
+* Name
+* Background
+* Experience with other frameworks
+
+
 ## Practicalities
+
+Note:
+* Give schedule, e.g. 09:30 - 17:30
+    * Say when breaks and lunch will be taken
+* Explain how they get the student app if they haven't got it already
+    * Explain how to find the exercises

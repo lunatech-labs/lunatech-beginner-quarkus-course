@@ -216,23 +216,6 @@ public class HelloResourceSpring {
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Hello World
 
-* Clone or unzip the Student App
-* Import it in your favourite IDE
-* Run the application
-* Browse to http://localhost:8080/
-    * What do you see?
-
-
-<!-- .slide: data-background="#abcdef" -->
-## Exercise: Hello World (cont'd)
-
-* Take a look at the config in http://localhost:8080/q/dev/io.quarkus.quarkus-vertx-http/config
-    * Change the value of `quarkus.log.level` to `DEBUG`.
-    * What happens in the config file `src/main/resources/application.properties`?
-* Create a new `hello` endpoint on the existing `GreetingResource`, with path parameter `subject`
-    * Make it return `Hello` plus the subject
-    * Go to http://localhost:8080/hello/world to see ‘Hello World’
-
 
 ## Recap
 
