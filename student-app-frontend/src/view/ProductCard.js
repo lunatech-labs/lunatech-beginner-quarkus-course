@@ -8,7 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from "@material-ui/icons/Edit";
-import MoreIcon from "@material-ui/icons/More";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles({
 	root: {
@@ -26,7 +26,7 @@ export default function ProductCard (props) {
 
 	return (
 		<Card className={classes.root}>
-			<CardActionArea>
+			<CardActionArea disabled={!props.enabled} href={'#/products/' + props.data.id}>
 				<CardMedia
 					component="img"
 					alt="Contemplative Reptile"
@@ -51,7 +51,7 @@ export default function ProductCard (props) {
 				<Button variant="outlined" endIcon={<EditIcon />} size="small" color="primary">
 					Edit
 				</Button>
-				<Button variant="outlined" size="small" color="primary" disabled={"true"} >
+				<Button variant="outlined" size="small" color="primary" disabled={true} >
 					Learn More
 				</Button>
 			</CardActions>

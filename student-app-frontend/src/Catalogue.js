@@ -6,9 +6,9 @@ import ProductCard from "./view/ProductCard";
 const styles=  (theme) => ({
     catalogContainer: {
         flexGrow: 1,
-        marginLeft: '3rem',
-        marginRight: '3rem'
-
+        marginLeft: '4rem',
+        marginRight: '4rem',
+        marginTop: "2rem"
 
     }
 })
@@ -25,9 +25,22 @@ class Catalogue extends React.Component {
         if(props.featureFlags.reactivePrices) {
             this.eventSource = new EventSource("http://localhost:8080/prices/stream");
         }
+
+    }
+
+    updatePrice(data) {
+        this.setState(prevState => ({
+            products: prevState.products.map((product) => {
+                if (product.id === data.productId) {
+                    product.price = data.price;
+                }
+                return product;
+            })
+        }));
     }
 
     componentDidMount() {
+
         fetch("http://localhost:8080/products")
             .then(res => res.json())
             .then(
@@ -55,16 +68,10 @@ class Catalogue extends React.Component {
         }
     }
 
-    updatePrice(data) {
-        this.setState(prevState => ({
-            products: prevState.products.map((product) => {
-                if (product.id === data.productId) {
-                    product.price = data.price;
-                }
-                return product;
-            })
-        }));
+    componentWillUnmount() {
+        this.eventSource.close();
     }
+
 
     render() {
         const { error, isLoaded, products } = this.state;
@@ -76,13 +83,6 @@ class Catalogue extends React.Component {
         } else if (!isLoaded) {
             return <LoadingCircular />;
         } else {
-            let productLine;
-            if (this.props.featureFlags.productDetails) {
-                productLine = (product) => (<span><a href={'/products/' + product.id}>{product.name}</a> - € {product.price}</span>);
-            } else {
-                productLine = (product) => (<span>{product.name} - € {product.price}</span>);
-            }
-
             return (
                 <Container className={classes.catalogContainer}>
 
@@ -90,11 +90,11 @@ class Catalogue extends React.Component {
                         Catalogue
                     </Typography>
 
-                    <Grid container spacing={3} >
+                    <Grid container spacing={4} >
 
                         { products.map(product => (
-                            <Grid item xs={6} sm={4} md={3} key={product.id} >
-                                <ProductCard data={product}/>
+                            <Grid item xs={6} sm={4} md={3} lg={3} key={product.id} >
+                                <ProductCard data={product} enabled={this.props.featureFlags.productDetails}/>
                             </Grid>
                         ))}
                     </Grid>

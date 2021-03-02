@@ -29,6 +29,13 @@ This is a React app that contains a frontend for the JSON version of the student
     npm install
     npm start
 
+To create the bundle to be included in the quarkus application:
+
+    cd ./student-app-frontend
+    mvn clean package
+    
+This will automatically build the frontend and create a bundle file which afterwards, it will be copied to `student-app-reactive/src/main/resources/META-INF/resources`
+
 Then go to http://localhost:3000/
 
 It's configured to connect to the Quarkus app running on http://localhost:8080/

@@ -1,19 +1,17 @@
 import './App.css';
 import React from "react";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
+    Switch,
+    Route, BrowserRouter, HashRouter,
 } from "react-router-dom";
 
-import { ThemeProvider } from '@material-ui/core/styles'
 import SearchResult from "./SearchResult";
 import Catalogue from "./Catalogue";
 import ProductDetails from "./ProductDetails";
 import Navbar from "./view/Navbar";
 
-import theme from './config/theme'
 import LoadingCircular from "./view/LoadingCircular";
+import {Router} from "@material-ui/icons";
 
 class App extends React.Component {
 
@@ -51,26 +49,24 @@ class App extends React.Component {
       if(this.state.isLoaded) {
           const featureFlags = this.state.featureFlags;
           return (
-              <ThemeProvider theme={theme}>
-                  <Router>
-                      <Navbar featureFlags={featureFlags} />
-                      <Switch>
-                          <Route
-                              path="/search/:query"
-                              render={(props) =>
-                                  (<SearchResult {...props} featureFlags={featureFlags} />)} />
+              <HashRouter basename={"/"}>
+                  <Navbar featureFlags={featureFlags} />
+                  <Switch>
+                      <Route
+                          path="/search/:query"
+                          render={(props) =>
+                              (<SearchResult {...props} featureFlags={featureFlags} />)} />
 
-                          <Route
-                              path="/products/:id"
-                              render={(props) =>
-                                  (<ProductDetails {...props} featureFlags={featureFlags} />)} />
+                      <Route
+                          path="/products/:id"
+                          render={(props) =>
+                              (<ProductDetails {...props} featureFlags={featureFlags} />)} />
 
-                          <Route
-                              render={props =>
-                                  (<Catalogue {...props} featureFlags={featureFlags} />)} />
-                      </Switch>
-                  </Router>
-              </ThemeProvider>
+                      <Route
+                          render={props =>
+                              (<Catalogue {...props} featureFlags={featureFlags} />)} />
+                  </Switch>
+              </HashRouter>
           )
       } else {
           return <LoadingCircular />;

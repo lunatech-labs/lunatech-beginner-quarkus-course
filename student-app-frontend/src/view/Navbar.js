@@ -8,6 +8,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import {Link} from "@material-ui/core";
 import {AvatarMenu} from "./AvatarMenu";
 
+import logo from '../images/logo.png'
+
 const useStyles = makeStyles((theme) => ({
     logo: {
         scale: true,
@@ -19,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: '1rem',
         flexGrow: 1,
         display: 'none',
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('xs')]: {
             display: 'block',
         },
         fontFamily: 'Roboto',
@@ -96,7 +98,7 @@ function Navbar( props ) {
     return (
         <AppBar position="static">
             <Toolbar>
-                <img src={"/logo.png"} alt="logo" className={classes.logo} />
+                <img src={logo} alt="logo" className={classes.logo} />
                 <Typography variant="h3" className={classes.title}>
                     Hiquéa
                 </Typography>
