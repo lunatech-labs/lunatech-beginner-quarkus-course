@@ -19,15 +19,12 @@ public class MinimumPriceTransformer {
     @Outgoing("prices-out")
     @Broadcast
     @Acknowledgment(Acknowledgment.Strategy.PRE_PROCESSING)
-    public Uni<Price> process(Price price) {
-        if(price == null) {
-            return Uni.createFrom().nothing();
-        }
+    public Price process(Price price) {
 
         if(price.price.compareTo(MINIMUM_PRICE) > 0) {
-            return Uni.createFrom().item(price);
+            return price;
         } else {
-            return Uni.createFrom().item(new Price(price.productId, price.price.add(MINIMUM_PRICE)));
+            return new Price(price.productId, price.price.add(MINIMUM_PRICE));
         }
     }
 

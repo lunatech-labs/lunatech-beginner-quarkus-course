@@ -24,7 +24,7 @@ public class PriceResource {
     @Path("/stream")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestSseElementType(MediaType.APPLICATION_JSON)
-    public Publisher<Price> stream() {
+    public Multi<Price> stream() {
         logger.info("SSE consumer connected to /prices/stream");
         return prices;
     }
@@ -33,9 +33,17 @@ public class PriceResource {
     @Path("/stream/{productId}")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestSseElementType(MediaType.APPLICATION_JSON)
-    public Publisher<Price> stream(@PathParam("productId") Long productId) {
+    public Multi<Price> stream(@PathParam("productId") Long productId) {
         logger.info("SSE consumer connected to /prices/stream/" + productId);
         return prices.filter(p -> p.productId.equals(productId));
+    }
+
+    @GET
+    @Path("foo")
+    @Produces(MediaType.SERVER_SENT_EVENTS)
+    @RestSseElementType(MediaType.TEXT_PLAIN)
+    public Multi<String> foo() {
+        return Multi.createFrom().items("foo", "bar", "quux");
     }
 
 }
