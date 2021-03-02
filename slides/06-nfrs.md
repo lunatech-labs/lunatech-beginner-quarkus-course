@@ -64,8 +64,6 @@ Note:
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Stretch goal exercise on Observability
 
-// TODO, introduce the HTTP client and caching using some external FX service
-
 
 ## Security
 
