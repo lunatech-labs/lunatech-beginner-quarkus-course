@@ -1,6 +1,20 @@
 import React from "react";
+import LoadingCircular from "./view/LoadingCircular";
+import {Container, Grid, Typography, withStyles} from "@material-ui/core";
+import ProductCard from "./view/ProductCard";
+
+const styles=  (theme) => ({
+    catalogContainer: {
+        flexGrow: 1,
+        marginLeft: '4rem',
+        marginRight: '4rem',
+        marginTop: "2rem"
+
+    }
+})
 
 class Catalogue extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -11,9 +25,22 @@ class Catalogue extends React.Component {
         if(props.featureFlags.reactivePrices) {
             this.eventSource = new EventSource("http://localhost:8080/prices/stream");
         }
+
+    }
+
+    updatePrice(data) {
+        this.setState(prevState => ({
+            products: prevState.products.map((product) => {
+                if (product.id === data.productId) {
+                    product.price = data.price;
+                }
+                return product;
+            })
+        }));
     }
 
     componentDidMount() {
+
         fetch("http://localhost:8080/products")
             .then(res => res.json())
             .then(
@@ -41,47 +68,41 @@ class Catalogue extends React.Component {
         }
     }
 
-    updatePrice(data) {
-        this.setState(prevState => ({
-            products: prevState.products.map((product) => {
-                if (product.id === data.productId) {
-                    product.price = data.price;
-                }
-                return product;
-            })
-        }));
+    componentWillUnmount() {
+        this.eventSource.close();
     }
+
 
     render() {
         const { error, isLoaded, products } = this.state;
+
+        const { classes } = this.props;
+
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
-            return <div>Loading...</div>;
+            return <LoadingCircular />;
         } else {
-            let productLine;
-            if (this.props.featureFlags.productDetails) {
-                productLine = (product) => (<span><a href={'/products/' + product.id}>{product.name}</a> - € {product.price}</span>);
-            } else {
-                productLine = (product) => (<span>{product.name} - € {product.price}</span>);
-            }
-
             return (
-                <div>
-                    <h2>Catalogue</h2>
-                    <ul>
-                        {products.map(product => (
-                            <li key={product.id}>
-                                <strong>{productLine(product)}</strong>
-                                <p>{product.description}</p>
-                            </li>
+                <Container className={classes.catalogContainer}>
+
+                    <Typography gutterBottom variant="h3" color={"primary"} >
+                        Catalogue
+                    </Typography>
+
+                    <Grid container spacing={4} >
+
+                        { products.map(product => (
+                            <Grid item xs={6} sm={4} md={3} lg={3} key={product.id} >
+                                <ProductCard data={product} enabled={this.props.featureFlags.productDetails}/>
+                            </Grid>
                         ))}
-                    </ul>
-                </div>
+                    </Grid>
+                </Container>
             );
         }
     }
 
 }
 
-export default Catalogue
+export default withStyles(styles) (Catalogue)

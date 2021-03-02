@@ -1,14 +1,17 @@
 import './App.css';
 import React from "react";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
+    Switch,
+    Route, BrowserRouter, HashRouter,
 } from "react-router-dom";
+
 import SearchResult from "./SearchResult";
 import Catalogue from "./Catalogue";
 import ProductDetails from "./ProductDetails";
-import Navbar from "./Navbar";
+import Navbar from "./view/Navbar";
+
+import LoadingCircular from "./view/LoadingCircular";
+import {Router} from "@material-ui/icons";
 
 class App extends React.Component {
 
@@ -45,9 +48,9 @@ class App extends React.Component {
     render() {
       if(this.state.isLoaded) {
           const featureFlags = this.state.featureFlags;
-          return (<Router>
-              <div class="container">
-                  <Navbar featureFlags={featureFlags}/>
+          return (
+              <HashRouter basename={"/"}>
+                  <Navbar featureFlags={featureFlags} />
                   <Switch>
                       <Route
                           path="/search/:query"
@@ -62,12 +65,11 @@ class App extends React.Component {
                       <Route
                           render={props =>
                               (<Catalogue {...props} featureFlags={featureFlags} />)} />
-
                   </Switch>
-              </div>
-          </Router>);
+              </HashRouter>
+          )
       } else {
-          return "Loading..."; // TODO, make a bit prettier!
+          return <LoadingCircular />;
       }
     }
 }
