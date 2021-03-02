@@ -12,6 +12,7 @@ public class InternalChannels {
 
     private static final Faker faker = new Faker();
 
+    /*
     @Outgoing("greet-subjects")
     public Multi<String> greetSubjectsProducer() {
         return Multi.createFrom()
@@ -38,7 +39,7 @@ public class InternalChannels {
 
         System.out.println(greet.greet + " " + greet.subject);
     }
-
+*/
 
 
 

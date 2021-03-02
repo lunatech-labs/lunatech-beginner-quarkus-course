@@ -283,12 +283,6 @@ Note:
 This demonstrates asynchronous 'waiting'. No thread is blocked here. The initial part of the computation is performed on the Vert.x IO thread. The `delayIt` method doesn't block, just returns a `Uni` that completes after the specified time. Continued work with that `Uni` is not performed by an IO Thread.
 
 
-<!-- .slide: data-background="#abcdef" -->
-## Exercise:
-
-TODO, rework some stuff into reactive
-
-
 ## Reactive Routes
 
 An alternative to _RESTEasy Reactive_ is to use the _Reactive Routes_ extension:
@@ -374,18 +368,101 @@ It's a reactive API for Hibernate ORM.
 * Well-integrated with Quarkus
 * No implicit blocking lazy loading, but explicit asynchronous operations for fetching associations
 
-... but we won't be using it in this course :)
-
 Note:
-People should try it, but it's too new to use in the course right now. Instead, we will be using the lower-level libraries directly.
-
 One other thing to mention, the creators _don't expect this to be faster than regular Hibernate ORM_. They don't expect many applications to benefit from it. However, they do expect better degradation under load for some applications, and maybe there will be performancee improvements in the future.
 
 
-## Reactive SQL Clients
+## Hibernate Reactive + Panache
 
-Instead, we will be experimenting with the underlying clients directly.
+* Methods that returned `T` or `List<T>` now return `Uni<T>` and `Uni<List<T>>`
+* New methods `streamXXX` that return a `Multi<T>`
+* Classes live in a new package under `io.quarkus.hibernate.reactive`
 
+
+## Hibernate Reactive + Panache usage
+
+```java
+@GET
+public Multi<Product> products() {
+    return Product.streamAll();
+}
+
+@GET
+@Path("{productId}")
+public Uni<Product> details(@PathParam("productId") Long productId) {
+    return Product.findById(productId);
+}
+```
+
+Note:
+* Here we modified the `products` endpoint to use a `streamXXX` method of Hibernate, to get a `Multi`
+Remark the difference between `Uni<List<T>>` and `Multi<T>`: The `Uni<List<T>>` will get the List into memory, while the Multi is fully streaming.
+
+
+## Mutiny, Unit & Multi
+
+**Mutiny** is the library for Reactive Programming that Quarkus uses. It's two main types are:
+
+- `Multi<T>` represents a stream of items of type `T`
+- `Uni<T>`, represents a stream of zero or one element of type `T`
+
+Note:
+* Mention that Multi is potentially unbounded
+* Mention that they also support indicating failure.
+* Mention that we *will learn much more about these types in later slides*
+* Mention that Hibernate Reactive has two APIs: one using Mutiny types and one using Java Stdlib types: `CompletionStage` and `Publisher`. 
+
+
+## Sessions & Transactions
+
+```java
+session.find(Product.class, id)
+    .call(product -> session.remove(product))
+    .call(() -> session.flush())
+```
+
+Note:
+- The major point to make here is that 'sessions' and 'transactions' aren't bound to threads anymore, but need to be explicitly handled.
+- Of the Hibernate Session, there are also multiple variants available; one for Java standardlib types, and one for Mutiny types!
+- These are examples without Panache, using Hibernate directly
+
+
+## Sessions & Transactions - Example
+
+Good:
+```java
+Uni<Product> product = session.find(Product.class, id)
+    .call(session::remove)
+    .invoke(session::flush)
+```
+
+Bad:
+```java
+Uni<Product> product = session.find(Product.class, id)
+.call(session::remove)
+.invoke(session::flush)
+```
+
+Methods:
+```java
+Uni<T> call(Supplier<Uni<?>> supplier)
+Uni<T> invoke(Runnable callback)
+```
+
+Both methods compile and have the right types, but the `Uni` produces by 
+
+Note:
+* This shows a common mistake. Both of these examples compile, but the second one _will never execute the flush_. 
+
+This is because `call` expects a `Uni`, _and subscribes to it_ when the 'outer' `Uni` (containing the product) is subscribed to, even through the _result_ of the Uni created by Flush is ignored.
+But `invoke` never subscribes to the `Uni` returned by `invoke`.
+
+People familiar with reactive programming will have experienced this before typically!
+
+
+## Low-level Reactive SQL Clients
+
+Another way of connecting to the DB is using the low-level reactive SQL clients.
 ```
 PgConnectOptions connectOptions = new PgConnectOptions()
 .setPort(5432)
@@ -408,7 +485,7 @@ Note:
 ^ Remark that in Quarkus, *of course* we can just configure it in the unified config, so this is not needed.
 
 
-## Reactive SQL Clients
+## Low-level Reactive SQL Clients
 
 ```
 @Inject
@@ -423,19 +500,6 @@ Pick the right `PgPool`:
 
 Note:
 There are created with a code generator. There are also variants for RxJava 2 and RxJava 3. But when using Quarkus, sticking with the Mutiny variants is certainly your best option.
-
-
-## Mutiny, Unit & Multi
-
-**Mutiny** is the library for Reactive Programming that Quarkus uses. It's two main types are:
-
-- `Multi<T>` represents a stream of items of type `T`
-- `Uni<T>`, represents a stream of zero or one element of type `T`
-
-Note:
-* Mention that Multi is potentially unbounded
-* Mention that they also support indicating failure.
-* Mention that we *will learn much more about these types in later slides*
 
 
 ## Querying
