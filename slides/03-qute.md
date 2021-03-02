@@ -101,14 +101,23 @@ public TemplateInstance product(@PathParam("productId") long productId) {
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: A Qute Hello World
 
-Enhance your Hello World application with an HTML template that renders the message.
+In this exercise, we will use the Qute template engine to make our Hello World endpoint a tiny bit nicer.
 
-* Create a file `src/main/resources/....html` // TODO
-* Populate it with some HTML and use an expression `{message}`
-* Inject it into your `Resource` class as a `Template`.
-* Make your `Resource` method return a `TemplateInstance`
-* Create the `TemplateInstance` using the `data` method on the `Template`
-* Observe your wonderful new Hello World :-)
+* Create an HTML file that shows ‘Hello World!’.
+  * You can create one yourself, or copy the example from `materials/exercise-2/greet.html`.
+  * Save it as `src/main/resources/templates/greet.html`.
+* Inject a `io.quarkus.qute.Template` field with name `greet` using a `javax.inject.Inject` annotation.
+  * Quarkus will look for a template with that name, and automatically generate the `Template` object for you!
+
+
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: A Qute Hello World (cont'd)
+
+* Make your hello endpoint return `greet.instance()`
+* Check http://localhost:8080/hello/world to see if it works :)
+* Now, change your template to use an expression ‘subject’ instead of the hardcoded ‘World’
+* Change your resource to supply the subject parameter to the template.
+* Check http://localhost:8080/hello/quarkus to see if it works!
 
 
 ## Qute Template Engine
@@ -227,24 +236,60 @@ Now, Qute will render an error:
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Qute products, part 1
 
-Now that we know some Quarkus, and some Qute, we will start on the HIQUÉA catalog!
+In this exercise, we will start on the HIQUEA catalogue. We will make two pages, a page that lists all products, and a page that shows the details of a product.
 
-You can find some templates you can use in the directory // TODO, or you can come up with your own templates :)
+* Create a class `Product`, with the following public final fields, and a suitable constructor:
+  * `Long id`
+  * `String name`
+  * `String description`
+  * `BigDecimal price`
+* Copy the file `materials/exercise-3/Products.java` into your project.
+* Create a new `ProductsResource`
 
-TODO, tell people how to get the Product class, and how to get some sample products.
 
-* Create an endpoint that lists all products, using Qute
-* Use a custom tag for each product in the list
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Qute products, part 1 (cont'd)
+
+* Create a `products` endpoint, that shows an HTML page with all products (use the products from the `all()` method on the `Products` class).
+  * You can use the HTML from the file `materials/exercise-3/catalogue.html`.
+  * Make sure to replace the following with Qute expressions:
+    * Product names
+    * Path parameters in URLs
+    * Total number of products
+* Create a `products/{productId}` endpoint, that lists the details of a product (use the `getById` method on the `Products` class).
+  * You can use the HTML from the file `materials/exercise-3/details.html`.
+  * Make sure to replace the following with Qute expressions:
+    * Product name (twice)
+    * Product ID
+    * Description
+    * Price
+
+
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Qute products, part 1 (cont'd)
+
+* **Extra**: How would you deal with products that can’t be found?
+* **Extra**: Write a test for both endpoints, testing that they give a `200` response, and contain some strings that should be there.
 
 
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Qute products, part 2
 
-Create a 'details' page that shows the details of a product
+In this exercise, we will use some more Qute features to make some parts of our templates reusable. You will probably need the [Qute Reference Documentation](https://quarkus.io/guides/qute-reference) to figure out how to do these things.
 
-* Use a path parameter for the product identifier
+* Create a file `layout.html`, that contains the <html>, <head> and <body> tags, and which can be used by other templates as a layout, using `{#include}`.
+  * Let the templates for product listing and product details make use of this `layout.html`.
+  * Make sure that both the body content and the content of the <title> tag can be overridden by a template that includes the layout.
 
-// TODO, work out the details
+
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Qute products, part 2 (cont'd)
+
+* Write an extension method `monetary`, such that BigDecimal values can be printed as money, with always to decimal places. So “40” should be printed as “€ 40.00” and “39.95” as “€ 39.95”.
+* Use it in the details template where we display the price of a product.
+  * Tip: You may need to use the `RawString` feature to avoid escaping.
+* Write a _user-defined tag_ that displays a single list item of the products list page. So essentially the <li> tag.
+* **Extra**: How would you make this template type-safe?
 
 
 # Namespaces
