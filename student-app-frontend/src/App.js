@@ -55,7 +55,7 @@ class App extends React.Component {
                       <Route
                           path="/search/:query"
                           render={(props) =>
-                              (<SearchResult {...props} featureFlags={featureFlags} />)} />
+                              (<SearchResult key={props.match.params.query} {...props} featureFlags={featureFlags} />)} />
 
                       <Route
                           path="/products/:id"

@@ -24,7 +24,7 @@ class ProductDetails extends React.Component {
         };
 
         if(props.featureFlags.reactivePrices) {
-            this.eventSource = new EventSource("/prices/stream/" + props.match.params.id);
+            this.eventSource = new EventSource("/prices/" + props.match.params.id);
         }
 
     }
@@ -91,7 +91,7 @@ class ProductDetails extends React.Component {
                       <Typography color={"secondary"} gutterBottom variant="h6" component="h4">Price</Typography>
                       <Typography inline={"true"} align={"left"} color="primary" component="div">${product.price}</Typography>
                       <Typography color={"secondary"} gutterBottom variant="h6" component="h4">Description</Typography>
-                      <Typography inline={"true"} align={"left"} color="primary" component="div">${product.description}</Typography>
+                      <Typography inline={"true"} align={"left"} color="primary" component="div">{product.description}</Typography>
                   </dl>
                 </Container>
             );

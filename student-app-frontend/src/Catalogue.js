@@ -23,7 +23,7 @@ class Catalogue extends React.Component {
             products: []
         };
         if(props.featureFlags.reactivePrices) {
-            this.eventSource = new EventSource("/prices/stream");
+            this.eventSource = new EventSource("/prices");
         }
 
     }
