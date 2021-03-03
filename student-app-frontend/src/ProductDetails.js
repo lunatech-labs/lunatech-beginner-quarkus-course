@@ -1,4 +1,17 @@
 import React from "react";
+import {Container, withStyles} from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import CardMedia from "@material-ui/core/CardMedia";
+
+const styles =  (theme) => ({
+    productContainer: {
+        flexGrow: 1,
+        marginLeft: '4rem',
+        marginRight: '4rem',
+        marginTop: "2rem"
+
+    }
+})
 
 class ProductDetails extends React.Component {
 
@@ -59,6 +72,9 @@ class ProductDetails extends React.Component {
     }
 
     render() {
+
+        const { classes } = this.props;
+
         const { error, isLoaded, product } = this.state;
         if (error) {
             return <div>Error: {error.message}</div>;
@@ -66,18 +82,21 @@ class ProductDetails extends React.Component {
             return <div>Loading...</div>;
         } else {
             return (
-                <div>
-                  <h1>{product.name}</h1>
+                <Container className={classes.productContainer}>
+                    <Typography color={"primary"} gutterBottom variant="h3" component="h2">
+                        {product.name}
+                    </Typography>
+                    <img alt={product.name} src={`https://fakeimg.pl/420x320/ff0000,128/333333,255/?text=${product.name}&font=lobster`} />
                   <dl>
-                      <dt>Price</dt>
-                      <dd>€ {product.price}</dd>
-                      <dt>Description</dt>
-                      <dd>{product.description}</dd>
+                      <Typography color={"secondary"} gutterBottom variant="h6" component="h4">Price</Typography>
+                      <Typography inline={"true"} align={"left"} color="primary" component="div">${product.price}</Typography>
+                      <Typography color={"secondary"} gutterBottom variant="h6" component="h4">Description</Typography>
+                      <Typography inline={"true"} align={"left"} color="primary" component="div">${product.description}</Typography>
                   </dl>
-                </div>
+                </Container>
             );
         }
     }
 }
 
-export default ProductDetails
+export default withStyles(styles) (ProductDetails)

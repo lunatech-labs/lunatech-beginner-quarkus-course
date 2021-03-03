@@ -1,6 +1,18 @@
 
 import React from "react";
 import LoadingCircular from "./view/LoadingCircular";
+import {Container, Grid, Typography, withStyles} from "@material-ui/core";
+import ProductCard from "./view/ProductCard";
+
+const styles=  (theme) => ({
+    catalogContainer: {
+        flexGrow: 1,
+        marginLeft: '4rem',
+        marginRight: '4rem',
+        marginTop: "2rem"
+
+    }
+})
 
 class SearchResult extends React.Component {
     constructor(props) {
@@ -15,7 +27,7 @@ class SearchResult extends React.Component {
     componentDidMount() {
         const {match: {params: {query}}} = this.props;
 
-        fetch("/products/search?query=" + query)
+        fetch("/products/search/" + query)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -37,6 +49,9 @@ class SearchResult extends React.Component {
     }
 
     render() {
+
+        const { classes } = this.props;
+
         const { error, isLoaded, products } = this.state;
         if (error) {
             return <div>Error: {error.message}</div>;
@@ -44,22 +59,25 @@ class SearchResult extends React.Component {
             return <LoadingCircular/>;
         } else {
             return (
-                <div>
-                    <h2>Search</h2>
-                    <ul>
-                        {products.map(product => (
-                            <li key={product.id}>
-                                <strong>
-                                    <a href={'/products/' + product.id}>{product.name}</a> (€ {product.price})</strong>
-                                <p>{product.description}</p>
-                            </li>
+                <Container className={classes.searchContainer}>
+
+                    <Typography gutterBottom variant="h3" color={"primary"} >
+                        Search
+                    </Typography>
+
+                    <Grid container spacing={4} >
+
+                        { products.map(product => (
+                            <Grid item xs={6} sm={4} md={3} lg={3} key={product.id} >
+                                <ProductCard data={product} editEnabled={this.props.featureFlags.productUpdate} enabled={this.props.featureFlags.productDetails}/>
+                            </Grid>
                         ))}
-                    </ul>
-                </div>
+                    </Grid>
+                </Container>
             );
         }
     }
 
 }
 
-export default SearchResult
+export default withStyles(styles) (SearchResult)
