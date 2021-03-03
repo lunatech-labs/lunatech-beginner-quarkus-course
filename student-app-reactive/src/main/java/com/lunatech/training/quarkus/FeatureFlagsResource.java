@@ -19,6 +19,7 @@ public class FeatureFlagsResource {
         node.put("productDetails", true);
         node.put("productSearch", true);
         node.put("reactivePrices", true);
+        node.put("productUpdate", true);
         return node;
     }
 

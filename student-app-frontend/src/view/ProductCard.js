@@ -62,7 +62,8 @@ export default function ProductCard (props) {
 					<Button variant="outlined"
 					        endIcon={<EditIcon />}
 					        size="small"
-					        color="primary" onClick={handleClickOpen}>
+					        color="primary" onClick={handleClickOpen}
+					        disabled={!props.editEnabled}>
 						Edit
 					</Button>
 					<Button variant="outlined" size="small" color="primary" >

@@ -96,7 +96,7 @@ class Catalogue extends React.Component {
 
                         { products.map(product => (
                             <Grid item xs={6} sm={4} md={3} lg={3} key={product.id} >
-                                <ProductCard data={product} enabled={this.props.featureFlags.productDetails}/>
+                                <ProductCard data={product} editEnabled={this.props.featureFlags.productUpdate} enabled={this.props.featureFlags.productDetails}/>
                             </Grid>
                         ))}
                     </Grid>
