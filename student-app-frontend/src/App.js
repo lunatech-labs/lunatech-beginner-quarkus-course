@@ -11,7 +11,7 @@ import ProductDetails from "./ProductDetails";
 import Navbar from "./view/Navbar";
 
 import LoadingCircular from "./view/LoadingCircular";
-import {Router} from "@material-ui/icons";
+
 
 class App extends React.Component {
 
