@@ -2,12 +2,12 @@ import './App.css';
 import React from "react";
 import {
     Switch,
-    Route, BrowserRouter, HashRouter,
+    Route, HashRouter,
 } from "react-router-dom";
 
-import SearchResult from "./SearchResult";
+import SearchResult from "./view/SearchResult";
 import Catalogue from "./Catalogue";
-import ProductDetails from "./ProductDetails";
+import ProductDetails from "./view/ProductDetails";
 import Navbar from "./view/Navbar";
 
 import LoadingCircular from "./view/LoadingCircular";

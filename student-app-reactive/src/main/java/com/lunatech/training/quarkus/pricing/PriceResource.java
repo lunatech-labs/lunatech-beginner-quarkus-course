@@ -21,7 +21,7 @@ public class PriceResource {
     Multi<Price> prices;
 
     @GET
-    @Path("/stream")
+    @Path("")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestSseElementType(MediaType.APPLICATION_JSON)
     public Multi<Price> stream() {
@@ -30,7 +30,7 @@ public class PriceResource {
     }
 
     @GET
-    @Path("/stream/{productId}")
+    @Path("/{productId}")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @RestSseElementType(MediaType.APPLICATION_JSON)
     public Multi<Price> stream(@PathParam("productId") Long productId) {

@@ -1,8 +1,8 @@
 
 import React from "react";
-import LoadingCircular from "./view/LoadingCircular";
+import LoadingCircular from "./LoadingCircular";
 import {Container, Grid, Typography, withStyles} from "@material-ui/core";
-import ProductCard from "./view/ProductCard";
+import ProductCard from "./ProductCard";
 
 const styles=  (theme) => ({
     catalogContainer: {
