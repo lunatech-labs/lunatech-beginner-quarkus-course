@@ -1,23 +1,23 @@
 # Web Services
 
 
-## Learning outcomes
+## Connaissances obtenues
 
-After this module, you should:
-* Know how to write a GET endpoint that returns JSON
-* Know how to write a POST endpoint that takes and validates JSON
-* Know how to generate an Open API spec
-* Know how to use @QuarkusTest to write an integration test for RESTful endpoint
+Après ce module, vous devrez :
+* Savoir écrire un endpoint GET qui retourne un JSON
+* Savoir écrire un endpoint POST qui prend et valide un JSON
+* Savoir comment générer une spécification Open API
+* Savoir comment utiliser `@QuarkusTest` pour écrire un test d'intégration pour les endpoints RESTful
 
 
 ## Introduction
 
-In this chapter we will be updating our Qute endpoints to JSON endpoints, and interact with them using a React frontend.
+Dans ce chapitre, nous allons mettre à jour nos endpoints Qute en endpoints JSON, et interagir avec eux en utilisant un frontend React.
 
 
-## Automatic JSON serialization
+## Sérialisation automatique en JSON
 
-Given a class `Greet`:
+Donnant une classe `Greet`:
 
 ```java
 public class Greet {
@@ -34,9 +34,9 @@ public class Greet {
 ```
 
 
-## Automatic JSON serialization
+## Sérialisation automatique JSON
 
-Quarkus and RESTeasy can automatically serialize it to JSON, if you tell it to produce JSON:
+Quarkus et RESTeasy peuvent automatiquement sérialiser ceci en JSON, si nous lui indiquons de produire du JSON:
 
 ```java
 @Path("hello-json")
@@ -51,7 +51,7 @@ public class HelloJsonResource {
 }
 ```
 
-This returns:
+Le retour:
 
 ```json
 {
@@ -61,9 +61,9 @@ This returns:
 ```
 
 
-## Automatic JSON serialization with Jackson
+## Sérialisation automatique JSON avec Jackson
 
-We can use Jackson annotations to change how the JSON is generated:
+Nous pouvons utiliser les annotations Jackson pour modifier le JSON généré:
 
 ```java [|1,7]|]
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -83,7 +83,7 @@ public class Greet {
 }
 ```
 
-Now we get the following output:
+Maintenant, nous avons ce résultat:
 
 ```json
 {
@@ -92,14 +92,14 @@ Now we get the following output:
 }
 ```
 
-Note: Jackson annotation to control JSON output
+Note:
+Jackson annotation to control JSON output
 
 
 ## Alternatives
 
-But Quarkus isn't tied to Jackson! This just happens to use Jackson, because we have the extension
-`quarkus-resteasy-jackson` installed. But if we prefer JSON-B instead (part of Microprofile!), we can use
-the `quarkus-resteasy-jsonb` extension. And then we can use JSON-B annotations:
+Mais Quarkus n’est pas forcément lié à Jackson! Ici c’est le cas, car nous avons installé l’extension
+`quarkus-resteasy-jackson`. Mais si nous préférons JSON-B à la place (faisant partie de Microprofile!), nous pouvons utiliser l’extension `quarkus-resteasy-jsonb`. Et alors nous pouvons appliquer les annotations JSON-B:
 
 ```java
 import javax.json.bind.annotation.JsonbProperty;
@@ -122,13 +122,12 @@ public class Greet {
 
 ## Alternatives
 
-We can also have both extensions installed. Quarkus will pick the right serialization framework based on the annotations
-that are used by the class.
+Nous pouvons aussi avoir les deux extensions installées. Quarkus choisira l’implémentation du sérialiseur en se basant sur les annotations utilisées dans la classe.
 
 
 ## Jackson JSON object
 
-To return JSON, we can use the Jackson library:
+Afin de retourner du JSON, nous pouvons utiliser la librairie Jackson:
 
 ```java
 @Inject
@@ -145,7 +144,7 @@ public ObjectNode node() {
 
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Convert endpoints to JSON
+## Exercice: Convertir les endpoints en JSON
 
 
 ## OpenAPI and Swagger UI
@@ -162,19 +161,19 @@ Cf. The [Quarkus OpenAPI / Swagger UI Guide](https://quarkus.io/guides/openapi-s
 
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Add Open API
+## Exercice: Ajouter Open API
 
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Adding REST data Panache
+## Exercice: Ajouter REST data Panache
 
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Test your endpoints
+## Exercice: Tester ses endpoints
 
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Hook up the react app
+## Exercice: Hook up the react app
 
 
 ## Validation
@@ -204,14 +203,15 @@ public class Person {
 
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Create PUT endpoint, enable feature flag and try in the react app
+## Exercice: Créer un endpoint PUT, activer le feature-flag et essayer dans l’application react
+
 
 
 ## Recap
 
-In this module we have:
-* Seen how JSON serialisation works in Quarkus
-* Added a POST endpoint with validation of JSON body
-* Generated an OpenAPI spec and seen how to access Swagger UI
-* Hooked up a React frontend to our HIQUEA application
-* Seen how to use Bean Validation for REST endpoint validation
+Au cours de ce module nous avons:
+* Vu comment fonctionne la sérialisation JSON dans Quarkus
+* Ajouté un point d’entrée POST avec la validation du contenu de la requête JSON
+* Généré une spécification OpenAPI et vus comment accéder à l’interface Swagger
+* Câblé un frontal React à notre application HIQUEA
+* Vu comment utiliser la _Bean Validation_ pour valider des requêtes vers nos endpoints REST

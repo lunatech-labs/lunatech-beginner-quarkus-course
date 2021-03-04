@@ -1,23 +1,21 @@
-# Persistence
+# Persistance
 
 
-## Learning outcomes
+## Connaissances obtenues
 
-After this module, you should:
-* Understand the different connectivity options
-* Know how to configure a data source
-* Know how to use Hibernate + Panache to retrieve and store data
-* Understand where `@Transactional` annotation can be placed
+A l’issue de ce module, vous devriez :
+* Comprendre les différentes options de connectivité
+* Savoir configurer une source de données
+* Savoir utiliser Hibernate + Panache pour récupérer et stocker des données
+* Comprendre où l'annotation `@Transactional` peut être placée
 
 
-## Multiple options for persistence layer
+## Multiples options pour la persistance
 
-* Hibernate ORM and JPA
-* Hibernate ORM with Panache
-    * will use for "imperative" part of the course
+* Hibernate ORM et JPA
+* Hibernate ORM avec Panache
 * Reactive SQL
-    * will use for "reactive" part of the course
-* Many NoSQL clients (MongoDB, Redis, Neo4j, Cassandra, etc.)
+* Plusieurs clients NoSQL (MongoDB, Redis, Neo4j, Cassandra, etc.)
 
 Note:
 * Talk about how we can use the de facto approach of Hibernate ORM and JPA if we want to take a more classic approach (using EntityManager and Repository classes).
@@ -27,11 +25,12 @@ Note:
 
 ## Quarkus, Hibernate & Panache
 
-* Quarkus and Hibernate are best buddies.
-* Panache is a layer on top which:
-    * Facilitates Active Record or Repository patterns
-    * ... with many pre-created methods
-    * Can create RESTful endpoints for entities
+* Quarkus et Hibernate sont les meilleurs copains.
+* Panache est une couche qui :
+    * Facilite les _Active Record_ ou _Repository patterns_
+    * ... avec de nombreuses méthodes pré-créées
+    * Peut créer des points d'extrémité RESTful pour les entités
+
 
 Note:
 Remark that Quarkus and Hibernate are both primarily maintained by Red Hat, and a lot of overlapping people.
@@ -56,7 +55,7 @@ Note:
 * Can mention multiple named data sources - https://quarkus.io/guides/datasource#multiple-datasources
 
 
-## Active Record Example
+## Exemple d’un _Active Record_
 
 ```java [|1,2|8-10|12-14|16-18|]
 @Entity
@@ -89,7 +88,7 @@ Note:
 Remark that this is an _Active Record_ example, but that you don't need to like this style. You can also choose a Repository Pattern style, in the next slide.
 
 
-## Repository Example
+## Exemple pour un _Repository_
 
 ```java
 @ApplicationScoped
@@ -115,7 +114,7 @@ Note:
 * Of course you can extend this repository with any methods that you need.
 
 
-## Paging
+## Pagination
 
 ```java [1|1-3|1-5|1-7|1-9|1-11|1-13|1-18|]
 PanacheQuery<Product> activeProducts = Product.find("status", Status.Active);
@@ -142,7 +141,7 @@ Note:
 Explain every line
 
 
-## Sorting
+## Triage
 
 ```java
 public static List<Product> findExpensive(){
@@ -160,7 +159,7 @@ Note:
 * We can sort as well. Be aware of the order here; after the HQL part, first the sorting, and then at the end the parameters for the HQL query.
 
 
-##  Query Projection
+##  Requête de projection
 
 ```java
 @RegisterForReflection
@@ -182,14 +181,14 @@ Note:
 * The 'RegisterForReflection' is needed for native deployment.
 
 
-## Field access rewrite
+## Réécriture de l'accès aux champs
 
-* You can write your Panache Entity with public fields
-* Quarkus will automatically rewrite all access to (generated) getters and setters
-* You can override getters and setters when you want.
+* Vous pouvez écrire vos Entités Panache avec des champs publics
+* Quarkus réécrira automatiquement tous les accès aux getters et setters (générés)
+* Vous pouvez réécrire les getters and setters quand vous le souhaitez.
 
 
-## Field access rewrite example
+## Exemple de réécriture de l'accès aux champs
 
 ```java [|3,7-9|]
 public class Product extends PanacheEntity {
@@ -217,10 +216,10 @@ This is quite like similar functionality in Scala or Kotlin.
 
 ## Transactions
 
-* All persistence-related extensions integrate the Transaction Manager
-* Declarative approach with @Transactional annotation
-* Six transactional types
-    * `REQUIRED` (which is the default)
+* Toutes les extensions liées à la persistance intégrent le _Transaction Manager_
+* Une approache declarative avec l'annotation `@Transactional`
+* Six types de configuration
+    * `REQUIRED` (la valeur par défaut)
     * `REQUIRED_NEW`
     * `MANDATORY`
     * `SUPPORTS`
@@ -228,57 +227,57 @@ This is quite like similar functionality in Scala or Kotlin.
     * `NEVER`
 
 
-## Putting our products in the database
+## Insérer nos produits dans la base de données
 
-For development:
-* `import.sql` in the `src/main/resources` folder
+En mode développement:
+* `import.sql` dans le repertoire `src/main/resources`
 * `quarkus.hibernate-orm.database.generation=drop-and-create`
 
-In production we would use schema migration with [Flyway](https://quarkus.io/guides/flyway)
+En production on utiliserait plutôt la _schema migration_ avec [Flyway](https://quarkus.io/guides/flyway)
 
 Note:
 * Will want to mention that we use 'drop-and-create' for simplicity, but in a real application we would want to use schema migration with Flyway - https://quarkus.io/guides/flyway
 
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Product from the database
+## Exercice : Produit depuis la base de données
 
 
 ## CDI & ArC
 
-CDI is a Jakarta EE and MicroProfile spec for Context & Dependency Injection
+CDI est une spécification de Jakarta EE et MicroProfile pour l'injection de contexte et de dépendance
 
-Quarkus has a partial implementation called *ArC*
+Quarkus possède une implémentation partielle de *ArC*
 
 Note:
 * Remark that ArC is non-compliant, because of the strong build-time focus. Some parts of CDI are essentially impossible to implement at build-time.
 
 
-## ArC - Build Time DI
+## ArC - Temps pour build avec DI (injection de dépendance)
 
-* At compile-time ArC analyzes all classes and dependencies
-* At runtime, ArC just has to read the generated metadata and instantiate classes.
+* Au moment de la compilation, ArC analyse toutes les classes et dépendances
+* Au moment de l'exécution, ArC n'a plus qu'à lire les métadonnées générées et à instancier les classes.
 
 
-## Features
+## Fonctionnalités
 
-* Field, constructor and setter injection
-* @Dependent, @ApplicationScoped, @Singleton, @RequestScoped and @SessionScoped scopes
-* @AroundInvoke, @PostConstruct, @PreDestroy, @AroundConstruct lifecycle callbacks and interceptors
+* Champs, constructeur et setter injection
+* @Dependent, @ApplicationScoped, @Singleton, @RequestScoped et @SessionScoped _scopes_
+* @AroundInvoke, @PostConstruct, @PreDestroy, @AroundConstruct _lifecycle callbacks_ et _interceptors_
 
 
 ## Injection
 
-* Basically what you'd expect
-* Uses `@Inject` annotation
-* All resolved compile time, so no general `@Conditional` like Spring
-* But there is `@IfBuildProperty`
+* En gros, ce à quoi vous vous attendez
+* Utiliser l’annotation `@Inject`
+* Tout est résolu durant la compilation, il n’y a donc pas de `@Conditional` comme avec Spring
+* Mais il y a `@IfBuildProperty`
 
 
-## Scopes
+## Scopes (Portées)
 
-* Normal scopes: `@ApplicationScoped`, `@RequestScoped`, `@SessionScoped` - Created when a method is invoked.
-* Pseudo scopes: `@Singleton`, `@Dependent` - Created when injected.
+* Portées normales: `@ApplicationScoped`, `@RequestScoped`, `@SessionScoped` - Créé lorsqu'une méthode est invoquée.
+* Pseudo-portées: `@Singleton`, `@Dependent` - Créé lorsqu'il est injecté.
 
 Note:
 * SessionScoped is only available if `quarkus-undertow` is used. Not very common to use these days, since we prefer stateless apps.
@@ -304,7 +303,7 @@ public class MyBean {
 
 ## Interceptors
 
-Create an _Interceptor Binding_
+Créer un _Interceptor Binding_
 ```java
 @InterceptorBinding
 @Target({METHOD, TYPE})
@@ -312,7 +311,7 @@ Create an _Interceptor Binding_
 public @interface Timed {}
 ```
 
-and an Interceptor:
+Et un _Interceptor_:
 
 ```java [|1|3|6-17|]
 @Timed
@@ -345,7 +344,7 @@ This particular one prints the duration of the method invocation.
 
 ## Interceptors
 
-Now we can use it on a method:
+Maintenant nous pouvons l’utiliser sur une méthode:
 
 ```java
 @Timed
@@ -354,14 +353,14 @@ public static List<Product> getAll() {
 }
 ```
 
-Alternatively, we could put it on the class, to time all method invocations on the class.
+On pourrait aussi le mettre sur la classe, pour chronométrer toutes les invocations de méthode sur la classe.
 
 
-## Non-standard Features
+## Caractéristiques non standard
 
-* @Inject can be skipped if there's a qualifier annotation like `@ConfigProperty` present
-* No-args constructors can be skipped, and `@Inject` is not needed if there's only one constructor
-* Mark a bean intended to be overridden as `@DefaultBean`
+* @Inject peut être ignoré si une annotation comme `@ConfigProperty` est présente
+* Les constructeurs sans arguments peuvent être ignorés, et `@Inject` n'est pas nécessaire s'il n'y a qu'un seul constructeur
+* Marquer un bean destiné à être réécrit avec `@DefaultBean`
 
 Note:
 - The requirement to have a no-arg constructor for any bean normally comes from CDI. So ArC relaxes this requirement.
@@ -372,10 +371,10 @@ Note:
 ## Exercise: CDI & ArC
 
 
-## Recap
+## Recapitulatif
 
-In this module we have:
-* Configured a Quarkus datasource to connect to PostgreSQL
-* Added the Hibernate+Panache extension for our persistence layer
-* Seen how to use the @Transactional annotation
-* Explored Dependency Injection with CDI and ArC
+Après ce module, vous avez :
+* Configuré une source de données Quarkus pour se connecter à PostgreSQL
+* Ajouté l’extension Hibernate+Panache pour notre couche de persistance
+* Vu comment utiliser l’annotation @Transactional
+* Exploré l'injection de dépendance avec CDI et ArC
