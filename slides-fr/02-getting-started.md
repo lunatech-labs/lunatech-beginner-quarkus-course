@@ -1,20 +1,24 @@
-# Getting Started
+# Démarrage
 
 
-## Learning outcomes
+## Connaissances obtenues
 
-After this module, you should:
-* Understand the Quarkus philosophy and its motivations
-* Witness how to generate a new Quarkus project from the Quarkus website
-* Know how to run Quarkus from the terminal with the Maven wrapper script
-* Know how to access the Dev UI
+A l’issue de ce module, vous devriez :
+* Comprendre la philosophie et les principes fondamentaux de Quarkus
+* Etre capable de générer un nouveau projet Quarkus depuis le site web Quarkus
+* Savoir comment démarrer Quarkus depuis la ligne de commande en utilisant le wrapper Maven
+* Savoir comment accéder à l'interface de développement
 
 
-## Why Quarkus exists
+## Pourquoi Quarkus existe
 
 > _Supersonic Subatomic Java ..._
 > _A Kubernetes Native Java stack..._
 > _crafted from the best of breed Java libraries and standards._
+
+> _Supersonic Subatomic Java ..._
+> _Une stack Java nativement Kubernetes..._
+> _construite à partir de la sélection des meilleures librairies et standards Java._
 
 https://quarkus.io/
 
@@ -22,11 +26,11 @@ Note:
 This is the tagline from the Quarkus homepage
 
 
-## Why Quarkus exists
+## Pourquoi Quarkus existe
 
-* *Java for the cloud-native age*
-* Unifies Imperative & Reactive paradigms
-* Developer Joy
+* *Java à l’ère de l'infonuagique*
+* Unifie les modèles impératif et réactif
+* Satisfaction des développeurs
 
 Note:
 This is where we can explain the Supersonic (fast startups) Subatomic (small memory footprint) tagline that encapsulates the "cloud-native" aims of Quarkus.
@@ -34,21 +38,21 @@ This is where we can explain the Supersonic (fast startups) Subatomic (small mem
 Contrast this with historical context of Enterprise Java frameworks that could accept slow startups and large memory footprint for applications that are meant to be long-lived and go through a "warm-up" phase before being optimised.
 
 
-## Why Quarkus exists
+## Pourquoi Quarkus existe
 
-* Java for the cloud-native age
-* *Unifies Imperative & Reactive paradigms*
-* Developer Joy
+* Java à l’ère de l'infonuagique
+* *Unifie les modèles impératif et réactif*
+* Satisfaction des développeurs
 
 Note:
 Can mention here that these two themes will be covered over the two days of the training course
 
 
-## Why Quarkus exists
+## Pourquoi Quarkus existe
 
-* Java for the cloud-native age
-* Unifies Imperative & Reactive paradigms
-* *Developer Joy*
+* Java à l’ère de l'infonuagique
+* Unifie les modèles impératif et réactif
+* *Satisfaction des développeurs*
 
 Note:
 At this slide, we explain _developer joy_ only:
@@ -62,12 +66,12 @@ At this slide, we explain _developer joy_ only:
 Explain that in the coming two days, we will dive deeper into each of these to fully grasp what they mean and why they are important.
 
 
-## Based on standards, inspired by best practice
-* Quarkus and many extensions are based on industry standards like Jakarta EE and MicroProfile
-* Quarkus itself is built on a best-of-breed reactive framework Vert.x
-* Quarkus inspired by developer experience of other frameworks like Spring Boot and Play Java
-    * Quarkus even has a _Spring Compatibility_ extension
-* Quarkus implements many APIs and supports a lot of frameworks. This is part of the Quarkus Philosophy.
+## Construit sur des standards, inspiré des meilleures pratiques
+* Quarkus et de nombreuses extensions sont bâties sur des standards de l’industrie tels que Jakarta EE et MicroProfile
+* Quarkus lui même est construit sur un des meilleurs frameworks réactifs, Vert.x
+* Quarkus est inspiré par l’expérience développeur d’autres frameworks comme Spring Boot et Play Java
+    * Quarkus possède même une extension de compatibilité avec Spring
+* Quarkus implémente de nombreuses APIs et supporte beaucoup de frameworks. Cela fait partie de la philosophie de Quarkus.
 
 Note:
 * Explain to people that they can choose what they like
@@ -76,11 +80,11 @@ are also quite opinionated, that might not match well. You can spend a ton of ti
 
 
 <!-- .slide: data-visibility="hidden" -->
-## Quarkus & Spring
+## Quarkus et Spring
 
-Quarkus has _Spring Compatiblity_ extensions; the annotations for several popular Spring components can be used in Quarkus.
+Quarkus possède une extension de compatibilité avec Spring, les annotations de plusieurs composants populaires de Spring peuvent être utilisés dans Quarkus.
 
-Primarily useful for porting existing Spring applications.
+L’utilisation principale concerne le portage d’applications Spring existantes.
 
 Note:
 Discuss some of the limitations; like that Quarkus still requires beans to be resolved compile-time, so you can't use
@@ -90,9 +94,9 @@ Discuss some of the limitations; like that Quarkus still requires beans to be re
 <!-- .slide: data-visibility="hidden" -->
 ## Quarkus and Microprofile
 
-The JAX-RS API's are part of Eclipse Microprofile (and Jakarta EE!)
+Les APIs JAX-RS font partie de Eclipse Microprofile (et Jakarta EE!)
 
-Eclipse Microprofile is a set of APIs suitable for Microservices that can be implemented by vendors:
+Eclipse Microprofile est un ensemble d’APIs adaptées aux Microservices et qui peuvent être implémentés par les éditeurs :
 
 * CDI
 * JSON-B
@@ -106,7 +110,7 @@ Eclipse Microprofile is a set of APIs suitable for Microservices that can be imp
 * Metrics
 * ... and more
 
-Quarkus has many extensions that implement these APIs (among others!)
+Quarkus comprend beaucoup d’extensions qui implémentent ces APIs (parmi d’autres!)
 
 Note:
 * Some of these APIs are just Jakarta EE APIs. Others are Microprofile specific.
@@ -115,21 +119,21 @@ two seems likely.
 
 
 <!-- .slide: data-visibility="hidden" -->
-## Quarkus and Microprofile
+## Quarkus et Microprofile
 
-* Typically, Quarkus uses the _[SmallRye](https://smallrye.io/)_ implementation of these APIs
-* SmallRye is a RedHat project, and is also used by WildFly, Thorntail and Open Liberty.
+* De manière générale, Quarkus utilise les implémentation SmallRye de ces APIs
+* SmallRye est un projet RedHat, qui est également utilisé par WildFly, Thorntail et Open Liberty.
 
 
 <!-- .slide: data-visibility="hidden" -->
-## Quarkus and Vert.x
+## Quarkus et Vert.x
 
-Quarkus is built on top of Vert.x, so many Vert.x APIs and types are also available in Quarkus.
+Quarkus est construit au-dessus de Vert.x, donc de nombreuses APIs et types de Vert.x APIs sont également disponibles dans Quarkus.
 
-For example, the `quarkus-routes` extension provides Vert.x annotations for creating HTTP endpoints.
+Par exemple, l’extension quarkus-routes fournit des annotations Vert.x pour déclarer des points d’entrée HTTP.
 
 
-## Hello World Demo
+## Démo Hello World
 
 Note:
 Demo the following:
@@ -147,9 +151,9 @@ Optionally:
 * Start the generation of the native executable! (Already, because it takes time!)
 
 
-## Hello World in Quarkus
+## Hello World en Quarkus
 
-We can use JAX-RS annotations to create a Hello World endpoint:
+Nous pouvons utiliser les annotations JAX-RS pour créer un point d’entrée “Hello World”:
 
 ```java
 package com.lunatech.training.quarkus;
@@ -173,14 +177,14 @@ public class HelloResource {
 
 ## JAX-RS & RESTeasy
 
-JAX-RS is a Jakarta EE API spec. It contains annotations such as:
+JAX-RS est une spécification de Jakarta EE API. Il contient des annotations telles que :
 
 * `@Path`
 * `@GET`, `@PUT`, `@POST`, `@DELETE`, `@HEAD`
 * `@Produces` and `@Consumes`
 * `@PathParam`, `@QueryParam`, `@HeaderParam` and more...
 
-So, a standard way of describing RESTful web services
+En somme, une manière standardisée de définir des web services RESTful
 
 Note:
 Might want to keep handy a couple links:
@@ -190,13 +194,13 @@ Might want to keep handy a couple links:
 
 ## JAX-RS & RESTeasy
 
-RESTeasy is the Red Hat _implementation_ of the JAX-RS standard. It's what Quarkus uses to provide web services.
+RESTeasy est l'implémentation RedHat du standard JAX-RS. C’est ce que Quarkus utilise pour fournir des web services.
 
 
 <!-- .slide: data-visibility="hidden" -->
-## Hello World in Quarkus with Spring compatiblity
+## Hello World en Quarkus avec la compatibilité Spring
 
-Or use the Quarkus extension for Spring Web API:
+Ou utiliser l’extension Quarkus pour Spring Web API:
 
 ```java
 package com.lunatech.training.quarkus;
@@ -217,12 +221,12 @@ public class HelloResourceSpring {
 
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Hello World
+## Exercice: Hello World
 
 
-## Recap
+## Récapitulatif
 
-In this module we have:
-* Discussed the philosophy of Quarkus
-* Set up the base project for the rest of the training
-* Experienced some of the Developer Joy that Quarkus aims to spark
+Dans ce module, nous avons :
+* Discuté de la philosophie de Quarkus
+* Mis en place un projet de base qui sera utilisé pour la suite
+* Découvert la joie des développeurs que Quarkus cherche à déclencher

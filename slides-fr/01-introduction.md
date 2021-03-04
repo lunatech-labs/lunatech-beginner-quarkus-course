@@ -1,97 +1,97 @@
-# Course Overview
+# Aperçu de la formation
 
 
-## Welcome to Lunatech Beginner Quarkus
+## Bienvenue dans Quarkus pour Débutant par Lunatech
 
-In this course you will learn:
+Au cours de cette formation vous apprendrez:
 
- * Quarkus Philosophy
- * Dependency Injection with ArC
- * Quarkus Data Access Layer
- * The Qute Template Engine
- * RESTful API development
- * Reactive Programming
- * Observability
- * Testing
- * ... and a lot of Quarkus tooling and best practices
+* La philosophie Quarkus
+* L’injection de dépendances avec ArC
+* La couche d’accès aux données de Quarkus
+* Le moteur de template Qute
+* Le développement d’APIs RESTful
+* La programmation Réactive
+* La surveillance des applications Quarkus
+* Tester son application
+* ... et de nombreux outils et bonnes pratiques Quarkus
 
 
-## Prerequisites
+## Pré-requis
 
-You should have:
+Vous devez préalablement avoir :
 
-* Knowledge of Java
-* Basic knowledge of the Web and HTTP
+* Connaissance du langage Java
+* Connaissances basiques du Web et de HTTP
 
-Your machine should have:
+Votre machine devrait être installée avec:
 
 * Java 11
 * Docker
-* An IDE of your choice
+* L’IDE de votre choix
 
 Note:
 For instructor-led workshops students should be sent these pre-requisites before the actual course. But we should double-check before starting.
 
-For Java
-* Get participants to run `java -version`
-* If necessary point them to installation pages
+Pour Java
+* Faire lancer aux participants `java -version`
+* Si nécessaire les diriger vers les pages d’installation
     * [Oracle](https://docs.oracle.com/en/java/javase/11/install/overview-jdk-installation.html)
     * [AdoptOpenJDK](https://adoptopenjdk.net/installation.html)
 
-For Docker
-* Get participants to run `docker version` and `docker-compose version`
-* If necessary point them to installation pages
+Pour Docker
+* Faire lancer aux participants `docker version` et `docker-compose version`
+* Si nécessaire les diriger vers les pages d’installation
     * [Mac](https://docs.docker.com/docker-for-mac/install/)
     * [Windows](https://docs.docker.com/docker-for-windows/install/)
     * [Linux](https://docs.docker.com/engine/install/)
 
 
-## Agenda day 1
+## Planning jour 1
 
-### Morning
+### Matin
 
-* Getting started
-* Qute Template Engine
-* Database access
+* Démarrage
+* Moteur de template Qute
+* Accès aux bases de données
 
-### Afternoon
+### Après-midi
 
 * Web Services
 * OpenAPI
-* Testing
+* Test
 
 Note:
 Discuss with the group whether they are interested in Qute or not at all. If not, it can be skipped in favor of having more time at the end for additional material.
 
 
-## Agenda day 2
+## Planning jour 2
 
-### Morning
+### Matin
 
-* Quarkus execution model
-* Reactive programming
-* Reactive messaging
+* Modèle d’exécution de Quarkus
+* Programmation réactive
+* Messagerie réactive
 
-### Afternoon
+### Après-midi
 
-* Reactive programming (cont'd)
-* Optional material (depending on time)
-    * Observability
-    * Serverless with AWS
+* Programmation réactive (suite)
+* Sujets optionnels (si le temps le permet)
+    * Observabilité
+    * Serverless avec AWS
 
 Note:
 Additional material depends on time.
 
 
-## Case Study
+## Etude de cas
 
-We will be doing several exercises that build upon the same domain: a furniture store called HIQUÉA.
+Nous allons réaliser plusieurs exercices construits autour d’un même projet : un magasin de meubles nommé HIQUÉA.
 
 Note:
 TODO: Explain either Course Management Tools, or the way we use vanilla Git to make sure students don't get lost.
 
 
-## About the trainer(s)
+## A propos des formateurs(s)
 
 Note:
 Tell about:
@@ -101,7 +101,7 @@ Tell about:
 * Can mention here Lunatech's experience with Quarkus on production in client projects (e.g. Sloe Central) or our use of it for internal projects (e.g. Timekeeper)
 
 
-## About the participants
+## A propos des participants
 
 Note:
 Get each participant to tell about:
@@ -111,10 +111,10 @@ Get each participant to tell about:
 * Motivation for wanting to learn Quarkus
 
 
-## Practicalities
+## Informations pratiques
 
-* Daily schedule: 09:30 - 17:30
-* [Student GitHub Repo](https://github.com/lunatech-labs/lunatech-beginner-quarkus-course-student-app)
+* Horaires: 09h30 - 17h30
+* [GitHub Repo](https://github.com/lunatech-labs/lunatech-beginner-quarkus-course-student-app)
 
 Note:
 * Give schedule, e.g. 09:30 - 17:30
