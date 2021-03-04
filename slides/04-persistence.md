@@ -8,12 +8,21 @@ After this module, you should:
 * Know how to configure a data source
 * Know how to use Hibernate + Panache to retrieve and store data
 * Understand where `@Transactional` annotation can be placed
-* Know how to write tests that include the persistence layer
 
 
-## Options options options
+## Multiple options for persistence layer
 
+* Hibernate ORM and JPA
+* Hibernate ORM with Panache
+    * will use for "imperative" part of the course
+* Reactive SQL
+    * will use for "reactive" part of the course
+* Many NoSQL clients (MongoDB, Redis, Neo4j, Cassandra, etc.)
 
+Note:
+* Talk about how we can use the de facto approach of Hibernate ORM and JPA if we want to take a more classic approach (using EntityManager and Repository classes).
+* Emphasise that Hibernate + Panache is really about the 90% use-case (all part of the "Developer Joy" philosophy)
+* Mention Panache support for NoSQL data stores like MongoDB
 
 
 ## Quarkus, Hibernate & Panache
@@ -30,7 +39,21 @@ Remark that Quarkus and Hibernate are both primarily maintained by Red Hat, and 
 
 ## Configuring the Data Source
 
-TODO
+* [Agroal](https://agroal.github.io/) is the default datasource connection pooling implementation for configuring with JDBC driver
+* `quarkus.datasource.*` keys in `application.properties`
+
+```
+quarkus.datasource.db-kind=...
+quarkus.datasource.username=...
+quarkus.datasource.password=...
+quarkus.datasource.jdbc.url=...
+```
+
+Note:
+* Cf. https://quarkus.io/guides/datasource
+* We can mention [Agroal](https://agroal.github.io/) as the default datasource connection pooling implementation
+* We can mention the different options for the key quarkus.hibernate-orm.database.generation when configuring the datasource in the 'application.properties' file.
+* Can mention multiple named data sources - https://quarkus.io/guides/datasource#multiple-datasources
 
 
 ## Active Record Example
@@ -192,16 +215,29 @@ This will print the product name in uppercase, because Quarkus rewrites the publ
 This is quite like similar functionality in Scala or Kotlin.
 
 
-## Putting our products in the database
-
-* TODO, show setup SQL script
-* TODO, show docker-compose to setup a database
-
-
 ## Transactions
 
-TODO
+* All persistence-related extensions integrate the Transaction Manager
+* Declarative approach with @Transactional annotation
+* Six transactional types
+    * `REQUIRED` (which is the default)
+    * `REQUIRED_NEW`
+    * `MANDATORY`
+    * `SUPPORTS`
+    * `NOT_SUPPORTED`
+    * `NEVER`
 
+
+## Putting our products in the database
+
+For development:
+* `import.sql` in the `src/main/resources` folder
+* `quarkus.hibernate-orm.database.generation=drop-and-create`
+
+In production we would use schema migration with [Flyway](https://quarkus.io/guides/flyway)
+
+Note:
+* Will want to mention that we use 'drop-and-create' for simplicity, but in a real application we would want to use schema migration with Flyway - https://quarkus.io/guides/flyway
 
 
 <!-- .slide: data-background="#abcdef" -->
@@ -245,11 +281,9 @@ Note:
 * Pseudo scopes: `@Singleton`, `@Dependent` - Created when injected.
 
 Note:
-SessionScoped is only available if `quarkus-undertow` is used. Not very common to use these days, since we prefer stateless apps.
-
-So for the normal scoped beans, a proxy is injected, which instantiates the actual class only when a method is invoked.
-
-Also note: all beans are created lazily! If you need to create a bean eagerly, invoke a method on it, or make it observe the `StartupEvent`
+* SessionScoped is only available if `quarkus-undertow` is used. Not very common to use these days, since we prefer stateless apps.
+* So for the normal scoped beans, a proxy is injected, which instantiates the actual class only when a method is invoked.
+* Also note, all beans are created lazily! If you need to create a bean eagerly, invoke a method on it, or make it observe the `StartupEvent`.
 
 
 ## Lifecycle callbacks
@@ -344,3 +378,4 @@ In this module we have:
 * Configured a Quarkus datasource to connect to PostgreSQL
 * Added the Hibernate+Panache extension for our persistence layer
 * Seen how to use the @Transactional annotation
+* Explored Dependency Injection with CDI and ArC

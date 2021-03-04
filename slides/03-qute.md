@@ -23,6 +23,18 @@ Note:
 * Optionally type-safe: we'll see this in later slides
 * Output can be streamed: Uses HTTP chunking to reduce required memory.
 * Can talk here about what the templates are compiled to, and how this works in native mode
+* IMPORTANT: Need to mention that it is Experimental -- no guarantee of stability until the solution matures. Maybe this is a good transition for discussing Quarkus extensions in general
+
+
+## Detour: Quarkus Extensions
+* Can think of them as project dependencies, but with added dimensions
+  * Build-time augmentation
+* They help third-party libraries integrate more easily into Quarkus applications and build
+* Integrations can more easily target GraalVM
+* Statuses: `Stable`, `Preview`, `Experimental`
+
+Note:
+* Can mention that developers can write their own extensions, although we won't cover that in this course
 
 
 ## Qute Expressions
@@ -60,6 +72,9 @@ You can iterate over collections:
 {/for}
 </ul>
 ```
+
+Note:
+Inside {for} there are values available such as index, hasNext, odd, even, count
 
 
 ## Some Qute operators
@@ -102,10 +117,13 @@ public TemplateInstance product(@PathParam("productId") long productId) {
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: A Qute Hello World
 
+Note:
+* Point out that they can go to the Dev UI and preview the template by passing some JSON
+
 
 ## Qute Virtual Methods
 
-Qute allows you to call _virtual methods_ on values. They are called _virtual_ because they don't correspond to real methods on the Java value, but to
+Qute allows you to call _virtual methods_ on values. They are called _virtual_ because they don't correspond to real methods on the Java value
 
 ```html [|1|2-3]
 <p>Name: {name}</p>
@@ -196,13 +214,6 @@ printed `NOT_FOUND`, at run time. We can improve on this, and make Qute generate
 Now, Qute will render an error:
 
 ![Qute error message rendered in the browser](images/qute/qute-error-1.png)
-
-
-## Type-safe templates
-
-Is there a way to make the templates type-safe?
-
-_(We leave this as a stretch goal in the final exercise of this chapter)_
 
 
 <!-- .slide: data-background="#abcdef" -->

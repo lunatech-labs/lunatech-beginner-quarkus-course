@@ -65,13 +65,6 @@ Note:
 ## Exercise: Stretch goal exercise on Observability
 
 
-## Security
-
-
-<!-- .slide: data-background="#abcdef" -->
-## Exercise: Stretch goal exercise on Security
-
-
 ## Recap
 
 In this module we have:
