@@ -54,15 +54,22 @@ Note:
     * JSON formatting can be enabled through config
 
 
-## Tracing (Optional)
+## Tracing
 * Quarkus Smallrye OpenTracing (implementation of MicroProfile OpenTracing)
 * Uses [Jaeger](https://www.jaegertracing.io/) tracer
 * Trace IDs can be logged via MDC propagation
 * Can configure to trace JDBC requests and Kafka message deliver
 
+Note:
+If needed, here is a possible log configuration to log trace IDs
+
+```
+quarkus.log.console.format=%d{HH:mm:ss} %-5p traceId=%X{traceId}, parentId=%X{parentId}, spanId=%X{spanId}, sampled=%X{sampled} [%c{2.}] (%t) %s%e%n
+```
+
 
 <!-- .slide: data-background="#abcdef" -->
-## Exercise: Stretch goal exercise on Observability
+## Exercise: Observability (Bonus)
 
 
 ## Recap
