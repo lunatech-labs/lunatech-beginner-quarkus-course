@@ -1,2 +1,4 @@
 node_modules
 slides/dist
+slides-fr/dist
+target/
