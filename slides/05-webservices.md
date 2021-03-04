@@ -128,7 +128,6 @@ that are used by the class.
 
 ## Jackson JSON object
 
-
 To return JSON, we can use the Jackson library:
 
 ```java
@@ -151,7 +150,15 @@ public ObjectNode node() {
 
 ## OpenAPI and Swagger UI
 
-// TODO, demonstrate how to use OpenAPI and Swagger
+* Simply add SmallRye OpenAPI extension
+  * This is an implementation of the MicroProfile Open API spec
+* We automatically get `/openapi` and `/swagger-ui`
+* Can enrich the OpenAPI descriptions with more annotations:
+  * `@Operation`, `@APIResponse`, `@Parameter`, `@RequestBody`, `@OpenAPIDefinition`
+* Swagger UI is good for testing API
+
+Note:
+Cf. The [Quarkus OpenAPI / Swagger UI Guide](https://quarkus.io/guides/openapi-swaggerui)
 
 
 <!-- .slide: data-background="#abcdef" -->
@@ -172,9 +179,31 @@ public ObjectNode node() {
 
 ## Validation
 
-TODO: Show validation and making a POST or PUT endopint
+* Bean Validation can be used to enforce certain constraints
+* We can use Hibernate Validator, especially to validate input to REST endpoint we want to add for creating products
+  * Simplest way is with an `@Valid` annotation on the request body parameter
+* Many standard constraints available under `javax.validation.constraints.*`
+
+```java
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Max;
+
+public class Person {
+
+    @NotBlank
+    @NotNull
+    public String name;
+
+    @Min(value=0)
+    @Max(value=150)
+    public int age;
+}
+```
 
 
+<!-- .slide: data-background="#abcdef" -->
 ## Exercise: Create PUT endpoint, enable feature flag and try in the react app
 
 
@@ -185,4 +214,4 @@ In this module we have:
 * Added a POST endpoint with validation of JSON body
 * Generated an OpenAPI spec and seen how to access Swagger UI
 * Hooked up a React frontend to our HIQUEA application
-* Seen how to pass @ConfigProperty values through our code
+* Seen how to use Bean Validation for REST endpoint validation

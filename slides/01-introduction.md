@@ -11,7 +11,7 @@ In this course you will learn:
  * The Qute Template Engine
  * RESTful API development
  * Reactive Programming
- * Securing Quarkus apps
+ * Observability
  * Testing
  * ... and a lot of Quarkus tooling and best practices
 
@@ -59,7 +59,6 @@ For Docker
 * Web Services
 * OpenAPI
 * Testing
-* Observability
 
 Note:
 Discuss with the group whether they are interested in Qute or not at all. If not, it can be skipped in favor of having more time at the end for additional material.
@@ -76,8 +75,9 @@ Discuss with the group whether they are interested in Qute or not at all. If not
 ### Afternoon
 
 * Reactive programming (cont'd)
-* Additional demo material
-    - Serverless with AWS
+* Optional material (depending on time)
+    * Observability
+    * Serverless with AWS
 
 Note:
 Additional material depends on time.
@@ -98,6 +98,7 @@ Tell about:
 * Your name, your company
 * Broadly your background
 * Your experience with Quarkus and/or related technologies
+* Can mention here Lunatech's experience with Quarkus on production in client projects (e.g. Sloe Central) or our use of it for internal projects (e.g. Timekeeper)
 
 
 ## About the participants
@@ -107,12 +108,21 @@ Get each participant to tell about:
 * Name
 * Background
 * Experience with other frameworks
+* Motivation for wanting to learn Quarkus
 
 
 ## Practicalities
+
+* Daily schedule: 09:30 - 17:30
+* [Student GitHub Repo](https://github.com/lunatech-labs/lunatech-beginner-quarkus-course-student-app)
 
 Note:
 * Give schedule, e.g. 09:30 - 17:30
     * Say when breaks and lunch will be taken
 * Explain how they get the student app if they haven't got it already
     * Explain how to find the exercises
+    * Explain how to use the git tags in case they get stuck
+* Mention that the course is participative
+    * We will ask them to discuss their solutions...
+    * ...help each other...
+    * ...and maybe even do mob programming for some exercises with the trainer

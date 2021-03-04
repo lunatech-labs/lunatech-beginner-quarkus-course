@@ -136,11 +136,14 @@ Demo the following:
 * Generate a project on the Quarkus website
 * Run it with `./mvnw compile quarkus:dev` downloaded directory (we compile first, to show the speed of quarkus in the second command)
 * Show http://localhost:8080/
+* Show the Dev UI
 * Import in Intellij
+    * For IntelliJ there is a Quarkus plugin and they can make a run configuration for the application
+
+Optionally:
 * Add a new endpoint, that returns 'Hello ' + name of the group you're teaching.
 * Make a Java error, show the exception page
 * Fix the error, show people that no restart is needed
-* Show the Dev UI
 * Start the generation of the native executable! (Already, because it takes time!)
 
 
