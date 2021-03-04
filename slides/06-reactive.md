@@ -1,10 +1,11 @@
 # Reactive Programming
 
 
+<!-- .slide: data-visibility="hidden" -->
 ## Learning outcomes
 
 After this module, you should:
-* ...
+* Understand how Kafka is the Swiss Army Chainsaw of messaging.
 
 
 ## Execution Model
@@ -261,7 +262,7 @@ Here we see that if we tell quarkus that our method is blocking, it will run it 
 
 ## Reactive Execution Model
 
-### Event better example
+### Even better example
 
 Of course, we can do even much better, by not blocking a thread at all:
 
@@ -318,7 +319,7 @@ Note:
 2. Shows returning a Uni instead of putting the response on the `RoutingContext`
 3. Shows parameter usage
 
-Also note:
+Also:
 Instead of injecting `RoutingContext` you can also choose some other Vert.x or Quarkus or even Mutiny HTTP model classes. Just pick one that you like working with or that has the stuff you need easily available.
 
 How to choose between this and RESTEasy Reactive?
@@ -399,7 +400,7 @@ Note:
 Remark the difference between `Uni<List<T>>` and `Multi<T>`: The `Uni<List<T>>` will get the List into memory, while the Multi is fully streaming.
 
 
-## Mutiny, Unit & Multi
+## Mutiny, Uni & Multi
 
 **Mutiny** is the library for Reactive Programming that Quarkus uses. It's two main types are:
 
@@ -410,7 +411,44 @@ Note:
 * Mention that Multi is potentially unbounded
 * Mention that they also support indicating failure.
 * Mention that we *will learn much more about these types in later slides*
-* Mention that Hibernate Reactive has two APIs: one using Mutiny types and one using Java Stdlib types: `CompletionStage` and `Publisher`. 
+* Mention that Hibernate Reactive has two APIs: one using Mutiny types and one using Java Stdlib types: `CompletionStage` and `Publisher`.
+
+
+## RESTEasy Reactive with Mutiny Uni
+
+`Uni`s are supported as a result type:
+```java [|3|4]
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+public Uni<String> helloUni() {
+    return Uni.createFrom().item("Hello!");
+}
+```
+
+Note: Again, a `Uni` is like a stream that emits up to one element. But it can also be cancelled or fail.
+
+
+## RESTEasy Reactive
+
+Also, `Multi` is supported:
+
+```java
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+public Multi<String> helloMulti() {
+  return Multi.createFrom().items("Hello", "world!");
+}
+```
+
+This returns a `chunked` HTTP response.
+
+Note: Meaning that Quarkus doesn't need to create the full response in memory before sending it.
+
+So it can support arbitrarily long HTTP responses in bounded memory.
+
+
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Going Reactive
 
 
 ## Sessions & Transactions
@@ -433,14 +471,14 @@ Good:
 ```java
 Uni<Product> product = session.find(Product.class, id)
     .call(session::remove)
-    .invoke(session::flush)
+    .call(session::flush)
 ```
 
 Bad:
 ```java
 Uni<Product> product = session.find(Product.class, id)
-.call(session::remove)
-.invoke(session::flush)
+    .call(session::remove)
+    .invoke(session::flush)
 ```
 
 Methods:
@@ -449,10 +487,10 @@ Uni<T> call(Supplier<Uni<?>> supplier)
 Uni<T> invoke(Runnable callback)
 ```
 
-Both methods compile and have the right types, but the `Uni` produces by 
+Both examples compile and have the right types, but the second one _will never execute the flush_.
 
 Note:
-* This shows a common mistake. Both of these examples compile, but the second one _will never execute the flush_. 
+* This shows a common mistake. Both of these examples compile, but the second one _will never execute the flush_.
 
 This is because `call` expects a `Uni`, _and subscribes to it_ when the 'outer' `Uni` (containing the product) is subscribed to, even through the _result_ of the Uni created by Flush is ignored.
 But `invoke` never subscribes to the `Uni` returned by `invoke`.
@@ -465,15 +503,15 @@ People familiar with reactive programming will have experienced this before typi
 Another way of connecting to the DB is using the low-level reactive SQL clients.
 ```
 PgConnectOptions connectOptions = new PgConnectOptions()
-.setPort(5432)
-.setHost("the-host")
-.setDatabase("the-db")
-.setUser("user")
-.setPassword("secret");
+  .setPort(5432)
+  .setHost("the-host")
+  .setDatabase("the-db")
+  .setUser("user")
+  .setPassword("secret");
 
 // Pool options
 PoolOptions poolOptions = new PoolOptions()
-.setMaxSize(5);
+  .setMaxSize(5);
 
 // Create the client pool
 PgPool client = PgPool.pool(connectOptions, poolOptions);
@@ -491,8 +529,6 @@ Note:
 @Inject
 PgPool client;
 ```
-
-This is what you do in Quarkus :)
 
 Pick the right `PgPool`:
 * `io.vertx.mutiny.pgclient.PgPool` uses Mutiny types
@@ -561,6 +597,10 @@ Explain that this `Tuple` comes from Mutiny.
 
 Note:
 Explain that we retrieve back the generated Id from the database.
+
+
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Reactive search endpoint
 
 
 ## Listen & Notify
@@ -648,6 +688,30 @@ In the first screenshot you see those come in.
 TODO, maybe prepare a little demo for this?
 
 
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Listen & Notify
+
+Note:
+
+Different ways to fill in the missing part
+
+```java
+.onItem().transformToMulti(rows -> Multi.createFrom().iterable(rows))
+.map(Product::from)
+```
+
+```java
+.toMulti().flatMap(rows -> Multi.createFrom().iterable(rows))
+.map(Product::from)
+```
+
+```java
+.onItem().<Row>disjoint()
+.map(Product::from)
+```
+
+
+<!-- .slide: data-visibility="hidden" -->
 ## What's looming on the horizon?
 
 ![Project Loom](images/reactive/loom.jpeg)
@@ -684,8 +748,10 @@ Note:
 Answer: memory will fill up, until the system breaks.
 
 
+<!-- .slide: data-visibility="hidden" -->
 ## Slow consumer
 
+Note:
 TODO, draw diagram of slow consumer being overloaded by fast producer
 
 
@@ -705,7 +771,8 @@ That last one is essentially what's called back-pressure. The consumer can indic
 
 *Back pressure* means that the consumer can indicate *demand* to the producer. The producer will only produce the amount that the consumer requested.
 
-// TODO, draw diagram of a consumer indicating demand.
+Note:
+TODO, draw diagram of a consumer indicating demand.
 
 
 ## Back pressure
@@ -726,6 +793,7 @@ Note:
 So we can make reactive back-pressuring systems across TCP. For example using chunked HTTP responses.
 
 
+<!-- .slide: data-visibility="hidden" -->
 ## Compared with JMS
 
 * Blocking interface: we don't want a blocking interface
@@ -784,20 +852,6 @@ Explain this line by line:
 Obviously, this is for demo purposes. In real code, you should almost never use *join*. Instead, the frameworks we work with (like Quarkus), support returning Uni's and Multi's.
 
 
-## RESTEasy Reactive with Mutiny UNI
-
-`Uni`s are supported as a result type:
-```java [|3|4]
-@GET
-@Produces(MediaType.TEXT_PLAIN)
-public Uni<String> helloUni() {
-    return Uni.createFrom().item("Hello!");
-}
-```
-
-Note: Again, a `Uni` is like a stream that emits up to one element. But it can also be cancelled or fail.
-
-
 ## Mutiny Uni
 
 A `Uni` only gets executed when connected to a *subscriber*:
@@ -818,25 +872,6 @@ Note:
 This is different from a `CompletionStage`, which is already running.
 
 A `Uni` is more a descriptor of an operation.
-
-
-## RESTEasy Reactive
-
-Also, `Multi` is supported:
-
-```java
-@GET
-@Produces(MediaType.TEXT_PLAIN)
-public Multi<String> helloMulti() {
-  return Multi.createFrom().items("Hello", "world!");
-}
-```
-
-This returns a `chunked` HTTP response.
-
-Note: Meaning that Quarkus doesn't need to create the full response in memory before sending it.
-
-So it can support arbitrarily long HTTP responses in bounded memory.
 
 
 ## Mutiny Multi
@@ -880,51 +915,6 @@ Cancellable cancellable = multi
 ```
 
 Note: If you check the Reactive Streams spec, this is also what you see.
-
-
-## Server-Sent Events
-
-Server-Sent Events is a technology that allows the server to push data to the client when it wants. The client opens a connection and the connection is kept open. The server can send chunks of data.
-
-
-## Server-Sent Events
-
-Here's an example of an endpoint that sends a chunk every second, containing the current time:
-
-```java [|2|3|6-7|8]
-@GET
-@Produces(MediaType.SERVER_SENT_EVENTS)
-@RestSseElementType(MediaType.TEXT_PLAIN)
-public Multi<String> time() {
-  return Multi.createFrom()
-    .ticks()
-    .every(Duration.ofSeconds(1))
-    .map(__ -> LocalDateTime.now().toString());
-}
-```
-
-``` [|1|2-4|5-10|11]
-➜  lunatech-beginner-quarkus-course git:(main) ✗ http localhost:8082/time --stream
-HTTP/1.1 200 OK
-Content-Type: text/event-stream
-X-SSE-Content-Type: text/plain
-transfer-encoding: chunked
-data:2021-02-23T14:09:59.233302
-data:2021-02-23T14:10:00.237587
-data:2021-02-23T14:10:01.236240
-data:2021-02-23T14:10:02.236214
-data:2021-02-23T14:10:03.236526
-^C
-```
-
-Note:
-1. Endpoint produces Server Sent Events
-2. Each chunk has type text/plain
-3. We create a Multi from ticks. The elemens are just an incrementing counter
-4. We throw away the element, and create a new element containing the time
-5. We use httpie with `--stream` to show each chunk as it comes in. You can also use `cURL`.
-6. Each 'data:' element is a chunk
-7. We need to `Ctrl-C` to abort, since it's a never-ending stream :)
 
 
 ## Visualising the events
@@ -1171,6 +1161,52 @@ Other strategies, that mutiny currently doesn't have built in yet:
 If you want more advanced features, take a look at more advanced reactive streams libraries, like RxJava or Akka Streams.
 
 
+## Server-Sent Events
+
+Server-Sent Events is a technology that allows the server to push data to the client when it wants. The client opens a connection and the connection is kept open. The server can send chunks of data.
+
+
+## Server-Sent Events
+
+Here's an example of an endpoint that sends a chunk every second, containing the current time:
+
+```java [|2|3|6-7|8]
+@GET
+@Produces(MediaType.SERVER_SENT_EVENTS)
+@RestSseElementType(MediaType.TEXT_PLAIN)
+public Multi<String> time() {
+  return Multi.createFrom()
+    .ticks()
+    .every(Duration.ofSeconds(1))
+    .map(__ -> LocalDateTime.now().toString());
+}
+```
+
+``` [|1|2-4|5-10|11]
+➜  lunatech-beginner-quarkus-course git:(main) ✗ http localhost:8082/time --stream
+HTTP/1.1 200 OK
+Content-Type: text/event-stream
+X-SSE-Content-Type: text/plain
+transfer-encoding: chunked
+data:2021-02-23T14:09:59.233302
+data:2021-02-23T14:10:00.237587
+data:2021-02-23T14:10:01.236240
+data:2021-02-23T14:10:02.236214
+data:2021-02-23T14:10:03.236526
+^C
+```
+
+Note:
+1. Endpoint produces Server Sent Events
+2. Each chunk has type text/plain
+3. We create a Multi from ticks. The elemens are just an incrementing counter
+4. We throw away the element, and create a new element containing the time
+5. We use httpie with `--stream` to show each chunk as it comes in. You can also use `cURL`.
+6. Each 'data:' element is a chunk
+7. We need to `Ctrl-C` to abort, since it's a never-ending stream :)
+
+
+<!-- .slide: data-visibility="hidden" -->
 ## Recap
 
 In this module we have:

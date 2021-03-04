@@ -1,6 +1,7 @@
 # Reactive Messaging
 
 
+<!-- .slide: data-visibility="hidden" -->
 ## Learning outcomes
 
 After this module, you should:
@@ -89,13 +90,17 @@ Note that in the second example, a `CompletionStage` is returned. This is needed
 
 ## Signatures
 
-All possibilities are specified in the Microprofile Reactive Messaging Specification:
-
+All possibilities are specified in the MicroProfile Reactive Messaging Specification:
 
 ![Microprofile Reactive Messaging Spec screenshot](images/kafka/spec.png)
 
 Note:
+* Cf. [MicroProfile Reactive Messaging Specification](https://download.eclipse.org/microprofile/microprofile-reactive-messaging-1.0/microprofile-reactive-messaging-spec.html)
 * In the screenshot you see that a method that receives messages doesn't need to process the messages itself, it can also return a subscriber instance!
+
+
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Internal Channels
 
 
 ## Connecting to Kafka
@@ -217,15 +222,26 @@ Note:
 * Ignore doesn't commit. Useful in combination with the 'auto commit' feature of the Kafka Client
 * Latest commits as soon as a message is acknowledged. Could lead to a lot of commits, but minimizes reprocessing.
 
-Also note:
+Also:
 When using `throttled`, there's a maximum time the connector waits for an `ack` or a `nack`. By default one minute. If a message is not acked or nacked after a minute, the connector will mark the application as unhealthy.
 
 
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Kafka
+
+
+<!-- .slide: data-background="#abcdef" -->
+## Exercise: Dead Letter Queue & Stream filtering
+
+Note:
+- Tell students in final exercise they can add an @Incoming listener on the dead-letter-queue to print failures
+
+
+<!-- .slide: data-visibility="hidden" -->
 ## Broadcasting
 
 
-
-
+<!-- .slide: data-visibility="hidden" -->
 ##
 
 TODO:
@@ -237,6 +253,7 @@ TODO:
 - Health & Metrics integration
 
 
+<!-- .slide: data-visibility="hidden" -->
 ## Recap
 
 In this module we have:
