@@ -1,19 +1,18 @@
-# Non Functional Features
+# Fonctionnalités techniques
 
 
-## Learning outcomes
+## Connaissance attendues
 
-After this module, you should:
-* Understand how to add health checks
-* Understand the different approaches to gathering metrics
-* Understand how to add tracing
-* Know how to add security to a Quarkus app using Keycloak
+A l’issue de ce module vous devriez:
+* Savoir comment ajouter des vérification de la santé de l’application
+* Comprendre les différentes approches pour collecter des métriques
+* Comprendre comment ajouter de la traçabilité
 
 
-## Monitoring
-* Task of / tools for observing our application over a period of time
-    * Observing overall status and measuring behaviour
-* Especially relevant in cloud-native (and K8s-native) context
+## Supervision
+* L’action et les outils pour observer notre application sur une large période
+    * Observer le statut global et mesurer le comportement
+* C’est particulièrement pertinent dans un contexte d’environnements cloud (et kubernetes)
 
 Note:
 * Here we can emphasise the relevance of including monitoring (health-checks, metrics, etc.) in a Quarkus training course
@@ -21,44 +20,44 @@ Note:
 
 
 ## Liveness and Readiness
-* Quarkus Smallrye Health extension (implementation of MicroProfile Health)
-* Adding extension gives out-of-the-box endpoints
+* L’extension Smallrye Health de Quarkus  implémente la spécification MicroProfile Health
+* Ajouter cette extension fournit immédiatement des points d’entrées
     * `/health`
     * `/health/live`
     * `/health/ready`
-* Liveness - Is the service _up/down_, _reachable/unreachable_?
-* Readiness - Can the service handle user requests?
-    * A service can be "UP" and pass the Liveness check but fail the Readiness check
-* Correspond to liveness and readiness Kubernetes probes
+* Liveness - qu’on peut traduire par vitalité - Le service est-il _démarré_ ou _éteint_, _joignable_ ou _injoignable_ ?
+* Readiness - qu’on peut traduire par le fait d’être prêt - Le service peut-il traiter des requêtes utilisateurs?
+    * Un service peut être démarré et passer la vérification du Liveness mais échouer la vérification de Readiness
+* Ceci correspond aux sondes liveness et readiness de Kubernetes
 
 
-## Metrics (w/ MicroProfile Metrics)
-* Quarkus Smallrye Metrics extension (implementation of MicroProfile Metrics)
-* Adding extension gives out-of-the-box endpoints
+## Métriques (avec MicroProfile Metrics)
+* L’extension Quarkus Smallrye Metrics implémente la spéc. MicroProfile Metrics
+* Ajouter cette extension fournit immédiatement des points d’entrées:
     * `/metrics`
     * `/metrics/base`
     * `/metrics/vendor`
     * `/metrics/application`
-* Supports returning both JSON and [OpenMetrics](https://openmetrics.io/)
-    * OpenMetrics is a CNF sandbox project
-    * OpenMetrics standard is based on Prometheus representation
+* Supporte des retours en JSON et [OpenMetrics](https://openmetrics.io/)
+    * OpenMetrics est un projet de la sandbox CNCF (Cloud Native Computing Fundation)
+    * Le standard OpenMetrics est basé sur les représentations de Prometheus
 
 
-## Metrics (w/ Micrometer)
-* The recommended approach!
-* [Micrometer](https://micrometer.io/) is the SLF4J for metrics
-    * a vendor-neutral façade
-* Quarkus Micrometer extension (with Prometheus registry)
-* Adding extension gives out-of-the-box `/metrics` endpoint
-    * Prometheus-formatted, with application metrics as well as system, jvm, and http metrics
-    * JSON formatting can be enabled through config
+## Métriques (avec Micrometer)
+* L’approche recommandée !
+* [Micrometer](https://micrometer.io/) est le pendant de SLF4J pour les métriques
+    * Une façade indépendante des implémentations éditeurs
+* Extension Quarkus Micrometer avec une registry Prometheus
+* Ajouter cette extension fournit immédiatement le point d’entrée `/metrics`
+    * Au format Prometheus, avec des métriques applicatives comme système, JVM et HTTP
+    * Le format JSON peut également être activé par la configuration
 
 
-## Tracing
-* Quarkus Smallrye OpenTracing (implementation of MicroProfile OpenTracing)
-* Uses [Jaeger](https://www.jaegertracing.io/) tracer
-* Trace IDs can be logged via MDC propagation
-* Can configure to trace JDBC requests and Kafka message deliver
+## Traces
+* L’extension Quarkus Smallrye OpenTracing implémente la spec. MicroProfile OpenTracing
+* Utilise le traçeur [Jaeger](https://www.jaegertracing.io/)
+* Les identifiant de traces peuvent être enregistrés avec la propagation MDC
+* Il est possible de configurer le suivi des requêtes JDBC et de la remise des messages Kafka
 
 Note:
 If needed, here is a possible log configuration to log trace IDs
@@ -74,8 +73,7 @@ quarkus.log.console.format=%d{HH:mm:ss} %-5p traceId=%X{traceId}, parentId=%X{pa
 
 ## Recap
 
-In this module we have:
-* Seen how to add liveness and readiness checks
-* Seen two ways of enabling metrics gathering on our Quarkus app
-* Seen how to enable distributed tracing
-* Seen how to secure our Quarkus app using Keycloak
+Dans ce module, nous avons vus:
+* Comment ajouter des vérifications de liveness et readiness
+* Deux façons permettant la collecte de métriques dans notre application Quarkus
+* Comment activer le traçage distribué

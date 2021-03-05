@@ -1,16 +1,16 @@
-# Reactive Programming
+# Programmation réactive
 
 
 <!-- .slide: data-visibility="hidden" -->
-## Learning outcomes
+## Connaissances obtenues
 
-After this module, you should:
-* Understand how Kafka is the Swiss Army Chainsaw of messaging.
+Après ce module, vous devrez :
+* ...
 
 
-## Execution Model
+## Modèle d’exécution
 
-When using the standard *imperative* RESTEasy, Quarkus creates as many `executor` threads as needed, up to the configured maximum:
+Lors de l’utilisation de RESTEasy, *impératif* par défaut, Quarkus créé autant de `executor` threads que nécessaire, jusqu'à atteindre le maximum configuré:
 
 ```java [|6|]
 @GET
@@ -34,19 +34,19 @@ Waiting:     1002 1009   6.8   1007    1037
 Total:       1002 1010   7.4   1007    1039
 ```
 
-The default maximum is `max(200, 8 * nr_of_cores)`
+La configuration par défaut du maximum est `max(200, 8 * nr_of_cores)`
 
 Note:
 What we see here, is that if we execute 50 concurrent requests, they all get executed in parallel.
 
 
-## Execution Model
+## Modèle d’exécution
 
-If we choose a smaller amount of maximum threads:
+Si nous limitons volontairement le nombre maximal de fils (threads):
 
 ```quarkus.thread-pool.max-threads=10```
 
-Then running the same `ab` command takes much longer:
+Alors l’exécution de la même commande `ab` prend beaucoup plus longtemps:
 
 ``` [|8|]
 ab -c 50 -n300  http://127.0.0.1:8081/threads/slow
@@ -61,14 +61,15 @@ Total:       1022 4680 959.5   5021    5070
 
 Note:
 What we see here, is that if we reduce the maximum number of threads, we see that many requests have to wait before being processed.
+Ce que nous voyons ici, c’est que la réduction du nombre maximal de thread impose que de nombreuses requêtes soient mises en attente avant de pouvoir être exécutées.
 
 
-## Execution Model - Blocking Threads
+## Modèle d’exécution - Threads bloquants
 
-Two types of a thread being held up:
+Deux choses qui peuvent occuper un thread :
 
-* Doing useful work on the CPU
-* Waiting for somebody else (Database, API call, Disk IO, etc.). This is what we call _blocking_.
+* Effectuer une tâche utile sur le CPU
+* Attendre quelqu’un d’autre (Base de données, Appel d’API, IO Disque, etc.). C’est ce que l’on appelle _(bloquage) blocking_.
 
 Note:
 Explain the following:
@@ -83,27 +84,27 @@ But there is a limitation: Quarkus can't discriminate between a thread blocked o
 
 In the next chapter, we will see a different model that solves this.
 
-## CPU vs Non-Blocking IO vs Blocking IO
+## CPU vs IO Non-bloquant IO vs IO bloquantes
 
-Remember from last section:
+Rappelez vous la dernière section :
 
-* A thread doing CPU is good, but we don't want a ton of those
-* A thread doing IO is fine, but it shouldn't prevent other threads doing CPU work
+* Un thread occupant le CPU est bon, mais nous ne voulons pas trop de ceux-ci.
+* Un thread effectuant des IO est bien, mais il ne devrait pas empêcher les autres threads d’effectuer des opérations sur le CPU.
 
 <div class="fragment">
-Solution?
+Solution ?
 
 <ul>
-<li> Have a limited number of threads doing CPU-work
-<li> Try to do IO without blocking a thread
-<li> If you can't, have potentially an unlimited number of threads waiting for IO
+<li> Avoir un nombre limité de threads qui effectue de taches sur le CPU
+<li> Essayer d’effectuer les IO sans bloquer un thread
+<li> Et si c’est impossible, avoir éventuellement un nombre illimité de threads d’attente des IO.
 </ul>
 </div>
 
 
 ## RESTEasy Reactive
 
-The `quarkus-resteasy-reactive` extension brings reactive JAX-RS support to Quarkus.
+L’extension `quarkus-resteasy-reactive` ajoute un support du modèle réactif de JAX-RS à Quarkus.
 
 ```xml
 <dependency>
@@ -120,12 +121,12 @@ public String hello() {
 }
 ```
 
-Works identically.
+Par exemple la définition du point d’entrée REST fonctionne exactement comme la version impérative.
 
 
 ## RESTEasy Reactive
 
-The `quarkus-resteasy-reactive` extension brings reactive JAX-RS support to Quarkus.
+L’extension `quarkus-resteasy-reactive` ajoute un support du modèle réactif de JAX-RS à Quarkus.
 
 ```xml
 <dependency>
@@ -143,21 +144,21 @@ public CompletionStage<String> hello() {
 }
 ```
 
-We can also return a `CompletionStage`
+Mais nous pouvons également retourner un `CompletionStage`
 
 
-## Reactive Execution Model
+## Le modèle d’exécution réactif
 
-RESTEasy reactive **does** care about blocking
+RESTEasy reactive n'est pas indifférent aux bloquages
 
-* Your method will be called by a Vert.x eventloop thread
-* You shouldn't block it
-* If you do block, annotate with `@Blocking`
+* Votre méthode sera appelée par le thread de la boucle d’évènement Vert.x (eventloop)
+* Vous ne devriez pas le bloquer
+* Mais si vous devez, annoter avec `@Blocking`
 
 
-## Reactive Execution Model
+## Le modèle d’exécution réactif
 
-### Example
+### Exemple
 
 ```java
 @GET
@@ -167,12 +168,12 @@ public String regular() {
 }
 ```
 
-This is fine - returns something like `vert.x-eventloop-thread-3`
+C’est bien - retourne le nom du thread de la boucle Vert.x, par exemple `vert.x-eventloop-thread-3`
 
 
-## Reactive Execution Model
+## Le modèle d’exécution réactif
 
-### Bad Example
+### Mauvais exemple
 
 ```java [|4|]
 @GET
@@ -183,17 +184,21 @@ public String regularSlow() {
 }
 ```
 
-This is **not** fine.
+Ce n’est pas correct.
 
 Note:
 Here we block the eventloop thread for IO. Ask the audience what they expect to happen if we measure this with a high number of concurrent requests?
 
 See next page for the results
 
+Ici nous avons bloqué le thread de la boucle d'événements pour de l’IO. Demander à l’audience ce qui pourrait arriver si on mesurait la performance de ceci avec un grand nombre de requêtes concurrentes ?
 
-## Reactive Execution Model
+Voir la page suivante pour les résultats
 
-### Bad Example
+
+## Le modèle d’exécution réactif
+
+### Mauvais exemple
 
 ``` [|1|8|9-10|]
 ab -c50 -n300  http://127.0.0.1:8082/threads/regular-slow
@@ -219,9 +224,9 @@ Answer:
 Also note that AB finds the results suspicious :)
 
 
-## Reactive Execution Model
+## Le modèle d’exécution réactif
 
-### Good Example
+### Bon exemple
 
 ```java [|2|]
 @GET
@@ -233,15 +238,15 @@ public String blockingSlow() {
 }
 ```
 
-This returns `executor-thread-221`
+Ceci retourne `executor-thread-221`
 
 Note:
 And remember, of these threads there are very many, and you can safely tie them up in blocking IO.
 
 
-## Reactive Execution Model
+## Le modèle d’exécution réactif
 
-### Good Example
+### Bon exemple
 
 ```
 ab -c70 -n300  http://127.0.0.1:8082/threads/blocking-slow
@@ -254,17 +259,17 @@ Waiting:     1001 1008   4.5   1007    1023
 Total:       1001 1009   4.9   1008    1024
 ```
 
-Back to normal :)
+Retour à des performances normales :)
 
 Note:
 Here we see that if we tell quarkus that our method is blocking, it will run it with an executor thread; of which there are many more available.
 
 
-## Reactive Execution Model
+## Le modèle d’exécution réactif
 
-### Even better example
+### Un exemple encore meilleur
 
-Of course, we can do even much better, by not blocking a thread at all:
+Evidemment, nous pouvons faire encore mieux, en ne bloquant pas du tout le thread :
 
 ```java [|3|5|6-7|]
 @GET
@@ -277,7 +282,7 @@ public Uni<String> nonblockingSlow() {
 }
 ```
 
-Outputs:
+La sortie:
     Initial: vert.x-eventloop-thread-18, later: executor-thread-1
 
 Note:
@@ -286,12 +291,14 @@ This demonstrates asynchronous 'waiting'. No thread is blocked here. The initial
 
 ## Reactive Routes
 
-An alternative to _RESTEasy Reactive_ is to use the _Reactive Routes_ extension:
+Une alternative à _RESTEasy Reactive_ est d’utiliser l’extension _Reactive Routes_:
 
 > Reactive routes propose an alternative approach to implement HTTP endpoints where you declare and chain routes. This approach became very popular in the JavaScript world, with frameworks like Express.Js or Hapi. Quarkus also offers the possibility to use reactive routes. You can implement REST API with routes only or combine them with JAX-RS resources and servlets.
 
 Note:
 This extension is also known as 'Vert.x web'
+
+> Reactive routes propose une approche différente à l’implémentation des points d’entrée HTTP où vous déclarez et enchaînez des routes. Cette approche a été popularisée par le monde JavaScript, avec des frameworks comme Express.Js et Hapi. Quarkus offre également la possibilité d’utiliser le routage réactif. Vous pouvez implémenter ne API REST avec des routes seules ou les combiner avec des resources ou des servlets JAX-RS.
 
 
 ## Reactive Routes
@@ -327,18 +334,18 @@ How to choose between this and RESTEasy Reactive?
 - Vert.x Web is stable, so typically a better choice.
 
 
-# Reactive Database Access
+# Accès réactif à la base de données
 
 
-## About JDBC
+## A propos de JDBC
 
-JDBC is a blocking API
+JDBC est une API bloquante
 
-Example:
+Exemple:
 
     ResultSet rs = stmt.executeQuery(query);
 
-There is **no way** to obtain the `ResultSet` without blocking **a** thread.
+Il n’existe pas de solution pour obtenir le `ResultSet` sans thread bloquante.
 
 Note:
 Remark that you don't necessarily have to block the thread you're working on. Of course you can execute the call on some different thread, and obtain a `CompletionStage` here. But then you have to block that other thread!
@@ -351,23 +358,23 @@ Of course it's not a huge problem in most applications, for several reasons:
 But for *supersonic* *subatomic* we can do better!
 
 
-## Hibernate going Reactive
+## Hibernate devient Réactif
 
-In December 2020, Hibernate Reactive was launched:
+Depuis Décembre 2020, Hibernate Reactive a été lancé:
 
 ```java
 Uni<Book> bookUni = session.find(Book.class, book.id);
 bookUni.invoke( book -> System.out.println(book.title + " is a great book!") )
 ```
 
-It's a reactive API for Hibernate ORM.
+C’est une API réactive pour Hibernate ORM.
 
 
-## Hibernate going Reactive
+## Hibernate devient Réactif
 
-* Works with non-blocking database clients. Currently the Vert.x clients for Postgres, MySQL and DB2
-* Well-integrated with Quarkus
-* No implicit blocking lazy loading, but explicit asynchronous operations for fetching associations
+* Fonctionne avec les clients non-bloquant d'accès aux bases de données. Pour le moment, les clients Vert.x pour Postgres, MySQL et DB2
+* L’intégration avec Quarkus est agréable
+* Pas de _lazy_ chargement bloquant, mais des opérations asynchrones explicites pour récupérer les associations
 
 Note:
 One other thing to mention, the creators _don't expect this to be faster than regular Hibernate ORM_. They don't expect many applications to benefit from it. However, they do expect better degradation under load for some applications, and maybe there will be performancee improvements in the future.
@@ -375,9 +382,9 @@ One other thing to mention, the creators _don't expect this to be faster than re
 
 ## Hibernate Reactive + Panache
 
-* Methods that returned `T` or `List<T>` now return `Uni<T>` and `Uni<List<T>>`
-* New methods `streamXXX` that return a `Multi<T>`
-* Classes live in a new package under `io.quarkus.hibernate.reactive`
+* Les méthodes qui retournent `T` ou `List<T>` retourne maintenant `Uni<T>` et `Uni<List<T>>`
+* Nouvelles méthodes `streamXXX` qui retournent `Multi<T>`
+* Les classes sont dans un nouveau package `io.quarkus.hibernate.reactive`
 
 
 ## Hibernate Reactive + Panache usage
@@ -402,10 +409,10 @@ Remark the difference between `Uni<List<T>>` and `Multi<T>`: The `Uni<List<T>>` 
 
 ## Mutiny, Uni & Multi
 
-**Mutiny** is the library for Reactive Programming that Quarkus uses. It's two main types are:
+**Mutiny** est la librarie pour la programmation réactive que Quarkus utilise. Il y a deux types principaux:
 
-- `Multi<T>` represents a stream of items of type `T`
-- `Uni<T>`, represents a stream of zero or one element of type `T`
+- `Multi<T>` représente un stream d’éléments de type `T`
+- `Uni<T>`, représente un stream de zéro ou un élément de type `T`
 
 Note:
 * Mention that Multi is potentially unbounded
@@ -416,7 +423,7 @@ Note:
 
 ## RESTEasy Reactive with Mutiny Uni
 
-`Uni`s are supported as a result type:
+Les `Uni`s sont supportés comme un type de résultat:
 ```java [|3|4]
 @GET
 @Produces(MediaType.TEXT_PLAIN)
@@ -430,7 +437,7 @@ Note: Again, a `Uni` is like a stream that emits up to one element. But it can a
 
 ## RESTEasy Reactive
 
-Also, `Multi` is supported:
+`Multi` est aussi supporté:
 
 ```java
 @GET
@@ -440,11 +447,14 @@ public Multi<String> helloMulti() {
 }
 ```
 
-This returns a `chunked` HTTP response.
+Cela retourne une réponse HTTP `chunked`.
 
 Note: Meaning that Quarkus doesn't need to create the full response in memory before sending it.
 
 So it can support arbitrarily long HTTP responses in bounded memory.
+
+Cela sous-entend que Quarkus n’a pas besoin de créer la réponse entière en mémoire avant de l’envoyer.
+Donc il peut supporter arbitrairement de longue réponse HTTP sans consommer trop de mémoire.
 
 
 <!-- .slide: data-background="#abcdef" -->
@@ -465,29 +475,29 @@ Note:
 - These are examples without Panache, using Hibernate directly
 
 
-## Sessions & Transactions - Example
+## Sessions & Transactions - Exemple
 
-Good:
+Bon exemple:
 ```java
 Uni<Product> product = session.find(Product.class, id)
     .call(session::remove)
     .call(session::flush)
 ```
 
-Bad:
+Mauvais exemple:
 ```java
 Uni<Product> product = session.find(Product.class, id)
     .call(session::remove)
     .invoke(session::flush)
 ```
 
-Methods:
+Les méthodes:
 ```java
 Uni<T> call(Supplier<Uni<?>> supplier)
 Uni<T> invoke(Runnable callback)
 ```
 
-Both examples compile and have the right types, but the second one _will never execute the flush_.
+Les deux exemples compilent et possèdent les types correctes, but le deuxième _déclenchera jamais l'operation `flush`_.
 
 Note:
 * This shows a common mistake. Both of these examples compile, but the second one _will never execute the flush_.
@@ -498,9 +508,9 @@ But `invoke` never subscribes to the `Uni` returned by `invoke`.
 People familiar with reactive programming will have experienced this before typically!
 
 
-## Low-level Reactive SQL Clients
+## Clients SQL Réactifs Low-level
 
-Another way of connecting to the DB is using the low-level reactive SQL clients.
+Une autre possibilité pour se connecter à la base de données est d’utiliser un client SQL low-level.
 ```
 PgConnectOptions connectOptions = new PgConnectOptions()
   .setPort(5432)
@@ -517,20 +527,20 @@ PoolOptions poolOptions = new PoolOptions()
 PgPool client = PgPool.pool(connectOptions, poolOptions);
 ```
 
-The base object we need is a `PgPool` instance.
+L’objet de base dont nous avons besoin est une instance de `PgPool`.
 
 Note:
 ^ Remark that in Quarkus, *of course* we can just configure it in the unified config, so this is not needed.
 
 
-## Low-level Reactive SQL Clients
+## Clients SQL Réactifs Low-level
 
 ```
 @Inject
 PgPool client;
 ```
 
-Pick the right `PgPool`:
+Récupérer le bon `PgPool`:
 * `io.vertx.mutiny.pgclient.PgPool` uses Mutiny types
 * `io.vertx.pgclient.PgPoool` uses Vert.x types
 
@@ -538,19 +548,19 @@ Note:
 There are created with a code generator. There are also variants for RxJava 2 and RxJava 3. But when using Quarkus, sticking with the Mutiny variants is certainly your best option.
 
 
-## Querying
+## Requêtage
 
-Querying returns a `Uni` containing a `RowSet`:
+Les requêtes retournent un `Uni` contenant un `RowSet`:
 
     Uni<RowSet<Row>> rowSetUni = client.query("SELECT name, age FROM people").execute();
 
-Of course, we can transform this into a `Multi` of `Rows`:
+Bien sûre, nous pouvons transformer cela par un `Multi` de `Rows`:
 
     Multi<Row> people = client.query("SELECT name, age FROM people").execute()
         .onItem().transformToMulti(set -> Multi.createFrom().iterable(set));
 
 
-## Querying
+## Requêtage
 
 ```java
 Multi<Person> people = client.query("SELECT name, age FROM people")
@@ -573,7 +583,7 @@ Explain how we can utilize a static method on Person and a method reference to c
 
 
 
-## Parameters
+## Paramétres
 
 ```java [|1|2|3|]
 client.preparedQuery(
@@ -585,7 +595,7 @@ Note:
 Explain that this `Tuple` comes from Mutiny.
 
 
-## Inserts and Updates
+## Insertions et Mise à jour
 
 ```java [|1|2|3|4|]
   Uni<Long> personId = client
@@ -605,7 +615,7 @@ Explain that we retrieve back the generated Id from the database.
 
 ## Listen & Notify
 
-One of the cool features of Postgres is to `Listen` to channels. As part of transactions you can notify channels, for example to alert consumers that are waiting for event.
+L’une des propriétés sympa de Postgres est d’écouter (`Listen`) des canaux. Dans le cadre des transactions, vous pouvez notifier les canaux, par exemple pour alerter les consommateurs qui attendent un événement.
 
 Note:
 This lends itself very well for reactive programming: keep a connection open to Postgres, have a stream of subscriptions/unsubscribes going there, and a stream of notifications coming back.
@@ -712,7 +722,7 @@ Different ways to fill in the missing part
 
 
 <!-- .slide: data-visibility="hidden" -->
-## What's looming on the horizon?
+## Qu’est ce qui approche (looming) à l’horizon ?
 
 ![Project Loom](images/reactive/loom.jpeg)
 
@@ -728,17 +738,16 @@ Explain a bit about Project Loom:
 
 ## Reactive Streams
 
-*Streaming data* is frequently found in modern applications:
+Les flux de données (*Streaming data*) sont fréquents dans les applications modernes:
 
-- Events that flow from a system to consumers
-- Records that flow from a database into a chunked HTTP response
-- Messages that are consumed from a queue, transformed and put on another queue
+- Flux d’évènements d’un système vers des consommateurs
+- Flux d’enregistrements d’une base de données vers une réponse HTTP chunked (découpée en gros morceaux)
+- Messages consommés depuis une queue, transformés et déposés dans une autre queue
 
-<p class="fragment">A fundamental problem of streaming data systems, is to make sure that the <em>consumer</em> of the stream
-can handle the messages that are being sent to it.</p>
+<p class="fragment">Un problème fondamental des systèmes de traitement de flux de données est d’avoir l’assurance que le <em>consommateur</em> du flux peut traiter les messages qu’on lui envoie.</p>
 
 
-## Slow consumer
+## Consommateur lent
 
 Suppose you have a system that reads records from a database, transforms them to JSON and stores them in a file.
 
@@ -749,19 +758,19 @@ Answer: memory will fill up, until the system breaks.
 
 
 <!-- .slide: data-visibility="hidden" -->
-## Slow consumer
+## Consommateur lent
 
 Note:
 TODO, draw diagram of slow consumer being overloaded by fast producer
 
 
-## Slow consumer - solutions
+## Consommateur lent - solutions
 
-Possible solutions:
-* <!-- .element: class="fragment" -->Have a really fast consumer instead
-* <!-- .element: class="fragment" -->Have a really slow producer
-* <!-- .element: class="fragment" -->Have more memory than your database size
-* <!-- .element: class="fragment" -->Adapt the speed of the producer, based on the capacity of the consumer
+Solutions possibles:
+* <!-- .element: class="fragment" -->Avoir un consommateur réellement rapide
+* <!-- .element: class="fragment" -->Avoir un producteur lent
+* <!-- .element: class="fragment" -->Avoir plus de mémoire que la taille de votre base de données
+* <!-- .element: class="fragment" -->Adapter la vitesse du producteur, basé sur la capacité du consommateur
 
 Note:
 That last one is essentially what's called back-pressure. The consumer can indicate how much it wants to read.
@@ -769,7 +778,7 @@ That last one is essentially what's called back-pressure. The consumer can indic
 
 ## Back pressure
 
-*Back pressure* means that the consumer can indicate *demand* to the producer. The producer will only produce the amount that the consumer requested.
+La *Back pressure* signifie que le consommateur peut faire la *demande* au producteur. Le producteur ne produira que la quantité demandée par le consommateur.
 
 Note:
 TODO, draw diagram of a consumer indicating demand.
@@ -777,41 +786,41 @@ TODO, draw diagram of a consumer indicating demand.
 
 ## Back pressure
 
-* Works for the entire stream, not just the consumer at the end
-* Each element can adapt the demand that's sent upstream
-  - Slow components reduce demand
-  - Some components, like buffers, can increase demand
+* Fonctionne avec le flux entier, et pas juste avec le consommateur à la fin
+* Chaque élément peut adapter la demande qui a été envoyée en amont
+  - Les composants lents réduisent la demande
+  - Quelques composants, comme les buffers, peuvent augmenter la demande
 
 
-## Streaming across TCP
+## Les flux au dessus TCP
 
-* TCP natively supports back-pressure!
-* *ack* messages contain a *window* field, indicating how much the sender may send.
-* When the receiver processed data, a new *ack* gets sent, with a bigger window.
+* TCP supporte nativement la back-pressure!
+* Les messages *ack* *(accusés)* contiennent un champ *window* *(fenêtre)*, indiquant comment l’expéditeur doit faire l’envoi.
+* Quand le destinataire reçoit les données, un nouvel accusé est envoyé, avec une fenêtre plus grande.
 
 Note:
 So we can make reactive back-pressuring systems across TCP. For example using chunked HTTP responses.
 
 
 <!-- .slide: data-visibility="hidden" -->
-## Compared with JMS
+## Comparaison avec JMS
 
-* Blocking interface: we don't want a blocking interface
-* Asynchronous interface: no back pressure
-
-
-## The Reactive Streams standard
-
-Around 2013, engineers from Netflix, Pivotal, Lightbend, Twitter and others were all working on streaming systems, essentially solving the same issues.
-
-To make sure their libraries would be interoperable, they came up with the **Reactive Streams** standard.
-
-It's a minimal interface needed to connect streaming libraries, retaining full non-blocking operation and back-pressure and a shared cancellation and error model.
+* Interface bloquante: nous ne voulons pas d’interface bloquante
+* Interface asynchrone: ne supporte pas la back pressure
 
 
-## The Reactive Streams standard
+## Les flux réactifs standards
 
-Ended up into the Java Standard Library as of Java 9, under `java.util.concurrent.Flow`.
+A partir de 2013, les ingénieurs de Netflix, Pivotal, Lightbend, Twitter et d’autres ont tous travaillés autour des systèmes de flux, essentiellement en résolvants les mêmes problèmes.
+
+Pour être certain que leurs librairies seront compatibles, ils ont mis en place un standard de **Reactive Streams**.
+
+C’est une interface minimale nécessaire pour connecter les librairies de flux, retenant toutes les opérations non bloquantes, la back-pressure, le partage de l’annulation et le modèle d’erreur.
+
+
+## Les flux réactifs standards
+
+Terminé dans la bibliothèque standard Java à partir de Java 9, sous `java.util.concurrent.Flow`.
 
 Note:
 The standard itself is very small, you can't really program against it directly. For example, ther are no `map` or `filter` methods in the standard library.
@@ -819,21 +828,21 @@ The standard itself is very small, you can't really program against it directly.
 So you need to use an *implementation* of the standard, to do meaningful streaming work.
 
 
-## Reactive Streams implementations
+## Les implémentations de flux réactif
 
 * Akka Streams
 * RxJava
 * Reactor
 * Vert.x
 * Mutiny
-* ... and others
+* ... et bien d’autres
 
 Note: Mutiny is the one that Quarkus uses. It's part of Smallrye. We've already used it in the DB section.
 
 But some parts of the Vert.x implementation are also used, since Quarkus uses Vert-x as well.
 
 
-## Getting Started
+## Démarrage
 
 ```java [1|2|3|4]
 Multi<String> greeter = Multi.createFrom().items("Hello", "world");
@@ -854,7 +863,7 @@ Obviously, this is for demo purposes. In real code, you should almost never use 
 
 ## Mutiny Uni
 
-A `Uni` only gets executed when connected to a *subscriber*:
+Un `Uni` n’est exécuté que lorsqu’il est connecté à un abonné (*subscriber*):
 
 ```java [1-6|8-9]
 Uni<Integer> myUni = Uni.createFrom().item(() -> {
@@ -876,9 +885,9 @@ A `Uni` is more a descriptor of an operation.
 
 ## Mutiny Multi
 
-Mutiny's `Multi` interface *extends* `org.reactivestreams.Publisher<T>`, so it's a reactive stream.
+L’interface `Multi` de Mutiny étend `org.reactivestreams.Publisher<T>`, donc c’est un flux réactif.
 
-Multi has many methods to operate on it:
+Multi possède de nombreuse méthode pour interagir avec:
 
 ```java [1|2|3|4|5]
 return Multi.createFrom().items("One", "Two", "Three", "Four", "Five", "Six")
@@ -897,14 +906,22 @@ Note:
 
 There are many more, see the docs. Be aware; Quarkus uses a somewhat outdated Mutiny version sometimes.
 
+Il y a plusieurs méthodes pour créer un Multi: à partir d’éléments, à partir d'itérateurs, en les poussant impérativement, à partir d’une horloge (timer ticks). Cependant, le plus souvent en tant que développeur d'application, vous ne créez pas vos propres multi, mais vous en obtiendrez un à partir d'une bibliothèque, comme un connecteur Kafka, un connecteur de base de données, un client de service Web, un téléchargement de formulaire et ensuite vous transformerez ce multi.
+La méthode  map. Proche de celle de stream.
+La méthode filter. Proche de celle de stream.
+La méthode `flatMap'. Pour aplatir des multis imbriqués.
+Autre map
+Il y en a encore bien plus, lisez la documentation. Attention; Quarkus utilise
+There are many more, see the docs. Be aware; Quarkus utilise parfois une version de Mutiny quelque peu obsolète.
+
 
 ## Mutiny Multi
 
-A subscriber to a Multi, must deal with the following situations:
+Un abonné (subscriber) à un Multi, doit faire face aux situations suivantes:
 
-* An element arrives
-* A failure occurred
-* The (bounded) stream completed
+* Un élément arrive
+* Une erreur intervient
+* Le flux (borné) et complété
 
 ```java [|3|4|5]
 Cancellable cancellable = multi
@@ -916,8 +933,10 @@ Cancellable cancellable = multi
 
 Note: If you check the Reactive Streams spec, this is also what you see.
 
+Si vous vérifiez les spécifications des flux réactifs, c’est ce que vous pourrez lire.
 
-## Visualising the events
+
+## Visualisation des événements
 
 ```java [|1|2|3|4|5|6|7|8]
 Multi.createFrom().items(1,2,3)
@@ -930,7 +949,7 @@ Multi.createFrom().items(1,2,3)
 .subscribe().with(__ -> {}); // Drain
 ```
 
-This prints the following:
+L’affichage est le suivant:
 ``` [|1|2|3-5|6]
 ⬇️ Subscribed
 ⬆️ Requested: 9223372036854775807
@@ -948,7 +967,7 @@ What's going on here?
 What we see is that the `with` method requests Long.MaxValue elements. Basically, it's a subscriber that doesn't ever apply back-pressure!
 
 
-## Visualising the events
+## Visualisation des événements
 
 ```java [|8-10]
 Stream<Integer> out = Multi.createFrom().items(1,2,3)
@@ -963,7 +982,7 @@ Stream<Integer> out = Multi.createFrom().items(1,2,3)
 Set<Integer> set = out.collect(Collectors.toSet());
 ```
 
-This prints:
+Cela affiche:
 ``` [|2]
 ⬇️ Subscribed
 ⬆️ Requested: 256
@@ -976,9 +995,9 @@ This prints:
 Note: So `asStream` only requests 256 items!
 
 
-## Visualising the events
+## Visualisation des événements
 
-We can configure the amount of items to queue:
+Nous pouvons configurer le nombre d’élément dans la queue:
 ```java [8-9]
 Stream<Integer> out = Multi.createFrom().items(1,2,3)
   .onSubscribe().invoke(() -> System.out.println("⬇️ Subscribed"))
@@ -1007,9 +1026,9 @@ Note:
 Our buffer of 2 creates a demand of 2. When empty, it creates new demand of 2.
 
 
-## Visualising the events
+## Visualisation des événements
 
-The Stream created by `asStream` will *cancel* the `Multi` when `close`d.
+Le flux créé par `asStream` devrait annuler (*cancel*) le `Multi` quand il est fermé (`close`).
 
 ```java [|11]
 Stream<Integer> out = Multi.createFrom().items(1,2,3,4,5,6)
@@ -1037,13 +1056,13 @@ out.close();
 ```
 
 
-## Backpressure strategies
+## Stratégies de Backpressure
 
-Essentially, there are three things we can do when the producer is faster than the consumer:
+Principalement, il y a trois choses à faire quand le producteur va plus vite que le consommateur:
 
-* Reduce the speed of the producer
-* Buffer items
-* Drop items
+* Réduire la vitesse du producteur
+* Bufferiser les éléments
+* Jeter des éléments
 
 Note:
 - We've seen the first, that's backpressure. But it's not always possible. What if you have a realtime stream that you can't pause? For example, if you're connected to Twitter, you can't tell the people to not Tweet for a while.
@@ -1051,7 +1070,7 @@ Note:
 - The third one is sometimes necessary. Items can be sampled, or maybe they can be cheaply merged.
 
 
-## Backpressure strategies
+## Stratégies de Backpressure
 
 ```java [|1|2-4|6-7|9-11|]
 Multi.createFrom().ticks().every(Duration.ofMillis(10))
@@ -1068,7 +1087,7 @@ Multi.createFrom().ticks().every(Duration.ofMillis(10))
   .subscribe().with(__ -> {});`
 ```
 
-Prints the following:
+Affiche:
 ``` [|1|2|3|4-5]
 B - ⬆️ Requested: 9223372036854775807
 A - ⬆️ Requested: 1
@@ -1088,7 +1107,7 @@ Note:
 8. And then the stream crashes, because it's 'full': the stream wants to emit an element but there is no demand.
 
 
-## Dropping excessive elements
+## Rejeter les éléments en trop
 
 ```java [|5-6|]
 Multi.createFrom().ticks().every(Duration.ofMillis(900))
@@ -1122,7 +1141,7 @@ Note:
 4. But position B never sees element 1! Because it's dropped.
 
 
-## Buffering
+## Bufferisé
 
 ```java [|5-6|]
 Multi.createFrom().ticks().every(Duration.ofMillis(900))
@@ -1161,14 +1180,14 @@ Other strategies, that mutiny currently doesn't have built in yet:
 If you want more advanced features, take a look at more advanced reactive streams libraries, like RxJava or Akka Streams.
 
 
+## L’envoi d’événement depuis le serveur (Server-Sent Events)
+
+L’envoi d’événement depuis le serveur (Server-Sent Events) est une technologie qui autorise le serveur à pousser des données à un client quand il le veut. Le client ouvre une connexion et la garde ouverte. Le serveur peut envoyer des données tronquées (chunks).
+
+
 ## Server-Sent Events
 
-Server-Sent Events is a technology that allows the server to push data to the client when it wants. The client opens a connection and the connection is kept open. The server can send chunks of data.
-
-
-## Server-Sent Events
-
-Here's an example of an endpoint that sends a chunk every second, containing the current time:
+Ci-dessous un exemple d’un endpoint qui envoi des données tronquées toute les secondes, contenant la date et heure courante:
 
 ```java [|2|3|6-7|8]
 @GET
