@@ -10,27 +10,28 @@ After this module, you should:
 
 ## Microprofile Reactive Messaging Spec
 
-Microprofile Reactive Messaging specifies an annotation based model for creating event-driven microservices.
+Microprofile Reactive Messaging spécifie une annotation basée sur le modèle pour la création de microservice évenementiel.
 
-It has two main annotations:
+Il y a deux annotations principales:
 
-* `@Incoming` to let a method _read_ messages from a _channel_.
-* `@Outgoing` to _write_ the return values of a method to a _channel_.
+* `@Incoming` pour permettre à une méthode de _lire_ les messages à partir d’un _canal_.
+* `@Outgoing` pour _écrire_ la valeur de retour d’une méthode dans un _canal_.
 
 
-## Channels, Messages and Ack
+## Canaux, Messages et Accusé
 
-Channels can be _internal_, to connect different beans to each other, or _external_, for example to connect them to Kafka. In Quarkus, this is managed by configuration.
+Les canaux peuvent être _internes_, pour connecter différentes instances entre elles, ou _externes_, par exemple pour se connecter à Kafka. Dans Quarkus, cela est géré par la configuration.
 
-Messages are the items that are produced by and written to Channels. It's a minimal interface that only contains methods to retrieve the payload, and to acknowledge the message.
+Les messages sont les éléments produits et écrits sur les canaux. C'est une interface minimale qui ne contient que des méthodes pour récupérer le contenu et pour accuser réception du message.
 
-To acknowledge the message means to tell the producer of the message that we've succesfully processed it, and don't need to retrieve it again.
+Accuser réception du message signifie dire au producteur du message que nous l'avons traité avec succès et qu'il n'est pas nécessaire de le récupérer à nouveau.
 
 Note:
 A typical implementation (for example for Kafka) will have a richer class that extends `Message`, like `KafkaRecord`.
 
+Une implémentation typique (par exemple pour Kafka) sera d’avoir une classe plus riche en étendant `Message`, comme `KafkaRecord`.
 
-## Internal Channels
+## Canaux internes
 
 ```java [|1-8|10-14|16-19|]
 @Outgoing("greet-subjects")
@@ -63,7 +64,7 @@ Note:
 
 ## Signatures
 
-Other signatures are supported as well:
+D’autres signatures sont supportées:
 
 ```java [|3-6|10|]
 @Incoming("greet-subjects")
@@ -90,7 +91,7 @@ Note that in the second example, a `CompletionStage` is returned. This is needed
 
 ## Signatures
 
-All possibilities are specified in the MicroProfile Reactive Messaging Specification:
+Toute les possibilités sont spécifiées dans la spécification de messagerie réactive de Microprofile:
 
 ![Microprofile Reactive Messaging Spec screenshot](images/kafka/spec.png)
 
@@ -103,16 +104,16 @@ Note:
 ## Exercise: Internal Channels
 
 
-## Connecting to Kafka
+## Connexion à Kafka
 
-To connect to Kafka instead of through internal channels we need:
+Pour se connecter à Kafka au lieu de passer par des canaux internes, nous avons besoin de:
 
-* The `quarkus-reactive-messaging-smallrye-kafka` extension
-* Configure the Kafka Topics
-* Configure the deserializer and serializer
+* L’extension `quarkus-reactive-messaging-smallrye-kafka`
+* Configurer les Topics Kafka
+* Configurer le désérialiseur et le sérialiseur
 
 
-## Connecting to Kafka
+## Connexion à Kafka
 
 ``` [|1,4|1-3|4-6|]
 mp.messaging.incoming.greets-in.connector=smallrye-kafka
@@ -140,9 +141,9 @@ Note:
 * We need to configure *two* channels here, one incoming and one outgoing
 
 
-## Failure Strategies
+## Stratégies d’erreur
 
-Let's make our consumer crash occasionally:
+Faire en sorte que notre consommateur produise des erreurs occasionnelles:
 ```java [|5-7|]
 private int counter = 0;
 
@@ -162,37 +163,37 @@ Note:
 Every third message will crash.
 
 
-## Failure Strategies
+## Stratégies d’erreur
 
-We can configure this behaviour with:
+Nous pouvons configurer ce comportement avec:
 
     mp.messaging.incoming.greets-in.failure-strategy=ignore
 
-With this setting, it will log the error, but continue with the stream.
+Avec ce réglage, il logguera une erreur, mais continuera avec le flux.
 
 Note:
 This can be useful in scenario's where we don't need to process every message per se.
 
 
-## Failure Strategies
+## Stratégies d’erreur
 
-Another option:
+Autre option:
 
     mp.messaging.incoming.greets-in.failure-strategy=dead-letter-queue
 
-This moves bad messages to a *dead letter queue*, where another system - or human operators - can inspect it, and maybe reschedule it.
+Ce changement vers une *queue dead letter*, permet à un autre système - ou une opération humaine - de monitorer ces messages, et éventuellement les reprogrammés.
 
 
-## Commit Strategies
+## Stratégies de validation (Commit)
 
-Kafka is an _at-least-once_ delivery system. To indicate to Kafka that you've succesfully processed a message, you *commit* it. This will tell Kafka you don't need to see that particular message again. If you don't commit a message, then in case of a crash and a restart of your application, you will see the same message from Kafka again.
+Kafka est un système de messagerie _at-least-once_. Pour indiquer à Kafka que vous avez traité avec succès un message, vous le validez (_commit_). Cela indiquera à Kafka que vous n'avez pas besoin de revoir ce message en particulier. Si vous ne validez pas de message, en cas de plantage et de redémarrage de votre application, vous verrez à nouveau le même message de Kafka.
 
-SmallRye Reactive Messaging Kafka keeps track of all acknowledgements of messages, and based on that decides when to commit.
+SmallRye Reactive Messaging Kafka garde une trace de tous les accusés de réception des messages et, en fonction de cela, décide du moment de la validation.
 
 
-## Commit Strategies
+## Stratégies de validation (Commit)
 
-Suppose the connector passed the following 8 messages to our app and received the following acknowledgements:
+Supposons le connecteur passe les 8 message suivants à notre application et reçoit les accusés suivants:
 
 1. Acknowledged
 2. Acknowledged
@@ -203,16 +204,17 @@ Suppose the connector passed the following 8 messages to our app and received th
 7. Nothing
 8. Nothing
 
-Now it can commit up to message #3, because everything up to message #3 has been acknowledged.
+Maintenant, il peut s'engager jusqu'au message n°3, car tout a été validé (commit) jusqu'au message numéro 3.
 
 Note:
 Ask the audience what happens after #3 gets committed, and then the application crashes and restarts?
 Answer: All messages from 4 onwards are reprocessed.
 
+Demandez au public ce qui se passe après la validation de n°3, puis l'application plante et redémarre? Réponse: Tous les messages à partir de 4 sont retraités
 
 ## Commit Strategies
 
-There are three commit strategies available:
+Il y a trois stratégies de validation:
 
 * Ignore
 * Latest
