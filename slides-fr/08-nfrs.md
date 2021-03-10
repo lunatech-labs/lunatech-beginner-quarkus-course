@@ -70,6 +70,24 @@ quarkus.log.console.format=%d{HH:mm:ss} %-5p traceId=%X{traceId}, parentId=%X{pa
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Observability (Bonus)
 
+* Ajouter dans `application.properties`
+
+```
+quarkus.log.console.format=%d{HH:mm:ss} %-5p traceId=%X{traceId}, parentId=%X{parentId}, spanId=%X{spanId}, sampled=%X{sampled} [%c{2.}] (%t) %s%e%n
+```
+* Ajouter un JBoss Logger dans `ProductsResource` et `PriceUpdatesResource` et logger quelques endpoints
+
+```java
+import org.jboss.logging.Logger;
+
+private static final Logger LOGGER = Logger.getLogger(Foo.class)
+```
+
+* Ajouter les extensions:
+    * Smallrye Health
+    * Quarkus Micrometer
+    * Quarkus Smallrye OpenTracing
+
 
 ## Recap
 

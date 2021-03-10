@@ -31,6 +31,7 @@ A typical implementation (for example for Kafka) will have a richer class that e
 
 Une implémentation typique (par exemple pour Kafka) sera d’avoir une classe plus riche en étendant `Message`, comme `KafkaRecord`.
 
+
 ## Canaux internes
 
 ```java [|1-8|10-14|16-19|]
@@ -211,6 +212,7 @@ Ask the audience what happens after #3 gets committed, and then the application 
 Answer: All messages from 4 onwards are reprocessed.
 
 Demandez au public ce qui se passe après la validation de n°3, puis l'application plante et redémarre? Réponse: Tous les messages à partir de 4 sont retraités
+
 
 ## Commit Strategies
 
