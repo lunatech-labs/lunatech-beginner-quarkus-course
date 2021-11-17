@@ -19,27 +19,27 @@ Quarkus est livré avec un moteur de template appelé *Qute* (**Qu**arkus **te**
 * La sortie peut être streamée
 
 Note:
-* Minimizing reflection reduces the size of the native image.
-* Optionally type-safe: we'll see this in later slides
-* Output can be streamed: Uses HTTP chunking to reduce required memory.
-* Can talk here about what the templates are compiled to, and how this works in native mode
-* IMPORTANT: Need to mention that it is Experimental -- no guarantee of stability until the solution matures. Maybe this is a good transition for discussing Quarkus extensions in general
+* La diminution de la reflexion diminue la taille de l'image native.
+* Typage-sûr en option : nous le verrons dans les prochains slides.
+* La sortie peut être diffusée en continu : utilise la segmentation HTTP pour réduire la mémoire requise.
+* Possibilité de parler ici de ce vers quoi les templates sont compilés, et comment cela fonctionne en mode natif.
+* IMPORTANT : Besoin de mentionner que c'est Expérimental -- pas de guarantie de stabilité tant que la solution n'est pas mature. Cela peut être une bonne transition pour discuter des extension Quarkus en général.
 
 
 ## Detour: Quarkus Extensions
-* Can think of them as project dependencies, but with added dimensions
-  * Build-time augmentation
-* They help third-party libraries integrate more easily into Quarkus applications and build
-* Integrations can more easily target GraalVM
-* Statuses: `Stable`, `Preview`, `Experimental`
+* On peut les considérer comme des dépendances de projet, mais avec des dimensions supplémentaires
+  * Augmentation du temps de construction
+* Elles aident les bibliothèques tierces à s'intégrer plus facilement dans les applications Quarkus et à créer
+* Les intégrations peuvent cibler plus facilement GraalVM
+* Status : `Stable`, `Preview`, `Experimental`
 
 Note:
-* Can mention that developers can write their own extensions, although we won't cover that in this course
+* On peut indiquer que les développeurs peuvent créer leurs propres extensions, bien que nous n'allons pas aborder cela dans ce cours
 
 
 ## Les expressions de Qute
 
-Avec une classe `Product` donné:
+Avec une classe `Product` donnée:
 ```java
 public class Product {
     public String name;
@@ -47,7 +47,7 @@ public class Product {
 }
 ```
 
-C’est une template présentant les détails d’un produit :
+Le template présentant les détails d’un produit :
 ```html
 <html>
   <head>
@@ -74,12 +74,12 @@ Vous pouvez faire l’itération d’une collection:
 ```
 
 Note:
-Inside {for} there are values available such as index, hasNext, odd, even, count
+À l'intéreur du {for} il y a des valeurs utilisables telles que index, hasNext, odd, even, count
 
 
 ## Quelques opérateurs Qute
 
-Qute possède quelques opérateurs utiles:
+Qute possède quelques opérateurs utiles :
 
 ```html [|1|2|3|5|6|]
 Manufacturer: {product.manufacturer ?: 'Unknown'}
@@ -91,8 +91,8 @@ Available: {product.isAvailable ? 'Yep' : 'Nope' }
 ```
 
 Note:
-* First two lines are _Elvis operator_, resolve to the default value if the previous part cannot be resolved or resolves to null
-* Third line is the _ternary operator_.
+* Les deux premières lignes possèdent l'_opérateur Elvis_, affectation d'une valeur par défaut si ce qui est à gauche est inaccessible ou null.
+* La troisième ligne utilise l'_opérateur ternaire_.
 
 
 ## Utilisation de Qute
@@ -118,7 +118,7 @@ public TemplateInstance product(@PathParam("productId") long productId) {
 ## Exercice: Un Hello World avec Qute
 
 Note:
-* Point out that they can go to the Dev UI and preview the template by passing some JSON
+* Faire remarquer qu'ils peuvent accéder à l'interface utilisateur de développement et prévisualiser le template en transmettant du JSON
 
 
 ## Méthodes virtuelles Qute
@@ -132,8 +132,7 @@ Qute autorise l’appel de méthodes virtuelles sur des valeurs. Elles sont appe
 ```
 
 Note:
-
-* `toUpperCase` is a nullary method on Java's String. We can call that, with or without parentheses
+* `toUpperCase` est une méthode nullaire sur une String Java. On peut l'appeler avec ou sans parenthèses
 
 
 ## Méthodes virtuelles Qute
@@ -158,13 +157,13 @@ public class StringExtension {
 ```
 
 Note:
-* `shout` is a virtual method. In fact there are two virtual methods, with and without parameters
-* In the last line, we use infix notation
+* `shout` est une méthode virtuelle. En fait il y a deux méthodes virtuelles, avec et sans paramètre
+* À la dernière ligne, nous utilisons la notation infixe
 
 
 ## Méthodes virtuelles Qute
 
-Nous ne pouvons appeler des méthodes _réelles_ avec des paramètres:
+Nous ne pouvons appeler des méthodes _réelles_ avec des paramètres :
 
     <p>Name: {name.replace('k', 'c'}}</p>
 
@@ -175,16 +174,16 @@ Affichera:
 
 ## Méthodes virtuelles Qute - Template Data
 
-Mais nous pouvons apprendre à Qute à générer un _value resolver_ pour nous:
+Mais nous pouvons apprendre à Qute à générer un _value resolver_ pour nous :
 
     @TemplateData(target = String.class)
 
-Maintenant cela fonctionne comme attendu:
+Maintenant cela fonctionne comme attendu :
 
     <p>Name: {name.replace('k', 'c'}}</p>
 
 Note:
-// Try to explain value resolvers a bit more.
+// Essayez d'expliquer un peu plus les values resolvers.
 
 
 ## Templates à typage-sûr
@@ -211,7 +210,7 @@ affichait `NOT_FOUND`, lors de l'exécution. Nous pouvons améliorer cela, et fa
 
 ## Templates à typage-sûr
 
-Maintenant, Qute devrait afficher une erreur:
+Maintenant, Qute devrait afficher une erreur :
 
 ![Qute error message rendered in the browser](images/qute/qute-error-1.png)
 
