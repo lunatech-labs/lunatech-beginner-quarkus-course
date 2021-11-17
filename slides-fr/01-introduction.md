@@ -3,7 +3,7 @@
 
 ## Bienvenue dans Quarkus pour Débutant par Lunatech
 
-Au cours de cette formation vous apprendrez:
+Au cours de cette formation vous apprendrez :
 
 * La philosophie Quarkus
 * L’injection de dépendances avec ArC
@@ -23,14 +23,14 @@ Vous devez préalablement avoir :
 * Connaissance du langage Java
 * Connaissances basiques du Web et de HTTP
 
-Votre machine devrait être installée avec:
+Votre machine devrait être installée avec :
 
 * Java 11
 * Docker
 * L’IDE de votre choix
 
 Note:
-For instructor-led workshops students should be sent these pre-requisites before the actual course. But we should double-check before starting.
+Pour les ateliers dirigés par un formateur, les étudiants doivent recevoir ces prérequis avant le cours proprement dit. Mais nous devrions revérifier avant de commencer.
 
 Pour Java
 * Faire lancer aux participants `java -version`
@@ -61,7 +61,7 @@ Pour Docker
 * Test
 
 Note:
-Discuss with the group whether they are interested in Qute or not at all. If not, it can be skipped in favor of having more time at the end for additional material.
+Discutez avec le groupe s'ils sont intéressés par Qute ou pas du tout. Sinon, il peut être ignoré afin d'avoir plus de temps à la fin pour du contenu supplémentaire.
 
 
 ## Planning jour 2
@@ -80,7 +80,7 @@ Discuss with the group whether they are interested in Qute or not at all. If not
     * Serverless avec AWS
 
 Note:
-Additional material depends on time.
+Le contenu additionnel dépend du temps alloué.
 
 
 ## Etude de cas
@@ -88,27 +88,26 @@ Additional material depends on time.
 Nous allons réaliser plusieurs exercices construits autour d’un même projet : un magasin de meubles nommé HIQUÉA.
 
 Note:
-TODO: Explain either Course Management Tools, or the way we use vanilla Git to make sure students don't get lost.
-
+TODO : Expliquez soit les Outils de Gestion de Cours, or comment utiliser Vanilla Git pours'assurer que les étudiants ne soient pas perdus.
 
 ## A propos des formateurs(s)
 
 Note:
-Tell about:
-* Your name, your company
-* Broadly your background
-* Your experience with Quarkus and/or related technologies
-* Can mention here Lunatech's experience with Quarkus on production in client projects (e.g. Sloe Central) or our use of it for internal projects (e.g. Timekeeper)
+Parler de :
+* Votre nom, votre société
+* Votre parcours rapidement
+* Votre experience avec Quarkus et/ou des technologies s'y rapportant
+* Vous pouvez évoquer l'expérience de Lunatech avec Quarkus pour des projets client (ex. Sloe Central) ou pour des projets internes (ex. TimeKeeper)
 
 
 ## A propos des participants
 
 Note:
-Get each participant to tell about:
-* Name
-* Background
-* Experience with other frameworks
-* Motivation for wanting to learn Quarkus
+Fautes parler chaque participant :
+* Son nom
+* Son expérience
+* Ses expériences avec d'autres frameworks
+* Sa motivation pour se former à Quarkus
 
 
 ## Informations pratiques
@@ -117,12 +116,12 @@ Get each participant to tell about:
 * [GitHub Repo](https://github.com/lunatech-labs/lunatech-beginner-quarkus-course-student-app)
 
 Note:
-* Give schedule, e.g. 09:30 - 17:30
-    * Say when breaks and lunch will be taken
-* Explain how they get the student app if they haven't got it already
-    * Explain how to find the exercises
-    * Explain how to use the git tags in case they get stuck
-* Mention that the course is participative
-    * We will ask them to discuss their solutions...
-    * ...help each other...
-    * ...and maybe even do mob programming for some exercises with the trainer
+* Donner les horaires, par exemple 09h30 - 17h30
+    * Annoncez quand les pauses et les déjeuners seront pris
+* Expliquez comment récupérer student app s'ils ne l'ont pas encore eu
+    * Expliquez comment trouvez les exercices
+    * Expliquez comment utiiser les tags Git dans le cas où ils sont bloqués
+* Mentionner que le cours est participatif
+    * Nous leur demanderons de discuter de leurs solutions...
+    * ... de s'entraider...
+    * ... et peut-être même de faire de la programmation en groupe pour certains exercices avec le formateur
