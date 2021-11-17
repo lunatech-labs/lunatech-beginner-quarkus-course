@@ -18,9 +18,9 @@ A l’issue de ce module, vous devriez :
 * Plusieurs clients NoSQL (MongoDB, Redis, Neo4j, Cassandra, etc.)
 
 Note:
-* Talk about how we can use the de facto approach of Hibernate ORM and JPA if we want to take a more classic approach (using EntityManager and Repository classes).
-* Emphasise that Hibernate + Panache is really about the 90% use-case (all part of the "Developer Joy" philosophy)
-* Mention Panache support for NoSQL data stores like MongoDB
+* Expliquez comment nous pouvons utiliser l'approche de facto d'Hibernate ORM et JPA si nous voulons adopter une approche plus classique (en utilisant les classes EntityManager et Repository).
+* Insistez sur le fait qu'Hibernate + Panache concerne vraiment 90% des cas d'utilisation (tout cela fait partie de la philosophie "Developer Joy")
+* Mentionnez la prise en charge de Panache pour les magasins de données NoSQL comme MongoDB
 
 
 ## Quarkus, Hibernate & Panache
@@ -33,13 +33,13 @@ Note:
 
 
 Note:
-Remark that Quarkus and Hibernate are both primarily maintained by Red Hat, and a lot of overlapping people.
+Faites remarquer que Quarkus et Hibernate sont tous les deux principalement maintenus par Red Hat et par beaucoup d'autres personnes.
 
 
 ## Configuring the Data Source
 
-* [Agroal](https://agroal.github.io/) is the default datasource connection pooling implementation for configuring with JDBC driver
-* `quarkus.datasource.*` keys in `application.properties`
+* [Agroal](https://agroal.github.io/) est l'implémentation par défaut du pool de connexion à la datasource pour la configuration avec le driver JDBC
+* `quarkus.datasource.*` dans `application.properties`
 
 ```
 quarkus.datasource.db-kind=...
@@ -50,9 +50,9 @@ quarkus.datasource.jdbc.url=...
 
 Note:
 * Cf. https://quarkus.io/guides/datasource
-* We can mention [Agroal](https://agroal.github.io/) as the default datasource connection pooling implementation
-* We can mention the different options for the key quarkus.hibernate-orm.database.generation when configuring the datasource in the 'application.properties' file.
-* Can mention multiple named data sources - https://quarkus.io/guides/datasource#multiple-datasources
+* Nous pouvons mentionner [Agroal](https://agroal.github.io/) comme l'implémentation par défaut du pool de connexion à la datasource
+* Nous pouvons mentionner les différentes options pour les clés de quarkus.hibernate-orm.database.generation quand on configure la datasource dans le fichier 'application.properties'.
+* Nous pouvons mentionner plusieurs sources de données nommées - https://quarkus.io/guides/datasource#multiple-datasources
 
 
 ## Exemple d’un _Active Record_
@@ -80,12 +80,12 @@ public class Product extends PanacheEntity {
 ```
 
 Note:
-* Extending PanacheEntity gives a ton of static methods for searching, retrieving, listing, deleting, updating etcetera.
-* `findByName` uses `PanacheEntity`'s `find` method, which takes a piece of shortened HQL (Hibernate Query Language). Basically this gets expanded into `FROM Product WHERE name = ?1`. Also note the convenient 'firstResult' helper method.
-* `findExpensive` uses a slightly longer HQL fragment, to support other operators than equals
-* `deleteChairs` shows a mutation methohd.
+* L'extension de PanacheEntity donne une tonnes de méthodes statiques pour rechercher, récupérer, lister, supprimer, mettre à jour etc.
+* `findByName` utilise la méthode `find` de `PanacheEntity`, qui prend un morceau de HQL (Hibernate Query Language) raccourci. Fondamentalement, cela se développe en `FROM Product WHERE name = ?1`. Notez également la méthode d'assistance pratique 'firstResult'.
+* `findExpensive` utilise un fragment HQL légèrement plus long, pour prendre en charge d'autres opérateurs qu'égal
+* `deleteChairs` montre une méthode de mutation.
 
-Remark that this is an _Active Record_ example, but that you don't need to like this style. You can also choose a Repository Pattern style, in the next slide.
+Remarquez qu'il s'agit d'un exemple _Active Record_, mais que vous n'avez pas besoin d'aimer ce style. Vous pouvez également choisir un style de Repository Pattern, dans la diapositive suivante.
 
 
 ## Exemple pour un _Repository_
@@ -110,8 +110,8 @@ public class ProductRepository implements PanacheRepository<Product> {
 ```
 
 Note:
-* Obviously this does the same, but now you'd typically inject one of these repositories where you need it.
-* Of course you can extend this repository with any methods that you need.
+* Évidemment, cela fait la même chose, mais maintenant, vous injectez généralement l'un de ces repositories là où vous en avez besoin.
+* Bien sûr, vous pouvez étendre ce repository avec toutes les méthodes dont vous avez besoin.
 
 
 ## Pagination
@@ -138,7 +138,7 @@ return Product.find("status", Status.Alive)
 ```
 
 Note:
-Explain every line
+Expliquez chaque ligne
 
 
 ## Triage
@@ -156,7 +156,7 @@ public static List<Product> findExpensive(){
 ```
 
 Note:
-* We can sort as well. Be aware of the order here; after the HQL part, first the sorting, and then at the end the parameters for the HQL query.
+* On peut aussi trier. Soyez conscient de l'ordre ici; après la partie HQL, d'abord le tri, puis à la fin les paramètres de la requête HQL.
 
 
 ##  Requête de projection
@@ -177,8 +177,8 @@ PanacheQuery<ProductName> query = Product.find("active", Status.Active).project(
 ```
 
 Note:
-* This will only retrieve the 'name' field from the database. So it's a DTO.
-* The 'RegisterForReflection' is needed for native deployment.
+* Cela ne récupérera que le champ 'nom' de la base de données. C'est donc un DTO.
+* Le 'RegisterForReflection' est nécessaire pour le déploiement natif.
 
 
 ## Réécriture de l'accès aux champs
@@ -210,8 +210,8 @@ System.out.println(product.name);
 ```
 
 Note:
-This will print the product name in uppercase, because Quarkus rewrites the public field access to use the getter instead.
-This is quite like similar functionality in Scala or Kotlin.
+Cela affichera le nom du produit en majuscules, car Quarkus réécrit l'accès au champ public pour utiliser à la place le getter.
+C'est assez ressemblant à une fonctionnalité similaire dans Scala ou Kotlin.
 
 
 ## Transactions
@@ -236,7 +236,7 @@ En mode développement:
 En production on utiliserait plutôt la _schema migration_ avec [Flyway](https://quarkus.io/guides/flyway)
 
 Note:
-* Will want to mention that we use 'drop-and-create' for simplicity, but in a real application we would want to use schema migration with Flyway - https://quarkus.io/guides/flyway
+* Nous utilisons 'drop-and-create' pour plus de simplicité, mais dans une application réelle, nous utiliserions la migration de schéma avec Flyway - https://quarkus.io/guides/flyway
 
 
 <!-- .slide: data-background="#abcdef" -->
@@ -250,7 +250,7 @@ CDI est une spécification de Jakarta EE et MicroProfile pour l'injection de con
 Quarkus possède une implémentation partielle de *ArC*
 
 Note:
-* Remark that ArC is non-compliant, because of the strong build-time focus. Some parts of CDI are essentially impossible to implement at build-time.
+* Remarquez que ArC n'est pas conforma, en raison du temps de construction important. Certaines parties du CDI sont essentiellement impossibles à implémenter au moment de la construction.
 
 
 ## ArC - Temps pour build avec DI (injection de dépendance)
@@ -280,9 +280,9 @@ Note:
 * Pseudo-portées: `@Singleton`, `@Dependent` - Créé lorsqu'il est injecté.
 
 Note:
-* SessionScoped is only available if `quarkus-undertow` is used. Not very common to use these days, since we prefer stateless apps.
-* So for the normal scoped beans, a proxy is injected, which instantiates the actual class only when a method is invoked.
-* Also note, all beans are created lazily! If you need to create a bean eagerly, invoke a method on it, or make it observe the `StartupEvent`.
+* SessionScoped est seulement disponible si `quarkus-undertow` est utilisé. Pas très courant à utiliser de nos jours, car nous préférons les applications stateless.
+* Ainsi, pour les beans à portée normale, un proxy est injecté, qui instancie la classe uniquement lorsqu'une méthode est invoquée.
+* Notez également que tous les beans sont créés en mode lazy ! Si vous avez besoin de créer un bean en mode eager, invoquez une méthode dessus ou faites-lui observer le `StartupEvent`.
 
 
 ## Lifecycle callbacks
@@ -336,10 +336,10 @@ public class TimedInterceptor {
 ```
 
 Note:
-* We define an interceptor binding annotation
-* We create an interceptor, and annotate it with the binding annotation
+* Nous définissons une annotation de liaison d'intercepteur
+* Nous créons un intercepteur et l'annotons avec l'annotation de liaison
 
-This particular one prints the duration of the method invocation.
+Celui-ci imprime la durée de l'invocation de la méthode.
 
 
 ## Interceptors
@@ -363,8 +363,8 @@ On pourrait aussi le mettre sur la classe, pour chronométrer toutes les invocat
 * Marquer un bean destiné à être réécrit avec `@DefaultBean`
 
 Note:
-- The requirement to have a no-arg constructor for any bean normally comes from CDI. So ArC relaxes this requirement.
-- @DefaultBean puts it in priority behind regular beans.
+- L'exigence d'avoir un constructeur sans argument pour n'importe quel bean vient normalement de CDI. L'ArC assouplit donc cette exigence.
+- @DefaultBean le met en priorité derrière les beans normaux.
 
 
 <!-- .slide: data-background="#abcdef" -->
