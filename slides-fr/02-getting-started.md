@@ -3,9 +3,9 @@
 
 ## Connaissances obtenues
 
-A l’issue de ce module, vous devriez :
+À l’issue de ce module, vous devriez :
 * Comprendre la philosophie et les principes fondamentaux de Quarkus
-* Etre capable de générer un nouveau projet Quarkus depuis le site web Quarkus
+* Être capable de générer un nouveau projet Quarkus depuis le site web Quarkus
 * Savoir comment démarrer Quarkus depuis la ligne de commande en utilisant le wrapper Maven
 * Savoir comment accéder à l'interface de développement
 
@@ -23,7 +23,7 @@ A l’issue de ce module, vous devriez :
 https://quarkus.io/
 
 Note:
-This is the tagline from the Quarkus homepage
+C'est le slogan de la page d'accueil du site Quarkus
 
 
 ## Pourquoi Quarkus existe
@@ -33,9 +33,9 @@ This is the tagline from the Quarkus homepage
 * Satisfaction des développeurs
 
 Note:
-This is where we can explain the Supersonic (fast startups) Subatomic (small memory footprint) tagline that encapsulates the "cloud-native" aims of Quarkus.
+C'est là que nous pouvons expliquer le slogan Supersonic (démarrage rapide) Subatomic (faible empreinte mémoire) qui résume les objectifs "cloud-native" de Quarkus.
 
-Contrast this with historical context of Enterprise Java frameworks that could accept slow startups and large memory footprint for applications that are meant to be long-lived and go through a "warm-up" phase before being optimised.
+Comparez cela avec le contexte historique des frameworks Enterprise Java qui pouvaient accepter des démarrages lents et une empreinte mémoire importante pour les applications qui sont censées être durables et passer par une phase de "préchauffage" avant d'être optimisées.
 
 
 ## Pourquoi Quarkus existe
@@ -45,7 +45,7 @@ Contrast this with historical context of Enterprise Java frameworks that could a
 * Satisfaction des développeurs
 
 Note:
-Can mention here that these two themes will be covered over the two days of the training course
+Indiquez maintenant que ces 2 sujets seront abordés pendant ces 2 jours de formation
 
 
 ## Pourquoi Quarkus existe
@@ -55,15 +55,15 @@ Can mention here that these two themes will be covered over the two days of the 
 * *Satisfaction des développeurs*
 
 Note:
-At this slide, we explain _developer joy_ only:
-* Zero config (note there is no config file yet in this hello world app!). Show the config of the Dev UI, so people see how easy it is to lookup all possible configuration options.
-* Live reload (already shown)
-* Standards (Jax-RS in this example)
-* Unified config (we'll see this later, everything in one config file)
-* Streamlined code (a lot of stuff works out of the box, but you can fall back to full framework capabilitis when needed)
-* No hassle native executable generation (show the results, and run the native image. Highlight startup time!)
+Sur cette diapositive, nous expliquons seulement la _joie du développeur_ :
+* Zero config (notez qu'il n'y a pas encore de fichier de configuration dans cette application Hello World!). Montrez la configuration de l'interface utilisateur de développement afin que les utilisateurs voient à quel point il est facile de rechercher toutes les options de configuration possibles.
+* Rechargement en direct (déjà montré)
+* Normes (Jax-RS dans cet exemple)
+* Configuration unifiée (nous verrons cela plus tard, tout est dans un même fichier de configuration)
+* Code simplifié (pleins de choses fonctionnent dès l'installation, mais vous pouvez revenir aux capacités complètes du framework si nécessaire)
+* Génération d'exécutable natif sans tracas (affichez les résultats et exécutez l'image native. Mettez en surbrillance l'heure de démarrage !)
 
-Explain that in the coming two days, we will dive deeper into each of these to fully grasp what they mean and why they are important.
+Expliquez que pendant ces deux prochains jours, nous approfondirons chacun de ces points pour bien comprendre ce qu'ils signifient et pourquoi ils sont importants.
 
 
 ## Construit sur des standards, inspiré des meilleures pratiques
@@ -74,9 +74,8 @@ Explain that in the coming two days, we will dive deeper into each of these to f
 * Quarkus implémente de nombreuses APIs et supporte beaucoup de frameworks. Cela fait partie de la philosophie de Quarkus.
 
 Note:
-* Explain to people that they can choose what they like
-* Explain that it's typically a good idea to *not fight quarkus*. Some of the libraries are quite opinionated. If you yourself
-are also quite opinionated, that might not match well. You can spend a ton of time reconfiguring a framework, for little benefit. _Going with the flow_ is useful. Luckily, you have a choice of libraries to use :)
+* * Expliquez aux gens qu'ils peuvent choisir ce qu'ils aiment
+* Expliquez que c'est généralement une bonne idée de *ne pas se battre avec Quarkus*. Certaines bibliothèques sont assez contraignantes. Si vous êtes vous-même assez obstiné, cela pourrait bien ne pas fonctionner. Vous pouvez perdre énormément de temps à reconfigurer le framework pour un faible bénéfice. _Going with the flow_ is useful. Luckily, you have a choice of libraries to use :)
 
 
 <!-- .slide: data-visibility="hidden" -->
@@ -87,8 +86,8 @@ Quarkus possède une extension de compatibilité avec Spring, les annotations de
 L’utilisation principale concerne le portage d’applications Spring existantes.
 
 Note:
-Discuss some of the limitations; like that Quarkus still requires beans to be resolved compile-time, so you can't use
-`@Conditional` for example.
+Parlez de certaines limitations; comme le fait que Quarkus exige toujours que les beans soient résolus au moment de la compilation, ainsi vous ne pouvez pas utiliser
+`@Conditional` par exemple.
 
 
 <!-- .slide: data-visibility="hidden" -->
@@ -113,15 +112,15 @@ Eclipse Microprofile est un ensemble d’APIs adaptées aux Microservices et qui
 Quarkus comprend beaucoup d’extensions qui implémentent ces APIs (parmi d’autres!)
 
 Note:
-* Some of these APIs are just Jakarta EE APIs. Others are Microprofile specific.
-* Both Microprofile and Jakarta EE now fall under the Eclipse foundation. Further integration between the
-two seems likely.
+* Certaines de ces API sont juste des API Jakarta EE.
+* Some of these APIs are just Jakarta EE APIs. D'autres sont spécifiques à Microprofile.
+* Microprofile et Jakarta EE relèvent désormais de la fondation Eclipse. Une intégration plus poussée entre le deux semble probable.
 
 
 <!-- .slide: data-visibility="hidden" -->
 ## Quarkus et Microprofile
 
-* De manière générale, Quarkus utilise les implémentation SmallRye de ces APIs
+* De manière générale, Quarkus utilise les implémentations SmallRye de ces APIs
 * SmallRye est un projet RedHat, qui est également utilisé par WildFly, Thorntail et Open Liberty.
 
 
@@ -135,20 +134,21 @@ Par exemple, l’extension quarkus-routes fournit des annotations Vert.x pour d�
 
 ## Démo Hello World
 
-Note:
+Note :
 Demo the following:
-* Generate a project on the Quarkus website
-* Run it with `./mvnw compile quarkus:dev` downloaded directory (we compile first, to show the speed of quarkus in the second command)
-* Show http://localhost:8080/
-* Show the Dev UI
-* Import in Intellij
-    * For IntelliJ there is a Quarkus plugin and they can make a run configuration for the application
+* Générer b-un projet depuis le site web Quarkus
+* Lancez la commande `./mvnw compile quarkus:dev` depuis le dossier téléchargé (nous compilons d'abord pour montrer la vitesse de Quarkus dans la seconde commande)
+* Affichez http://localhost:8080/
+* Affichez l'UI de Dev
+* Importez dans IntelliJ
+    * Pour IntelliJ, il existe un plugin Quarkus et ils peuvent créer une configuration d'exécution pour l'application
 
-Optionally:
-* Add a new endpoint, that returns 'Hello ' + name of the group you're teaching.
-* Make a Java error, show the exception page
-* Fix the error, show people that no restart is needed
-* Start the generation of the native executable! (Already, because it takes time!)
+En option :
+* Ajoutez un point d'entrée qui retourne 'Hello ' + nom du groupe des participants.
+* Provoquez une erreur Java, affichez la page d'exception
+* Corrigez l'erreur, montrez que le redémarrage n'est pas nécessaire
+* Démarrez la génération de l'exécutable natif ! ()
+* Start the generation of the native executable! (Déjà, car cela prend du temps !)
 
 
 ## Hello World en Quarkus
