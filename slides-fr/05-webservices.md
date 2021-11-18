@@ -147,7 +147,7 @@ public ObjectNode node() {
 ## Exercice: Convertir les endpoints en JSON
 
 
-## OpenAPI and Swagger UI
+## OpenAPI et Swagger UI
 
 * Ajoutez simplement l'extension SmallRye OpenAPI
   * Ceci est une implémentation de la spécification MicroProfile Open API
@@ -181,7 +181,7 @@ Cf. Le [Quarkus OpenAPI / Swagger UI Guide](https://quarkus.io/guides/openapi-sw
 * Bean Validation peut être utilisé pour appliquer certaines contraintes
 * Nous pouvons utiliser Hibernate Validator, en particulier pour valider l'entrée d'un endpoint REST que nous voulons ajouter pour créer des produits
   * Le moyen le plus simple est d'utiliser une annotation `@Valid` sur le paramètre du corps de la requête
-* Many standard constraints available under `javax.validation.constraints.*`
+* De nombreuses contraintes standards disponibles sous `javax.validation.constraints.*`
 
 ```java
 import javax.validation.constraints.NotBlank;
