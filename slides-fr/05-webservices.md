@@ -149,15 +149,15 @@ public ObjectNode node() {
 
 ## OpenAPI and Swagger UI
 
-* Simply add SmallRye OpenAPI extension
-  * This is an implementation of the MicroProfile Open API spec
-* We automatically get `/openapi` and `/swagger-ui`
-* Can enrich the OpenAPI descriptions with more annotations:
+* Ajoutez simplement l'extension SmallRye OpenAPI
+  * Ceci est une implémentation de la spécification MicroProfile Open API
+* Nous obtenons automatiquement `/openapi` and `/swagger-ui`
+* Nous pouvons enrichir les descriptions OpenAPI avec plus d'annotations :
   * `@Operation`, `@APIResponse`, `@Parameter`, `@RequestBody`, `@OpenAPIDefinition`
-* Swagger UI is good for testing API
+* Swagger UI est bien pour tester l'API
 
 Note:
-Cf. The [Quarkus OpenAPI / Swagger UI Guide](https://quarkus.io/guides/openapi-swaggerui)
+Cf. Le [Quarkus OpenAPI / Swagger UI Guide](https://quarkus.io/guides/openapi-swaggerui)
 
 
 <!-- .slide: data-background="#abcdef" -->
@@ -178,9 +178,9 @@ Cf. The [Quarkus OpenAPI / Swagger UI Guide](https://quarkus.io/guides/openapi-s
 
 ## Validation
 
-* Bean Validation can be used to enforce certain constraints
-* We can use Hibernate Validator, especially to validate input to REST endpoint we want to add for creating products
-  * Simplest way is with an `@Valid` annotation on the request body parameter
+* Bean Validation peut être utilisé pour appliquer certaines contraintes
+* Nous pouvons utiliser Hibernate Validator, en particulier pour valider l'entrée d'un endpoint REST que nous voulons ajouter pour créer des produits
+  * Le moyen le plus simple est d'utiliser une annotation `@Valid` sur le paramètre du corps de la requête
 * Many standard constraints available under `javax.validation.constraints.*`
 
 ```java
