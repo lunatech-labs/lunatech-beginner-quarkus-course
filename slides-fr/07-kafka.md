@@ -4,8 +4,8 @@
 <!-- .slide: data-visibility="hidden" -->
 ## Learning outcomes
 
-After this module, you should:
-* Understand how Kafka is the Swiss Army Chainsaw of messaging.
+Après ce module, vous devriez :
+* Comprendre que Kafka est le couteau suisse de la messagerie.
 
 
 ## Microprofile Reactive Messaging Spec
@@ -57,11 +57,10 @@ public void greetPrinter(String greet) {
 ```
 
 Note:
-* This requires no configuration. The channels 'match', both are mentioned once for incoming and once for outgoing, so it can be connected internally.
-* The top one is a producer
-* The middle one is a processor, consumes and produces
-* The bottom one is a consumer
-
+* Cela ne nécessite aucune configuration. Les canaux 'correspondent', ils sont mentionnés deux fois, une fois pour les entrées et une fois pour les sorties, ils peuvent donc être connectés en interne.
+* Le premier est un producteur
+* Celui du milieu est un processeur, il consomme et produit
+* Celui du bas est un consommateur
 
 ## Signatures
 
@@ -84,11 +83,10 @@ public CompletableFuture<Message<?>> greetPrinter(Message<String> greet) {
 ```
 
 Note:
-* In the first example, instead of a single message, we return a Multi. These get concatenated into the stream, so effectively this is a `flatMap` processor now.
-* In the second example, we inject the full `Message` rather than only the payload. This would allow us to manually control acknowledging.
+* Dans le premier exemple, au lieu d'un seul message, nous renvoyons un Multi. Ceux-ci sont concaténés dans le flux, il s'agit donc désormais d'un processeur `flatMap`.
+* Dans le deuxième exemple, nous injectons le `Message` complet plutôt que seulement le payload (la charge utile). Cela nous permettrait de contrôler manuellement l'accusé de réception.
 
-Note that in the second example, a `CompletionStage` is returned. This is needed, otherwise the implementation would have to block until `greetPrinter` is finished before it can `ack` the message. Now it can subscribe on the completion of the `CompletionStage` to acknowledge the message.
-
+Notez que dans le deuxième exemple, un `CompletionStage` est renvoyé. Ceci est nécessaire, sinon l'implémentation devrait bloquer jusqu'à ce que `greetPrinter` soit terminé avant de pouvoir `accuser réception` du message. Maintenant, il peut s'abonner à la fin de la `CompletionStage` pour accuser réception du message.
 
 ## Signatures
 
@@ -99,7 +97,7 @@ Toute les possibilités sont spécifiées dans la spécification de messagerie r
 Note:
 * Cf. [MicroProfile Reactive Messaging Specification](https://download.eclipse.org/microprofile/microprofile-reactive-messaging-1.0/microprofile-reactive-messaging-spec.html)
 * In the screenshot you see that a method that receives messages doesn't need to process the messages itself, it can also return a subscriber instance!
-
+* Dans la capture d'écran, vous voyez qu'une méthode qui reçoit des messages n'a pas besoin de traiter les messages elle-même, elle peut également renvoyer une instance d'abonné !
 
 <!-- .slide: data-background="#abcdef" -->
 ## Exercise: Internal Channels
@@ -136,11 +134,10 @@ public class GreetDeserializer extends ObjectMapperDeserializer<Greet> {
 ```
 
 Note:
-* We configure the `smallrye-kafka` connector
-* We need a custom GreetDeserializer (that just extends the generic one) just to have it return the right type
-* We can use the generic serializer
-* We need to configure *two* channels here, one incoming and one outgoing
-
+* Nous configurons le connecteur `smallrye-kafka`
+* Nous avons besoin d'un GreetDeserializer personnalisé (qui étend juste le générique) juste pour qu'il renvoie le bon type
+* Nous pouvons utiliser le sérialiseur générique
+* Nous devons configurer ici *deux* canaux, un entrant et un sortant
 
 ## Stratégies d’erreur
 
@@ -158,10 +155,10 @@ public void greetPrinter(Greet greet) {
 }
 ```
 
-This will cause the stream to terminate on the third message.
+Cela entraînera la fin du flux sur le troisième message.
 
 Note:
-Every third message will crash.
+Un message sur trois plantera.
 
 
 ## Stratégies d’erreur
@@ -173,7 +170,7 @@ Nous pouvons configurer ce comportement avec:
 Avec ce réglage, il logguera une erreur, mais continuera avec le flux.
 
 Note:
-This can be useful in scenario's where we don't need to process every message per se.
+Cela peut être utile dans les scénarios où nous n'avons pas besoin de traiter chaque message.
 
 
 ## Stratégies d’erreur
@@ -216,7 +213,7 @@ Demandez au public ce qui se passe après la validation de n°3, puis l'applicat
 
 ## Commit Strategies
 
-Il y a trois stratégies de validation:
+Il y a trois stratégies de validation :
 
 * Ignore
 * Latest
@@ -225,9 +222,11 @@ Il y a trois stratégies de validation:
 Note:
 * Ignore doesn't commit. Useful in combination with the 'auto commit' feature of the Kafka Client
 * Latest commits as soon as a message is acknowledged. Could lead to a lot of commits, but minimizes reprocessing.
+* Ignorer ne commit pas. Utile en combinaison avec la fonction 'auto commit' du client Kafka
+* Le dernier commit dès qu'un message est acknowledged. Cela pourrait conduire à beaucoup de commits, mais minimise le retraitement.
 
 Also:
-When using `throttled`, there's a maximum time the connector waits for an `ack` or a `nack`. By default one minute. If a message is not acked or nacked after a minute, the connector will mark the application as unhealthy.
+Lors de l'utilisation de `throttled`, il y a un temps maximum pendant lequel le connecteur attend un `ack` ou un `nack`. Par défaut une minute. Si un message n'est pas acquitté ou nacké après une minute, le connecteur marquera l'application comme non saine.
 
 
 <!-- .slide: data-background="#abcdef" -->
@@ -238,7 +237,7 @@ When using `throttled`, there's a maximum time the connector waits for an `ack` 
 ## Exercise: Dead Letter Queue & Stream filtering
 
 Note:
-- Tell students in final exercise they can add an @Incoming listener on the dead-letter-queue to print failures
+- Dites aux étudiants que dans l'exercice final ils peuvent ajouter un listener @Incoming sur la dead-letter-queue pour afficher les échecs
 
 
 <!-- .slide: data-visibility="hidden" -->
@@ -249,16 +248,16 @@ Note:
 ##
 
 TODO:
-- Message acknowledgement
-- Message<T> instead of <T>
-- Supporting multiple subscribers (broadcasting)
-- Injecting publisher or multi
+- Accusé de réception des messages
+- Message<T> au lieu de <T>
+- Prise en charge de plusieurs abonnés (broadcasting/diffusion)
+- Injection publisher ou multi
 - Dead letter queue
-- Health & Metrics integration
+- Intégration de Health & Metrics
 
 
 <!-- .slide: data-visibility="hidden" -->
 ## Recap
 
-In this module we have:
+Dans ce module, nous avons :
 *
