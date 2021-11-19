@@ -61,7 +61,7 @@ Pour Docker
 * Test
 
 Note:
-Discutez avec le groupe s'ils sont intéressés par Qute ou pas du tout. Sinon, il peut être ignoré afin d'avoir plus de temps à la fin pour du contenu supplémentaire.
+Discutez avec le groupe pour savoir s'ils sont intéressés par Qute ou pas du tout. Sinon, il peut être ignoré afin d'avoir plus de temps à la fin pour du contenu supplémentaire.
 
 
 ## Planning jour 2
@@ -88,7 +88,7 @@ Le contenu additionnel dépend du temps alloué.
 Nous allons réaliser plusieurs exercices construits autour d’un même projet : un magasin de meubles nommé HIQUÉA.
 
 Note:
-TODO : Expliquez soit les Outils de Gestion de Cours, or comment utiliser Vanilla Git pours'assurer que les étudiants ne soient pas perdus.
+TODO : Expliquez soit les Outils de Gestion de Cours, or comment utiliser Vanilla Git pour s'assurer que les étudiants ne soient pas perdus.
 
 ## A propos des formateurs(s)
 
