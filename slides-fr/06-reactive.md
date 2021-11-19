@@ -571,7 +571,7 @@ Multi<Person> people = client.query("SELECT name, age FROM people")
 
 ```java
 static Person fromRow(Row row) {
-  return new Person(row.getString("nam"), row.getInteger("age"));
+  return new Person(row.getString("name"), row.getInteger("age"));
 }
 ```
 
