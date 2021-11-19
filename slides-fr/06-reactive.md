@@ -10,7 +10,7 @@ Après ce module, vous devrez :
 
 ## Modèle d’exécution
 
-Lors de l’utilisation de RESTEasy, *impératif* par défaut, Quarkus créé autant de `executor` threads que nécessaire, jusqu'à atteindre le maximum configuré:
+Lors de l’utilisation de RESTEasy, *impératif* par défaut, Quarkus crée autant de `executor` threads que nécessaire, jusqu'à atteindre le maximum configuré:
 
 ```java [|6|]
 @GET
