@@ -84,6 +84,7 @@ But there is a limitation: Quarkus can't discriminate between a thread blocked o
 
 In the next chapter, we will see a different model that solves this.
 
+
 ## CPU vs IO Non-bloquant IO vs IO bloquantes
 
 Rappelez vous la dernière section :
