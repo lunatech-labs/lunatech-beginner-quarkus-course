@@ -10,7 +10,7 @@ Après ce module, vous devrez :
 
 ## Modèle d’exécution
 
-Lors de l’utilisation de RESTEasy, *impératif* par défaut, Quarkus créé autant de `executor` threads que nécessaire, jusqu'à atteindre le maximum configuré:
+Lors de l’utilisation de RESTEasy, *impératif* par défaut, Quarkus crée autant de `executor` threads que nécessaire, jusqu'à atteindre le maximum configuré:
 
 ```java [|6|]
 @GET
@@ -68,7 +68,7 @@ Ce que nous voyons ici, c'est que si nous réduisons le nombre maximum de thread
 Deux choses qui peuvent occuper un thread :
 
 * Effectuer une tâche utile sur le CPU
-* Attendre quelqu’un d’autre (Base de données, Appel d’API, E/S Disque, etc.). C’est ce que l’on appelle _(bloquage) blocking_.
+* Attendre quelqu’un d’autre (Base de données, Appel d’API, IO Disque, etc.). C’est ce que l’on appelle _(bloquage) blocking_.
 
 Note:
 Expliquez ce qui suit :
@@ -79,24 +79,26 @@ Supposons donc que nous ayons 4 cœurs et 10 threads. Si 5 threads calculent act
 
 C'est pourquoi Quarkus s'assure qu'il y a un nombre royal de threads : au moins 200 dans la configuration par défaut. On peut donc avoir au moins 200 requêtes simultanées.
 
-Mais il y a une limitation : Quarkus ne peut pas faire la distinction entre un thread bloqué sur CPU et un thread bloqué sur E/S. Si les 200 threads sont utilisés pour le CPU, cela provoquera une _pénurie de threads_ : le calcul ne progresse pas beaucoup, car un thread n'est planifié qu'occasionnellement.
+Mais il y a une limitation : Quarkus ne peut pas faire la distinction entre un thread bloqué sur CPU et un thread bloqué sur IO. Si les 200 threads sont utilisés pour le CPU, cela provoquera une _pénurie de threads_ : le calcul ne progresse pas beaucoup, car un thread n'est planifié qu'occasionnellement.
 
 Dans le chapitre suivant, nous verrons un modèle différent qui résout ce problème.
 
-## CPU vs E/S Non-bloquant E/S vs E/S bloquantes
+
+## CPU vs IO Non-bloquant IO vs IO bloquantes
+
 
 Rappelez vous la dernière section :
 
 * Un thread occupant le CPU est bon, mais nous ne voulons pas trop de ceux-ci.
-* Un thread effectuant des E/S est bien, mais il ne devrait pas empêcher les autres threads d’effectuer des opérations sur le CPU.
+* Un thread effectuant des IO est bien, mais il ne devrait pas empêcher les autres threads d’effectuer des opérations sur le CPU.
 
 <div class="fragment">
 Solution ?
 
 <ul>
 <li> Avoir un nombre limité de threads qui effectue de taches sur le CPU
-<li> Essayer d’effectuer les E/S sans bloquer un thread
-<li> Et si c’est impossible, avoir éventuellement un nombre illimité de threads d’attente des E/S.
+<li> Essayer d’effectuer les IO sans bloquer un thread
+<li> Et si c’est impossible, avoir éventuellement un nombre illimité de threads d’attente des IO.
 </ul>
 </div>
 
@@ -190,7 +192,7 @@ Here we block the eventloop thread for IO. Ask the audience what they expect to 
 
 See next page for the results
 
-Ici nous avons bloqué le thread de la boucle d'événements pour de l’E/S. Demander à l’audience ce qui pourrait arriver si on mesurait la performance de ceci avec un grand nombre de requêtes concurrentes ?
+Ici nous avons bloqué le thread de la boucle d'événements pour de l’IO. Demander à l’audience ce qui pourrait arriver si on mesurait la performance de ceci avec un grand nombre de requêtes concurrentes ?
 
 Voir la page suivante pour les résultats
 
@@ -285,7 +287,7 @@ La sortie:
     Initial: vert.x-eventloop-thread-18, later: executor-thread-1
 
 Note:
-Cela démontre une « attente » asynchrone. Aucun thread n'est bloqué ici. La partie initiale du calcul est effectuée sur le thread E/S Vert.x. La méthode `delayIt` ne bloque pas, renvoie simplement un `Uni` qui se termine après le temps spécifié. Le travail continu avec cet `Uni` n'est pas effectué par un thread E/S.
+Cela démontre une « attente » asynchrone. Aucun thread n'est bloqué ici. La partie initiale du calcul est effectuée sur le thread IO Vert.x. La méthode `delayIt` ne bloque pas, renvoie simplement un `Uni` qui se termine après le temps spécifié. Le travail continu avec cet `Uni` n'est pas effectué par un thread E/S.
 
 
 ## Reactive Routes
@@ -570,7 +572,7 @@ Multi<Person> people = client.query("SELECT name, age FROM people")
 
 ```java
 static Person fromRow(Row row) {
-  return new Person(row.getString("nam"), row.getInteger("age"));
+  return new Person(row.getString("name"), row.getInteger("age"));
 }
 ```
 

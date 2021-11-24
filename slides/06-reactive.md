@@ -83,6 +83,7 @@ But there is a limitation: Quarkus can't discriminate between a thread blocked o
 
 In the next chapter, we will see a different model that solves this.
 
+
 ## CPU vs Non-Blocking IO vs Blocking IO
 
 Remember from last section:
@@ -561,7 +562,7 @@ Multi<Person> people = client.query("SELECT name, age FROM people")
 
 ```java
 static Person fromRow(Row row) {
-  return new Person(row.getString("nam"), row.getInteger("age"));
+  return new Person(row.getString("name"), row.getInteger("age"));
 }
 ```
 
