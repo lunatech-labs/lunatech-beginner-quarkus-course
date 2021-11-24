@@ -98,7 +98,7 @@ public class ProductRepository implements PanacheRepository<Product> {
        return find("name", name).firstResult();
    }
 
-   public List<Person> findExpensive(){
+   public List<Product> findExpensive(){
        return list("price > ?1", new BigDecimal("100"));
    }
 
