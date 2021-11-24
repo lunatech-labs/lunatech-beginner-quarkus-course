@@ -113,7 +113,7 @@ Quarkus comprend beaucoup d’extensions qui implémentent ces APIs (parmi d’a
 
 Note:
 * Certaines de ces API sont juste des API Jakarta EE.
-* Some of these APIs are just Jakarta EE APIs. D'autres sont spécifiques à Microprofile.
+* D'autres sont spécifiques à Microprofile.
 * Microprofile et Jakarta EE relèvent désormais de la fondation Eclipse. Une intégration plus poussée entre le deux semble probable.
 
 
@@ -147,8 +147,7 @@ En option :
 * Ajoutez un point d'entrée qui retourne 'Hello ' + nom du groupe des participants.
 * Provoquez une erreur Java, affichez la page d'exception
 * Corrigez l'erreur, montrez que le redémarrage n'est pas nécessaire
-* Démarrez la génération de l'exécutable natif ! ()
-* Start the generation of the native executable! (Déjà, car cela prend du temps !)
+* Démarrez la génération de l'exécutable natif ! (Ici, car ça prend du temps)
 
 
 ## Hello World en Quarkus

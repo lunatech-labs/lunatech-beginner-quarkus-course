@@ -103,7 +103,7 @@ Parler de :
 ## A propos des participants
 
 Note:
-Fautes parler chaque participant :
+Faites parler chaque participant :
 * Son nom
 * Son expérience
 * Ses expériences avec d'autres frameworks
@@ -118,9 +118,9 @@ Fautes parler chaque participant :
 Note:
 * Donner les horaires, par exemple 09h30 - 17h30
     * Annoncez quand les pauses et les déjeuners seront pris
-* Expliquez comment récupérer student app s'ils ne l'ont pas encore eu
-    * Expliquez comment trouvez les exercices
-    * Expliquez comment utiiser les tags Git dans le cas où ils sont bloqués
+* Expliquez comment récupérer 'student app' s'ils ne l'ont pas encore eu
+    * Expliquez comment trouver les exercices
+    * Expliquez comment utiliser les tags Git s'ils ne connaissent pas
 * Mentionner que le cours est participatif
     * Nous leur demanderons de discuter de leurs solutions...
     * ... de s'entraider...

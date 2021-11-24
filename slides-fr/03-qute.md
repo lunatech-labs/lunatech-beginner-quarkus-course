@@ -20,9 +20,9 @@ Quarkus est livré avec un moteur de template appelé *Qute* (**Qu**arkus **te**
 
 Note:
 * La diminution de la reflexion diminue la taille de l'image native.
-* Typage-sûr en option : nous le verrons dans les prochains slides.
+* Type-safe en option : nous le verrons dans les prochains slides.
 * La sortie peut être diffusée en continu : utilise la segmentation HTTP pour réduire la mémoire requise.
-* Possibilité de parler ici de ce vers quoi les templates sont compilés, et comment cela fonctionne en mode natif.
+* Possibilité de parler ici de sous quelle forme les templates sont compilés, et comment cela fonctionne en mode natif.
 * IMPORTANT : Besoin de mentionner que c'est Expérimental -- pas de guarantie de stabilité tant que la solution n'est pas mature. Cela peut être une bonne transition pour discuter des extension Quarkus en général.
 
 
@@ -158,7 +158,7 @@ public class StringExtension {
 
 Note:
 * `shout` est une méthode virtuelle. En fait il y a deux méthodes virtuelles, avec et sans paramètre
-* À la dernière ligne, nous utilisons la notation infixe
+* À la dernière ligne, nous utilisons la notation `infix`
 
 
 ## Méthodes virtuelles Qute
@@ -186,7 +186,7 @@ Note:
 // Essayez d'expliquer un peu plus les values resolvers.
 
 
-## Templates à typage-sûr
+## Templates type-safe
 
 Dans l’exemple précédent, nous avons vu la ligne suivante
 
@@ -208,7 +208,7 @@ affichait `NOT_FOUND`, lors de l'exécution. Nous pouvons améliorer cela, et fa
 
 
 
-## Templates à typage-sûr
+## Templates type-safe
 
 Maintenant, Qute devrait afficher une erreur :
 
@@ -229,4 +229,4 @@ Dans ce module nous avons:
 * Discuté pourquoi Qute a été créé et comment il est différent des autres moteurs de templating
 * Créé un template Qute et utilisé celui-ci à partir d’une Ressource
 * Vu comment créer des tags personnalisés et des extensions de méthodes
-* Vu comment créer des templates à typage-sûr
+* Vu comment créer des templates type-safe
