@@ -166,7 +166,7 @@ Note:
 
 Nous ne pouvons appeler des méthodes _réelles_ avec des paramètres:
 
-    <p>Name: {name.replace('k', 'c'}}</p>
+    <p>Name: {name.replace('k', 'c')}</p>
 
 Affichera:
 
@@ -181,7 +181,7 @@ Mais nous pouvons apprendre à Qute à générer un _value resolver_ pour nous:
 
 Maintenant cela fonctionne comme attendu:
 
-    <p>Name: {name.replace('k', 'c'}}</p>
+    <p>Name: {name.replace('k', 'c')}</p>
 
 Note:
 // Try to explain value resolvers a bit more.
@@ -191,7 +191,7 @@ Note:
 
 Dans l’exemple précédent, nous avons vu la ligne suivante
 
-     <p>Name: {name.replace('k', 'c'}}</p>
+     <p>Name: {name.replace('k', 'c')}</p>
 
 affichait `NOT_FOUND`, lors de l'exécution. Nous pouvons améliorer cela, et faire en sorte que Qute génère une erreur à l'exécution, en indiquant dans le template que la valeur attendue est du type `String`:
 
