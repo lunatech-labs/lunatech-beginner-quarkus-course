@@ -4,7 +4,7 @@
 ## Connaissance attendues
 
 A l’issue de ce module vous devriez:
-* Savoir comment ajouter des vérification de la santé de l’application
+* Savoir comment ajouter des vérifications de la santé de l’application
 * Comprendre les différentes approches pour collecter des métriques
 * Comprendre comment ajouter de la traçabilité
 
@@ -15,8 +15,8 @@ A l’issue de ce module vous devriez:
 * C’est particulièrement pertinent dans un contexte d’environnements cloud (et kubernetes)
 
 Note:
-* Here we can emphasise the relevance of including monitoring (health-checks, metrics, etc.) in a Quarkus training course
-    * In the cloud-native context (the main context for Quarkus) decisions for scaling up and down a service is typically based on liveness and readiness status, as well as metrics of how the service is responding to load
+* On peut souligner ici la pertinence d'inclure le monitoring (bilans de santé, métriques, etc.) dans une formation Quarkus
+  * Dans le contexte natif du cloud (le contexte principal pour Quarkus), les décisions de mise à l'échelle d'un service sont généralement basées sur l'état de disponibilité et de préparation, ainsi que sur des mesures de la façon dont le service réagit à la charge
 
 
 ## Liveness and Readiness
@@ -26,7 +26,7 @@ Note:
     * `/health/live`
     * `/health/ready`
 * Liveness - qu’on peut traduire par vitalité - Le service est-il _démarré_ ou _éteint_, _joignable_ ou _injoignable_ ?
-* Readiness - qu’on peut traduire par le fait d’être prêt - Le service peut-il traiter des requêtes utilisateurs?
+* Readiness - qu’on peut traduire par le fait d’être prêt - Le service peut-il traiter des requêtes utilisateurs ?
     * Un service peut être démarré et passer la vérification du Liveness mais échouer la vérification de Readiness
 * Ceci correspond aux sondes liveness et readiness de Kubernetes
 
@@ -60,7 +60,7 @@ Note:
 * Il est possible de configurer le suivi des requêtes JDBC et de la remise des messages Kafka
 
 Note:
-If needed, here is a possible log configuration to log trace IDs
+Si nécessaire, voici une possible configuration de journalisation pour consigner les trace ID
 
 ```
 quarkus.log.console.format=%d{HH:mm:ss} %-5p traceId=%X{traceId}, parentId=%X{parentId}, spanId=%X{spanId}, sampled=%X{sampled} [%c{2.}] (%t) %s%e%n
