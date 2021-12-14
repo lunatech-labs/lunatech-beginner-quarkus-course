@@ -1,4 +1,4 @@
-# Advanced reactive
+# Reactive programming 2
 
 ## Learning outcomes
 
@@ -6,7 +6,7 @@ After this module, you should:
 * Understand Event Bus
 * Understand websocket reactive
 
-##Using the Event Bus
+### Using the Event Bus
 
 Quarkus uses the Vert.x EventBus, so you need to enable the vertx extension to use this feature:
 
@@ -16,18 +16,7 @@ Quarkus uses the Vert.x EventBus, so you need to enable the vertx extension to u
 <artifactId>quarkus-vertx</artifactId>
 </dependency>
 ```
-
-##Configuring the address
-
-```java[|4|]
-@ConsumeEvent("greeting")               
-public String consume(String name) {
-return name.toUpperCase();
-}
-```
-Adresse to receive the messages is `greeting`
-
-## Sending messages
+### Sending messages
 
 ```java
 @Path("/async")
@@ -46,7 +35,7 @@ public class EventResource {
 }
 ```
 
-## Sending messages
+### Sending messages
 The EventBus object provides methods to:
 1. send a message to a specific address - one single consumer receives the message.
 2. publish a message to a specific address - all consumers receive the messages.
@@ -58,9 +47,21 @@ bus.sendAndForget("greeting", name)
 // Case 2
 bus.publish("greeting", name)
 // Case 3
-Uni<String> response = bus.<String>request("address", "hello, how are you?")
+Uni<String> response = bus.<String>request("address", "Hello")
 .onItem().transform(Message::body);
 ```
+
+### Configuring the address
+
+```java[|4|]
+@ConsumeEvent("greeting")               
+public String consume(String name) {
+return name.toUpperCase();
+}
+```
+Adresse to receive the messages is `greeting`
+
+
 
 
 
