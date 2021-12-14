@@ -3,10 +3,10 @@
 
 ## Learning outcomes
 
-Après ce module, vous devrez savoir :
-* Ce qu'est GraalVM et son rôle
-* Compiler una application en exécutable natif
-* Déboguer un exécutable natif
+After this module, you should know:
+* What Graal VM is and his role
+* How to compile an application into a native executable
+* How to test a native executable
 
 
 ## Introduction

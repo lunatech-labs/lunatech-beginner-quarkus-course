@@ -5,7 +5,7 @@
 
 Après ce module, vous devrez savoir :
 * Ce qu'est GraalVM et son rôle
-* Compiler una application en exécutable natif
+* Compiler une application en exécutable natif
 * Déboguer un exécutable natif
 
 
