@@ -26,4 +26,12 @@ public class GreetingResource {
                 .onItem().transform(Message::body);
     }
 
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("codecName/{name}")
+    public Uni<String> name(String name) {
+        return bus.<String>request("name", new MyName(name))
+                .onItem().transform(Message::body);
+    }
+
 }

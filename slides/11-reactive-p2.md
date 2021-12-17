@@ -4,7 +4,6 @@
 
 After this module, you should:
 * Understand Event Bus
-* Understand websocket reactive
 
 ### Using the Event Bus
 
@@ -61,9 +60,41 @@ return name.toUpperCase();
 ```
 Adresse to receive the messages is `greeting`
 
+### Using codecs
+The Vert.x Event Bus uses codecs to serialize and deserialize objects.
+Quarkus provides a default codec for local delivery (class `LocalEventBusCodec.java`). So you can exchange objects as follows:
 
+```java[|4|]
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+@Path("{name}")
+public Uni<String> greeting(@PathParam String name) {
+return bus.<String>request("greeting", new MyName(name))
+.onItem().transform(Message::body);
+}
 
+@ConsumeEvent(value = "greeting")
+Uni<String> greeting(MyName name) {
+return Uni.createFrom().item(() -> "Hello " + name.getName());
+}
+```
 
+You can also define a specific codec:
+```java[|4|]
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+@Path("{name}")
+public Uni<String> greeting(@PathParam String name) {
+return bus.<String>request("greeting", name,
+new DeliveryOptions().setCodecName(MyNameCodec.class.getName()))
+.onItem().transform(Message::body);
+}
+
+@ConsumeEvent(value = "greeting", codec = MyNameCodec.class)            
+Uni<String> greeting(MyName name) {
+return Uni.createFrom().item(() -> "Hello "+name.getName());
+}
+```
 
 
 

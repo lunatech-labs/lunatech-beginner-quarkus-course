@@ -2,9 +2,8 @@
 
 ## Connaissances obtenues
 * Comprendre Even Bus
-* Comprendre websocket réactive
 
-##Utilisation de Event Bus
+## Utilisation de Event Bus
 
 Quarkus utilise le Vert.x EventBus, vous devez donc activer l'extension vertx pour utiliser cette fonctionnalité :
 
@@ -58,3 +57,40 @@ return name.toUpperCase();
 }
 ```
 L'adresse pour recevoir les messages est `greeting`
+
+### Utilisation des codecs
+Le Vert.x Event Bus utilise des codecs pour sérialiser et désérialiser des objets.
+Quarkus fournit un codec par défaut pour la livraison locale (classe `LocalEventBusCodec.java`). 
+Vous pouvez donc échanger des objets comme suit :
+
+```java[|4|]
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+@Path("{name}")
+public Uni<String> greeting(@PathParam String name) {
+return bus.<String>request("greeting", new MyName(name))
+.onItem().transform(Message::body);
+}
+
+@ConsumeEvent(value = "greeting")
+Uni<String> greeting(MyName name) {
+return Uni.createFrom().item(() -> "Hello " + name.getName());
+}
+```
+
+Vous pouvez définir un codec spécifique :
+```java[|4|]
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+@Path("{name}")
+public Uni<String> greeting(@PathParam String name) {
+return bus.<String>request("greeting", name,
+new DeliveryOptions().setCodecName(MyNameCodec.class.getSimpleName()))
+.onItem().transform(Message::body);
+}
+
+@ConsumeEvent(value = "greeting", codec = MyNameCodec.class)            
+Uni<String> greeting(MyName name) {
+return Uni.createFrom().item(() -> "Hello "+name.getName());
+}
+```
