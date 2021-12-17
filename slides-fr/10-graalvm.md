@@ -64,6 +64,10 @@ La compilation se fait avec cette commande :
 
 ## Débogage d'un exécutable natif
 
+```
+./mvnw verify -Pnative
+```
+
 
 ## Affichage complet des erreurs
 
@@ -84,6 +88,23 @@ Pour relancer les tests sans compiler une nouvelle fois avec un exécutable exis
 
 ```
 ./mvnw test-compile failsafe:integration-test
+```
+
+
+## Performances
+
+Dans le cas de cette formation :
+
+_Sans native-image executable_
+```text
+Temps de démarrage  entre 3 et 3.5 secondes
+Mémoire utilisée    env. 530M
+```
+
+_En native-image executable_
+```text
+Tempas de démarrage entre 0.07 et 1.2 seconde
+Mémoire utilisée    env. 52M
 ```
 
 

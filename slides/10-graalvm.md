@@ -64,6 +64,10 @@ Use this command line to compile
 
 ## Test the native executable
 
+```
+./mvnw verify -Pnative
+```
+
 
 ## Full display of errors
 
@@ -84,6 +88,23 @@ To rerun tests with an existing native image
 
 ```
 ./mvnw test-compile failsafe:integration-test
+```
+
+
+## Performances
+
+In the case of this course:
+
+_Not in native-image executable_
+```text
+Boot time       between 3 and 3.5 seconds
+Memory used     approx. 530M
+```
+
+_In native-image executable_
+```text
+Boot time between 0.07 and 1.2 second
+Memory used approx. 52M
 ```
 
 
